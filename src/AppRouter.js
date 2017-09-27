@@ -1,20 +1,26 @@
 import {
-    HashRouter, Route
+    HashRouter, Route,Redirect
 } from 'react-router-dom';
 import {Layout} from 'antd';
 import HeadMenu from './components/common/HeadMenu';
-import Task from './components/task/Task';
+import ChargeTask from './components/task/ChargeTask';
+import AttentionTask from './components/task/AttentionTask';
+
 import Score from './components/score/Score';
 import Workflow from './components/workflow/Workflow';
 const {Header} = Layout;
+const charge = <h1>charge</h1>;
 
 const AppRouter = (
     <HashRouter>
         <Layout>
-            <Header className="">
+            <Header>
+                <span className="logo"/>
                 <HeadMenu/>
             </Header>
-            <Route path="/task" component={Task}/>
+            <Route exact path="/task" render={()=>(<Redirect to="/task/charge"/>)}/>
+            <Route path="/task/charge" component={ChargeTask}/>
+            <Route path="/task/attention" component={AttentionTask}/>
             <Route path="/workflow" component={Workflow}/>
             <Route path="/score" component={Score}/>
         </Layout>
