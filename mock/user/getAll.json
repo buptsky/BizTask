@@ -1,0 +1,1163 @@
+{
+    "success": true,
+    "data": [
+        {
+            "id": 207069,
+            "name": "aoying",
+            "label": "奥英",
+            "type": 0
+        },
+        {
+            "id": 210538,
+            "name": "caoshiwen",
+            "label": "曹诗文",
+            "type": 0
+        },
+        {
+            "id": 10269,
+            "name": "changlili",
+            "label": "常莉莉",
+            "type": 0
+        },
+        {
+            "id": 209471,
+            "name": "chenchensi2000",
+            "label": "陈琛",
+            "type": 0
+        },
+        {
+            "id": 208216,
+            "name": "chengdeming",
+            "label": "程德明",
+            "type": 0
+        },
+        {
+            "id": 200877,
+            "name": "chenglei",
+            "label": "程磊",
+            "type": 0
+        },
+        {
+            "id": 211377,
+            "name": "chengyixiang",
+            "label": "程益翔",
+            "type": 0
+        },
+        {
+            "id": 206269,
+            "name": "chenxinsi0457",
+            "label": "陈欣",
+            "type": 0
+        },
+        {
+            "id": 204516,
+            "name": "chenxisi0848",
+            "label": "陈曦",
+            "type": 0
+        },
+        {
+            "id": 202130,
+            "name": "chenzhen202130",
+            "label": "陈贞",
+            "type": 0
+        },
+        {
+            "id": 209681,
+            "name": "chenzhijin",
+            "label": "陈志金",
+            "type": 0
+        },
+        {
+            "id": 209753,
+            "name": "chenzhixi",
+            "label": "陈志锡",
+            "type": 0
+        },
+        {
+            "id": 117922,
+            "name": "congwei",
+            "label": "丛玮",
+            "type": 0
+        },
+        {
+            "id": 207079,
+            "name": "cuihaoran",
+            "label": "崔浩然",
+            "type": 0
+        },
+        {
+            "id": 2278,
+            "name": "dongyue",
+            "label": "董悦",
+            "type": 0
+        },
+        {
+            "id": 208552,
+            "name": "dongyuntao",
+            "label": "董云涛",
+            "type": 0
+        },
+        {
+            "id": 208690,
+            "name": "dongzeguang",
+            "label": "董泽光",
+            "type": 0
+        },
+        {
+            "id": 200640,
+            "name": "duanbin",
+            "label": "段斌",
+            "type": 0
+        },
+        {
+            "id": 111766,
+            "name": "fangxiuli",
+            "label": "房秀丽",
+            "type": 0
+        },
+        {
+            "id": 2292,
+            "name": "fangyuan",
+            "label": "方媛",
+            "type": 0
+        },
+        {
+            "id": 110341,
+            "name": "gaoqingxia",
+            "label": "高清霞",
+            "type": 0
+        },
+        {
+            "id": 116415,
+            "name": "gaoying",
+            "label": "高影",
+            "type": 0
+        },
+        {
+            "id": 118803,
+            "name": "gaozezhou",
+            "label": "高泽周",
+            "type": 0
+        },
+        {
+            "id": 117518,
+            "name": "guoliyong",
+            "label": "郭理勇",
+            "type": 0
+        },
+        {
+            "id": 201804,
+            "name": "guomeiqing",
+            "label": "郭美青",
+            "type": 0
+        },
+        {
+            "id": 209575,
+            "name": "guoqi209575",
+            "label": "郭琦",
+            "type": 0
+        },
+        {
+            "id": 208278,
+            "name": "guosong",
+            "label": "郭松",
+            "type": 0
+        },
+        {
+            "id": 2764,
+            "name": "guzeping",
+            "label": "顾泽平",
+            "type": 0
+        },
+        {
+            "id": 113329,
+            "name": "hanfei",
+            "label": "韩菲",
+            "type": 0
+        },
+        {
+            "id": 206953,
+            "name": "hehui",
+            "label": "和慧",
+            "type": 0
+        },
+        {
+            "id": 209719,
+            "name": "hemiao",
+            "label": "何苗",
+            "type": 0
+        },
+        {
+            "id": 208592,
+            "name": "houyingjie",
+            "label": "侯英杰",
+            "type": 0
+        },
+        {
+            "id": 209472,
+            "name": "huangjianhang",
+            "label": "黄舰航",
+            "type": 0
+        },
+        {
+            "id": 208685,
+            "name": "huangxun",
+            "label": "黄勋",
+            "type": 0
+        },
+        {
+            "id": 211397,
+            "name": "hujia",
+            "label": "胡嘉",
+            "type": 0
+        },
+        {
+            "id": 116573,
+            "name": "jinpengjia",
+            "label": "金鹏佳",
+            "type": 0
+        },
+        {
+            "id": 205938,
+            "name": "jinxing205938",
+            "label": "靳星",
+            "type": 0
+        },
+        {
+            "id": 117265,
+            "name": "kangchengbiao",
+            "label": "康成彪",
+            "type": 0
+        },
+        {
+            "id": 206952,
+            "name": "kanglin",
+            "label": "康林",
+            "type": 0
+        },
+        {
+            "id": 209618,
+            "name": "kangpanpan",
+            "label": "康盼盼",
+            "type": 0
+        },
+        {
+            "id": 118064,
+            "name": "liangxiao",
+            "label": "梁宵",
+            "type": 0
+        },
+        {
+            "id": 112999,
+            "name": "lijian",
+            "label": "李剑",
+            "type": 0
+        },
+        {
+            "id": 200641,
+            "name": "lilinfu",
+            "label": "李林芙",
+            "type": 0
+        },
+        {
+            "id": 117342,
+            "name": "linshiyou",
+            "label": "林世有",
+            "type": 0
+        },
+        {
+            "id": 208981,
+            "name": "liqingxi",
+            "label": "李清溪",
+            "type": 0
+        },
+        {
+            "id": 118583,
+            "name": "liubao",
+            "label": "刘宝",
+            "type": 0
+        },
+        {
+            "id": 117368,
+            "name": "liujianbj7368",
+            "label": "刘建",
+            "type": 0
+        },
+        {
+            "id": 209506,
+            "name": "liujing209506",
+            "label": "刘静",
+            "type": 0
+        },
+        {
+            "id": 209544,
+            "name": "liulin209544",
+            "label": "刘林",
+            "type": 0
+        },
+        {
+            "id": 207323,
+            "name": "liuweijie207323",
+            "label": "刘伟杰",
+            "type": 0
+        },
+        {
+            "id": 211283,
+            "name": "liuyanan",
+            "label": "刘雅楠",
+            "type": 0
+        },
+        {
+            "id": 2268,
+            "name": "liuyuehua",
+            "label": "刘跃华",
+            "type": 0
+        },
+        {
+            "id": 117936,
+            "name": "lixiaoqing",
+            "label": "李晓清",
+            "type": 0
+        },
+        {
+            "id": 2873,
+            "name": "lixiaoxuan",
+            "label": "李晓玄",
+            "type": 0
+        },
+        {
+            "id": 2295,
+            "name": "lixinxinOS2295",
+            "label": "李新新",
+            "type": 0
+        },
+        {
+            "id": 207964,
+            "name": "lixueying",
+            "label": "李雪莹",
+            "type": 0
+        },
+        {
+            "id": 208088,
+            "name": "liyang208088",
+            "label": "李扬",
+            "type": 0
+        },
+        {
+            "id": 117268,
+            "name": "liyangshao",
+            "label": "李洋少",
+            "type": 0
+        },
+        {
+            "id": 210419,
+            "name": "longxiao",
+            "label": "龙潇",
+            "type": 0
+        },
+        {
+            "id": 117517,
+            "name": "maohong",
+            "label": "毛宏",
+            "type": 0
+        },
+        {
+            "id": 205202,
+            "name": "muyanxue",
+            "label": "穆艳学",
+            "type": 0
+        },
+        {
+            "id": 206465,
+            "name": "muyunlong",
+            "label": "穆赟龙",
+            "type": 0
+        },
+        {
+            "id": 209321,
+            "name": "pengfei209321",
+            "label": "彭飞",
+            "type": 0
+        },
+        {
+            "id": 115322,
+            "name": "pengzhi",
+            "label": "彭智",
+            "type": 0
+        },
+        {
+            "id": 2933,
+            "name": "qianlu",
+            "label": "钱露",
+            "type": 0
+        },
+        {
+            "id": 115430,
+            "name": "ruanfeizhi",
+            "label": "阮飞只",
+            "type": 0
+        },
+        {
+            "id": 209477,
+            "name": "shanglonghua",
+            "label": "尚龙华",
+            "type": 0
+        },
+        {
+            "id": 200758,
+            "name": "shangyan200758",
+            "label": "尚岩",
+            "type": 0
+        },
+        {
+            "id": 200015,
+            "name": "shenzongqiang",
+            "label": "沈宗强",
+            "type": 0
+        },
+        {
+            "id": 202132,
+            "name": "shilei",
+            "label": "石磊",
+            "type": 0
+        },
+        {
+            "id": 208671,
+            "name": "shilijie",
+            "label": "施立杰",
+            "type": 0
+        },
+        {
+            "id": 207913,
+            "name": "sixiaolin",
+            "label": "司晓琳",
+            "type": 0
+        },
+        {
+            "id": 205617,
+            "name": "songchan",
+            "label": "宋婵",
+            "type": 0
+        },
+        {
+            "id": 208342,
+            "name": "songlei",
+            "label": "宋磊",
+            "type": 0
+        },
+        {
+            "id": 209423,
+            "name": "suncan",
+            "label": "孙灿",
+            "type": 0
+        },
+        {
+            "id": 209620,
+            "name": "sunmingming",
+            "label": "孙明鸣",
+            "type": 0
+        },
+        {
+            "id": 207984,
+            "name": "suyueyue",
+            "label": "苏玥玥",
+            "type": 0
+        },
+        {
+            "id": 206516,
+            "name": "tangjinzhou",
+            "label": "唐金州",
+            "type": 0
+        },
+        {
+            "id": 206645,
+            "name": "taoxinyi",
+            "label": "陶心一",
+            "type": 0
+        },
+        {
+            "id": 205310,
+            "name": "tianzhen",
+            "label": "田真",
+            "type": 0
+        },
+        {
+            "id": 208167,
+            "name": "wangfan",
+            "label": "王帆",
+            "type": 0
+        },
+        {
+            "id": 204681,
+            "name": "wangfei204681",
+            "label": "王飞",
+            "type": 0
+        },
+        {
+            "id": 208446,
+            "name": "wangjun208446",
+            "label": "王俊",
+            "type": 0
+        },
+        {
+            "id": 115797,
+            "name": "wanglinping",
+            "label": "王林平",
+            "type": 0
+        },
+        {
+            "id": 209841,
+            "name": "wangliwei",
+            "label": "王立卫",
+            "type": 0
+        },
+        {
+            "id": 206589,
+            "name": "wangshuai206589",
+            "label": "王帅",
+            "type": 0
+        },
+        {
+            "id": 207209,
+            "name": "wangwei207209",
+            "label": "王巍",
+            "type": 0
+        },
+        {
+            "id": 206779,
+            "name": "wangyan206779",
+            "label": "王衍",
+            "type": 0
+        },
+        {
+            "id": 207320,
+            "name": "wangyong",
+            "label": "王勇",
+            "type": 0
+        },
+        {
+            "id": 203260,
+            "name": "wangyu203260",
+            "label": "王宇",
+            "type": 0
+        },
+        {
+            "id": 117014,
+            "name": "weiguangbei",
+            "label": "韦光贝",
+            "type": 0
+        },
+        {
+            "id": 2717,
+            "name": "wubosi2717",
+            "label": "吴博",
+            "type": 0
+        },
+        {
+            "id": 203582,
+            "name": "wujuefei",
+            "label": "吴觉非",
+            "type": 0
+        },
+        {
+            "id": 206573,
+            "name": "wukun",
+            "label": "吴坤",
+            "type": 0
+        },
+        {
+            "id": 208764,
+            "name": "Wulihua",
+            "label": "吴利华",
+            "type": 0
+        },
+        {
+            "id": 206576,
+            "name": "xiaxianbo",
+            "label": "夏先波",
+            "type": 0
+        },
+        {
+            "id": 207374,
+            "name": "xinjianguo",
+            "label": "辛建国",
+            "type": 0
+        },
+        {
+            "id": 212104,
+            "name": "xiongsheng",
+            "label": "熊晟",
+            "type": 0
+        },
+        {
+            "id": 10246,
+            "name": "xupanpan",
+            "label": "徐盼盼",
+            "type": 0
+        },
+        {
+            "id": 211364,
+            "name": "yanchen",
+            "label": "闫晨",
+            "type": 0
+        },
+        {
+            "id": 211282,
+            "name": "yanghuilong",
+            "label": "杨会龙",
+            "type": 0
+        },
+        {
+            "id": 203180,
+            "name": "yangjianfei",
+            "label": "杨剑飞",
+            "type": 0
+        },
+        {
+            "id": 116779,
+            "name": "yanglei116779",
+            "label": "杨雷",
+            "type": 0
+        },
+        {
+            "id": 250,
+            "name": "yangruyue",
+            "label": "杨茹月",
+            "type": 0
+        },
+        {
+            "id": 211697,
+            "name": "yantian",
+            "label": "严甜",
+            "type": 0
+        },
+        {
+            "id": 202247,
+            "name": "yanxiang",
+            "label": "严翔",
+            "type": 0
+        },
+        {
+            "id": 209968,
+            "name": "yanyichao",
+            "label": "严义超",
+            "type": 0
+        },
+        {
+            "id": 206183,
+            "name": "yaogang",
+            "label": "么刚",
+            "type": 0
+        },
+        {
+            "id": 208584,
+            "name": "yeyingying",
+            "label": "叶莹莹",
+            "type": 0
+        },
+        {
+            "id": 208323,
+            "name": "yuchang",
+            "label": "于畅",
+            "type": 0
+        },
+        {
+            "id": 208999,
+            "name": "yuemeng",
+            "label": "岳猛",
+            "type": 0
+        },
+        {
+            "id": 115667,
+            "name": "yulong",
+            "label": "余龙",
+            "type": 0
+        },
+        {
+            "id": 207345,
+            "name": "zhaiyibo",
+            "label": "翟懿博",
+            "type": 0
+        },
+        {
+            "id": 208793,
+            "name": "zhangbangcheng",
+            "label": "张邦成",
+            "type": 0
+        },
+        {
+            "id": 203673,
+            "name": "zhangchengshan",
+            "label": "张成山",
+            "type": 0
+        },
+        {
+            "id": 117996,
+            "name": "zhangfengbj7996",
+            "label": "张峰",
+            "type": 0
+        },
+        {
+            "id": 200715,
+            "name": "zhanggaozheng",
+            "label": "张高政",
+            "type": 0
+        },
+        {
+            "id": 115157,
+            "name": "zhanghaitao",
+            "label": "张海涛",
+            "type": 0
+        },
+        {
+            "id": 212274,
+            "name": "zhangjiawei",
+            "label": "张家伟",
+            "type": 0
+        },
+        {
+            "id": 117515,
+            "name": "zhangjuncheng",
+            "label": "张俊城",
+            "type": 0
+        },
+        {
+            "id": 204770,
+            "name": "zhangshizhe204770",
+            "label": "张世哲",
+            "type": 0
+        },
+        {
+            "id": 202444,
+            "name": "zhangyasen",
+            "label": "张亚森",
+            "type": 0
+        },
+        {
+            "id": 200639,
+            "name": "zhangyu",
+            "label": "张宇",
+            "type": 0
+        },
+        {
+            "id": 10314,
+            "name": "zhangzhiqiangos0314",
+            "label": "张志强",
+            "type": 0
+        },
+        {
+            "id": 206717,
+            "name": "zhaoyuanfang",
+            "label": "赵远方",
+            "type": 0
+        },
+        {
+            "id": 208882,
+            "name": "zhengxuetong",
+            "label": "郑薛通",
+            "type": 0
+        },
+        {
+            "id": 116468,
+            "name": "zhili",
+            "label": "李治",
+            "type": 0
+        },
+        {
+            "id": 118933,
+            "name": "zhonghui",
+            "label": "钟辉",
+            "type": 0
+        },
+        {
+            "id": 204998,
+            "name": "zhouzhemin",
+            "label": "周哲敏",
+            "type": 0
+        },
+        {
+            "id": 206990,
+            "name": "zhuyingjie",
+            "label": "朱英杰",
+            "type": 0
+        },
+        {
+            "id": 2784,
+            "name": "zhuyingos2784",
+            "label": "朱盈",
+            "type": 0
+        },
+        {
+            "id": 1307,
+            "name": "wangjunsi3019",
+            "label": "王君",
+            "type": 0
+        },
+        {
+            "id": 212137,
+            "name": "liquancai",
+            "label": "李全才",
+            "type": 0
+        },
+        {
+            "id": 212189,
+            "name": "yaojun",
+            "label": "姚俊",
+            "type": 0
+        },
+        {
+            "id": 212108,
+            "name": "yangbing",
+            "label": "杨冰",
+            "type": 0
+        },
+        {
+            "id": 3018,
+            "name": "sunwenjuan",
+            "label": "孙文娟",
+            "type": 0
+        },
+        {
+            "id": 211915,
+            "name": "qintianjie",
+            "label": "秦天杰",
+            "type": 0
+        },
+        {
+            "id": 2925,
+            "name": "yangxiaosi2925",
+            "label": "杨潇",
+            "type": 0
+        },
+        {
+            "id": 3046,
+            "name": "chenwenchao",
+            "label": "陈文超",
+            "type": 0
+        },
+        {
+            "id": 3105,
+            "name": "hantianxiang",
+            "label": "韩天翔",
+            "type": 0
+        },
+        {
+            "id": 3107,
+            "name": "xiaoguilan",
+            "label": "肖桂兰",
+            "type": 0
+        },
+        {
+            "id": 3113,
+            "name": "linxionghui",
+            "label": "林雄辉",
+            "type": 0
+        },
+        {
+            "id": 3096,
+            "name": "wangruiOS3096",
+            "label": "王瑞",
+            "type": 0
+        },
+        {
+            "id": 3141,
+            "name": "yangzhikang",
+            "label": "杨志康",
+            "type": 0
+        },
+        {
+            "id": 3146,
+            "name": "menggesi",
+            "label": "孟格思",
+            "type": 0
+        },
+        {
+            "id": 3151,
+            "name": "lijiantong",
+            "label": "李建同",
+            "type": 0
+        },
+        {
+            "id": 3147,
+            "name": "zhangfei",
+            "label": "张飞",
+            "type": 0
+        },
+        {
+            "id": 212787,
+            "name": "liuchunlei",
+            "label": "刘春雷",
+            "type": 0
+        },
+        {
+            "id": 3169,
+            "name": "fusiran",
+            "label": "付思冉",
+            "type": 0
+        },
+        {
+            "id": 222208,
+            "name": "songlince",
+            "label": "宋林策",
+            "type": 0
+        },
+        {
+            "id": 3216,
+            "name": "xumengfan",
+            "label": "徐梦凡",
+            "type": 0
+        },
+        {
+            "id": 3036,
+            "name": "xuekai",
+            "label": "薛凯",
+            "type": 0
+        },
+        {
+            "id": 212249,
+            "name": "jialaibin",
+            "label": "贾来宾",
+            "type": 0
+        },
+        {
+            "id": 1,
+            "name": "技术部",
+            "label": "技术部",
+            "type": 1
+        },
+        {
+            "id": 2,
+            "name": "biztech",
+            "label": "biztech",
+            "type": 1
+        },
+        {
+            "id": 3,
+            "name": "bizdev_cpc",
+            "label": "bizdev_cpc",
+            "type": 1
+        },
+        {
+            "id": 4,
+            "name": "bizdev_cx",
+            "label": "bizdev_cx",
+            "type": 1
+        },
+        {
+            "id": 5,
+            "name": "bizdev_xuri",
+            "label": "bizdev_xuri",
+            "type": 1
+        },
+        {
+            "id": 6,
+            "name": "bizdev_app",
+            "label": "bizdev_app",
+            "type": 1
+        },
+        {
+            "id": 7,
+            "name": "bizbase",
+            "label": "bizbase",
+            "type": 1
+        },
+        {
+            "id": 8,
+            "name": "bizqa",
+            "label": "bizqa",
+            "type": 1
+        },
+        {
+            "id": 9,
+            "name": "bppm",
+            "label": "bppm",
+            "type": 1
+        },
+        {
+            "id": 10,
+            "name": "bizdev_ka",
+            "label": "bizdev_ka",
+            "type": 1
+        },
+        {
+            "id": 11,
+            "name": "bizdev_crm",
+            "label": "bizdev_crm",
+            "type": 1
+        },
+        {
+            "id": 12,
+            "name": "dba",
+            "label": "dba",
+            "type": 1
+        },
+        {
+            "id": 13,
+            "name": "bizop",
+            "label": "bizop",
+            "type": 1
+        },
+        {
+            "id": 14,
+            "name": "bizqa_xuri",
+            "label": "bizqa_xuri",
+            "type": 1
+        },
+        {
+            "id": 15,
+            "name": "ADPS_CPPM",
+            "label": "ADPS_CPPM",
+            "type": 1
+        },
+        {
+            "id": 16,
+            "name": "ADPP_oppm",
+            "label": "ADPP_oppm",
+            "type": 1
+        },
+        {
+            "id": 17,
+            "name": "ADPP_ospm",
+            "label": "ADPP_ospm",
+            "type": 1
+        },
+        {
+            "id": 18,
+            "name": "ADPS_ptspm",
+            "label": "ADPS_ptspm",
+            "type": 1
+        },
+        {
+            "id": 19,
+            "name": "bizop_base",
+            "label": "bizop_base",
+            "type": 1
+        },
+        {
+            "id": 20,
+            "name": "bizop_bl",
+            "label": "bizop_bl",
+            "type": 1
+        },
+        {
+            "id": 21,
+            "name": "bizop_sys",
+            "label": "bizop_sys",
+            "type": 1
+        },
+        {
+            "id": 22,
+            "name": "bizdev_admin",
+            "label": "bizdev_admin",
+            "type": 1
+        },
+        {
+            "id": 23,
+            "name": "bizqa_crm",
+            "label": "bizqa_crm",
+            "type": 1
+        },
+        {
+            "id": 24,
+            "name": "bpbf_pm",
+            "label": "bpbf_pm",
+            "type": 1
+        },
+        {
+            "id": 25,
+            "name": "bizdev_be",
+            "label": "bizdev_be",
+            "type": 1
+        },
+        {
+            "id": 26,
+            "name": "bizdev_cd",
+            "label": "bizdev_cd",
+            "type": 1
+        },
+        {
+            "id": 27,
+            "name": "ADLS",
+            "label": "ADLS",
+            "type": 1
+        },
+        {
+            "id": 28,
+            "name": "bizbase_support",
+            "label": "bizbase_support",
+            "type": 1
+        },
+        {
+            "id": 29,
+            "name": "biz_arch",
+            "label": "biz_arch",
+            "type": 1
+        },
+        {
+            "id": 30,
+            "name": "bizbase_bill",
+            "label": "bizbase_bill",
+            "type": 1
+        },
+        {
+            "id": 31,
+            "name": "bizbase_msg",
+            "label": "bizbase_msg",
+            "type": 1
+        },
+        {
+            "id": 32,
+            "name": "bizbase_secure",
+            "label": "bizbase_secure",
+            "type": 1
+        },
+        {
+            "id": 33,
+            "name": "bizop_pl",
+            "label": "bizop_pl",
+            "type": 1
+        },
+        {
+            "id": 34,
+            "name": "bizop_com",
+            "label": "bizop_com",
+            "type": 1
+        },
+        {
+            "id": 35,
+            "name": "bizqa_cx",
+            "label": "bizqa_cx",
+            "type": 1
+        },
+        {
+            "id": 36,
+            "name": "bizqa_ka",
+            "label": "bizqa_ka",
+            "type": 1
+        },
+        {
+            "id": 37,
+            "name": "bizqa_base",
+            "label": "bizqa_base",
+            "type": 1
+        },
+        {
+            "id": 38,
+            "name": "bizdev_cpcfe",
+            "label": "bizdev_cpcfe",
+            "type": 1
+        },
+        {
+            "id": 39,
+            "name": "bizdev_kcfe",
+            "label": "bizdev_kcfe",
+            "type": 1
+        },
+        {
+            "id": 40,
+            "name": "bizwork",
+            "label": "bizwork",
+            "type": 1
+        }
+    ]
+}

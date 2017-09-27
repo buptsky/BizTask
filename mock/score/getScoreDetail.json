@@ -1,0 +1,27 @@
+{
+    "success": true,
+    "errno": 0,
+    "errmsg": "",
+    "data": [
+        {
+            "dateTime": "总计",
+            "score": 6,
+            "reason": null
+        },
+        {
+            "dateTime": "2017-07-05 16:32:16",
+            "score": 1,
+            "reason": "分享了一篇前后台分离的文章"
+        },
+        {
+            "dateTime": "2017-07-05 16:31:09",
+            "score": 3,
+            "reason": "来自【bizwork部门积分】"
+        },
+        {
+            "dateTime": "2017-06-20 11:31:11",
+            "score": 2,
+            "reason": "来自【积分】"
+        }
+    ]
+}

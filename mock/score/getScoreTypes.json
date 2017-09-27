@@ -1,0 +1,19 @@
+{
+	"success": true,
+    "errno": 0,
+    "errmsg": "",
+    "data": [
+        {
+            "scoreTypeId": 1,
+            "scoreType": "技术大牛"
+        },
+        {
+            "scoreTypeId": 2,
+            "scoreType": "分享大师"
+        },
+        {
+            "scoreTypeId": 3,
+            "scoreType": "跨组支持"
+        }
+    ]
+}

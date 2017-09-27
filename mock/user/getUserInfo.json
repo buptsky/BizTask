@@ -1,0 +1,74 @@
+{
+    "success": true,
+    "errno": 0,
+    "errmsg": "",
+    "data": {
+        "id": 0,
+        "employeeId": 207345,
+        "userName": "翟懿博",
+        "email": "zhaiyibo@sogou-inc.com",
+        "chineseName": "翟懿博",
+        "groupName": "bizdev_kcfe",
+        "groupId": 17,
+        "birthday": "09-09",
+        "telephone": "5631",
+        "mobile": "18600459639",
+        "role": 1,
+        "state": 1,
+        "level": "T2.2",
+        "job": 3,
+        "leaderId": 207345,
+        "group": "bizdev_kcfe",
+        "hcdescription": "FE",
+        "ipAddress": "10.129.148.89",
+        "isLeader": true,
+        "leaderName": "翟懿博",
+        "title": "开发工程师",
+        "userLastName": "博",
+        "leaderUserName": "zhaiyibo",
+        "groupauth": "#1#3#17#",
+        "subordinates": [
+            {
+                "employeeId": 208278,
+                "chineseName": "郭松"
+            },
+            {
+                "employeeId": 118064,
+                "chineseName": "梁宵"
+            },
+            {
+                "employeeId": 209423,
+                "chineseName": "孙灿"
+            },
+            {
+                "employeeId": 206516,
+                "chineseName": "唐金州"
+            },
+            {
+                "employeeId": 2717,
+                "chineseName": "吴博"
+            },
+            {
+                "employeeId": 208793,
+                "chineseName": "张邦成"
+            },
+            {
+                "employeeId": 3046,
+                "chineseName": "陈文超"
+            },
+            {
+                "employeeId": 3105,
+                "chineseName": "韩天翔"
+            },
+            {
+                "employeeId": 3107,
+                "chineseName": "肖桂兰"
+            },
+            {
+                "employeeId": 3299,
+                "chineseName": "李蒙"
+            }
+        ],
+        "groupemail": "bizdev_kcfe@sogou-inc.com"
+    }
+}

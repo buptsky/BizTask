@@ -1,0 +1,12 @@
+{
+    "success": true,
+    "errno": 0,
+    "errmsg": "",
+    "data": {
+        "acceptPeople": [
+            "林雄辉",
+            "贾来宾"
+        ],
+        "score": [ 6,2]
+    }
+}

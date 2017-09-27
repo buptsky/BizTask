@@ -1,0 +1,26 @@
+{
+    "success": true,
+    "errmsg": "",
+    "data": [
+        {
+            "id": 1,
+            "name": "示例任务",
+            "color": null
+        },
+        {
+            "id": 258,
+            "name": "123",
+            "color": "#1118C2"
+        },
+        {
+            "id": 317,
+            "name": "11258",
+            "color": "#59C203"
+        },
+        {
+            "id": 403,
+            "name": "重要",
+            "color": "rgb(89, 194, 3)"
+        }
+    ]
+}

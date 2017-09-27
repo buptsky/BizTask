@@ -1,0 +1,23 @@
+{
+    "success": 1,
+    "data": [{
+      "id": 1,
+      "taskId": 163,
+      "userId": 25,
+      "userName": "陈曦",
+      "content": "测试消息：第6部分已完成提交",
+      "createTime": "2016-09-12 16:09:06",
+      "isOperateUser": 1
+    },{
+      "id": 2,
+      "taskId": 164,
+      "userId": 25,
+      "userName": "陈曦",
+      "content": "测试消息：第7部分已完成提交",
+      "createTime": "2016-09-13 16:09:06",
+      "isOperateUser": 1
+    }],
+    "errorCode": 500,
+    "errorMsg": "系统异常",
+    "totalNumber": 10
+}
