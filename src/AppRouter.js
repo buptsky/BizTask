@@ -9,7 +9,6 @@ import AttentionTask from './components/task/AttentionTask';
 import Score from './components/score/Score';
 import Workflow from './components/workflow/Workflow';
 const {Header} = Layout;
-const charge = <h1>charge</h1>;
 
 const AppRouter = (
     <HashRouter>
