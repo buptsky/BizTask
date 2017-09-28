@@ -11,6 +11,7 @@ class TaskMenu extends React.Component {
             <Menu
                 defaultSelectedKeys={[activeKey]}
                 mode="inline"
+                style={{ height: '100%', borderRight: 0 }}
             >
                 <Menu.Item key="chargeTask">
                     <Link to="/task/charge">我负责的任务</Link>

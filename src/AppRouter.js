@@ -1,5 +1,5 @@
 import {
-    HashRouter, Route,Redirect
+    HashRouter, Route, Redirect, Link
 } from 'react-router-dom';
 import {Layout} from 'antd';
 import HeadMenu from './components/common/HeadMenu';
@@ -12,11 +12,14 @@ const {Header} = Layout;
 
 const AppRouter = (
     <HashRouter>
-        <Layout>
+        <Layout className="main-layout">
             <Header>
-                <span className="logo"/>
+                <Link to="/">
+                    <div className="logo"/>
+                </Link>
                 <HeadMenu/>
             </Header>
+            <Route exact path="/" render={()=>(<Redirect to="/workflow"/>)}/>
             <Route exact path="/task" render={()=>(<Redirect to="/task/charge"/>)}/>
             <Route path="/task/charge" component={ChargeTask}/>
             <Route path="/task/attention" component={AttentionTask}/>
