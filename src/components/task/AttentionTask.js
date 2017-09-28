@@ -1,10 +1,13 @@
-import { connect } from 'react-redux';
+import {Layout} from 'antd';
+const {Sider, Content} = Layout;
+import {connect} from 'react-redux';
 import {actionCreator, actionTypes} from '../../actions/action-creator';
+import TaskMenu from './TaskMenu';
 @connect(
     state => ({}),
     dispatch => ({
-        activeHeaderMenu: ()=>{
-            dispatch( actionCreator('change_header_menu', 'task') );
+        activeHeaderMenu: ()=> {
+            dispatch(actionCreator('change_header_menu', 'task'));
         }
     })
 )
@@ -12,12 +15,21 @@ class Task extends React.Component {
     constructor(props) {
         super(props);
     }
+
     componentDidMount() {
         this.props.activeHeaderMenu();
     }
+
     render() {
         return (
-            <h1>AttentionTask</h1>
+            <Layout>
+                <Sider>
+                    <TaskMenu activeKey="attentionTask"/>
+                </Sider>
+                <Content>
+                    <h1>attentionTask</h1>
+                </Content>
+            </Layout>
         );
     }
 }
