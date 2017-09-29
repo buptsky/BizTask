@@ -50,7 +50,7 @@ class WorkflowCreate extends React.Component {
          </FormItem>
          <FormItem>
            <Button type="primary" htmlType="submit">
-             Log in
+             确认
            </Button>
          </FormItem>
        </Form>
