@@ -23,7 +23,7 @@ class Task extends React.Component {
     render() {
         return (
             <Layout>
-                <Sider width={200} style={{ background: '#fff' }}>
+                <Sider>
                     <TaskMenu activeKey="attentionTask"/>
                 </Sider>
                 <Content>
