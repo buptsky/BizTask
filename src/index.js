@@ -1,5 +1,5 @@
 import 'antd/dist/antd.css';
-import '../asset/less/app.less';
+import '../asset/css/app.css';
 
 import ReactDom from 'react-dom';
 import {createStore, applyMiddleware, compose} from 'redux';

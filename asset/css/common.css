@@ -4,13 +4,6 @@ body {
 #app,.main-layout {
   height: 100%;
 }
-.common-bg {
-  background-color: @bg-color
-}
-.common-font-color {
-  color: @font-color
-}
-
 .p20 {
   padding: 20px;
 }
