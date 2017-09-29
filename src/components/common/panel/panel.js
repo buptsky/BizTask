@@ -3,7 +3,8 @@
  * 组件依赖react-transition-group动画库和antd组件库
  * 面板本身不具备关闭开启功能，该功能由父组件控制
  * props参数（可选）
- * panelTitle[string]面板类型/ cancel[Function]面板取消回调/ confirm[Function]面板确认回调
+ * panelTitle[string]面板类型/ cancel[Function]面板取消回调/
+ * confirm[Function]面板确认回调/ disableBtn[Boolean]是否展示操作按钮/
  */
 import React from 'react';
 import './panel.css';
@@ -82,10 +83,16 @@ class Panel extends React.Component {
               {/*暂时只支持传入一个react元素*/}
               {this.props.children}
             </div>
-            <div className="panel-footer">
-              <Button type="primary" style={commonStyle.button} onClick={this.confirm}>确认</Button>
-              <Button type="primary" onClick={this.close}>取消</Button>
-            </div>
+            {/*某些情况下不应该使用panel提供的确认取消按钮，如表单提交*/}
+            {
+              (this.props && this.props.disableBtn) ? '' :
+                (
+                  <div className="panel-footer">
+                    <Button type="primary" style={commonStyle.button} onClick={this.confirm}>确认</Button>
+                    <Button type="primary" onClick={this.close}>取消</Button>
+                  </div>
+                )
+            }
           </div>
         </CSSTransitionGroup>
       </div>
