@@ -33,6 +33,13 @@ const workflowConfig = {
       '本月': [moment().startOf('month'), moment().endOf('month')]
     },
     initialRange: [moment().subtract(3, 'month'), moment()]
+  },
+  tablePagination: {
+    defaultPageSize: 10,
+    pageSizeOptions: ['10', '20', '50'],
+    showSizeChanger: true,
+    showQuickJumper: true,
+    showTotal: (totalNumber) => `共${totalNumber}条`
   }
 };
 export default workflowConfig;

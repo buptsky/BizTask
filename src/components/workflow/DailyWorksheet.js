@@ -3,6 +3,7 @@ const {Sider, Content} = Layout;
 import WorkflowMenu from './WorkflowMenu';
 import WorkflowFilter from './WorkflowFilter';
 import WorkflowTable from './WorkflowTable';
+import WorkflowCreate from './WorkflowCreate';
 import {connect} from 'react-redux';
 import {actionCreator} from '../../actions/action-creator';
 
@@ -18,12 +19,25 @@ class DailyWorksheet extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: 'pending-apply'
+      current: 'pending-apply', // 申请类型tab栏
+      showCreatePanel: false
     }
   }
 
   componentDidMount() {
     this.props.activeHeaderMenu();
+  }
+
+  closePanel = () => { // 关闭创建流程面板
+    this.setState({
+      showCreatePanel: false
+    })
+  }
+
+  openPanel = () => { // 打开创建流程面板
+    this.setState({
+      showCreatePanel: true
+    })
   }
 
   handleClick = (e) => {
@@ -55,7 +69,12 @@ class DailyWorksheet extends React.Component {
               <Icon type="team" />所有人的申请
             </Menu.Item>
           </Menu>
-          <Button type="primary" icon="plus" style={{position: 'absolute', top: '30px', left: '475px'}}>新增申请</Button>
+          <Button type="primary" icon="plus" style={{position: 'absolute', top: '30px', left: '475px'}} onClick={this.openPanel}>新增申请</Button>
+          {
+            this.state.showCreatePanel ?
+              <WorkflowCreate close={this.closePanel}/>
+              : ''
+          }
           <WorkflowFilter/>
           <WorkflowTable/>
         </Content>

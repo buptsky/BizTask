@@ -1,6 +1,5 @@
 import 'antd/dist/antd.css';
 import '../asset/css/app.css';
-
 import ReactDom from 'react-dom';
 import {createStore, applyMiddleware, compose} from 'redux';
 import {Provider} from 'react-redux';
