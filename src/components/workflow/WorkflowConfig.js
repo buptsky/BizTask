@@ -1,7 +1,8 @@
 /*
- * 工作流参数配置
+ * 工作流参数配置 (部分参数值需要结合线上进行修改，第一版仅做调试使用）
  * workflowType   工作流程下拉列表参数
  * workflowStatus 流程状态下拉列表参数
+ * createType     新建工作流中可选的流程类型
  * startDateRange 发起时间datePicker初始参数
  * endDateRange   结束时间datePicker初始参数
  */
@@ -19,6 +20,10 @@ const workflowConfig = {
     {title: '已完成', value: 'done'},
     {title: '进行中', value: 'pending'},
     {title: '已取消', value: 'cancel'}
+  ],
+  createType: [
+    {title: 'svn仓库申请', value: 'svn-apply'},
+    {title: 'svn权限分配', value: 'svn-allot'}
   ],
   startDateRange: {
     quickPiker: {
