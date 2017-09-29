@@ -1,0 +1,8 @@
+#app .ant-layout{
+    background: white;
+}
+.ant-layout-has-sider .ant-layout-sider {
+    background: white;
+    border-right: 2px solid rgb(204, 204, 204);
+    width: 200px;
+}
