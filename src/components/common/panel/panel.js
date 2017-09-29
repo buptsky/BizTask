@@ -29,7 +29,6 @@ class Panel extends React.Component {
   constructor() {
     super();
     this.state = {
-      title: (this.props && this.props.panelTitle) || '创建流程',
       hover: false // 记录右上角按钮是否hover
     };
   }
@@ -53,7 +52,7 @@ class Panel extends React.Component {
     if (this.state.hover) {
       iconStyle = {
         ...commonStyle.icon,
-        transform: 'rotateZ(180deg)'
+        transform: 'rotateZ(90deg)'
       }
     } else {
       iconStyle = {
@@ -74,7 +73,7 @@ class Panel extends React.Component {
         >
           <div className="wrapper" key="panel">
             <div className="panel-header">
-              <div className="title">{this.state.title}</div>
+              <div className="title">{(this.props && this.props.panelTitle) || 'title'}</div>
               <Icon type="close" style={iconStyle} onMouseEnter={this.toggleHover} onMouseLeave={this.toggleHover}
                     onClick={this.close}/>
             </div>

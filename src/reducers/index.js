@@ -1,5 +1,5 @@
 const initialState = {
-    headerActiveKey: 'task'
+    headerActiveKey: 'workflow'
 };
 const reducer = (state = initialState, action) => {
     switch (action.type) {
