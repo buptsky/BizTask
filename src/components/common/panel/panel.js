@@ -22,7 +22,7 @@ const commonStyle = {
   button: {
     marginRight: '20px'
   }
-}
+};
 
 class Panel extends React.Component {
 
@@ -37,15 +37,15 @@ class Panel extends React.Component {
   // 关闭回调
   close = () => {
     (this.props && this.props.cancel) ? this.props.cancel() : '';
-  }
+  };
   // 确认回调
   confirm = () => {
     (this.props && this.props.confirm) ? this.props.confirm() : '';
-  }
+  };
   // 关闭按钮动态效果
   toggleHover = () => {
     this.setState({hover: !this.state.hover})
-  }
+  };
 
   render() {
     // 关闭按钮的动态改变style
