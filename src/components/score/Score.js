@@ -1,5 +1,5 @@
 import { connect } from 'react-redux';
-import {actionCreator, actionTypes} from '../../actions/action-creator';
+import {actionCreator, actionTypes} from '../../action-creator';
 @connect(
     state => ({}),
     dispatch => ({
