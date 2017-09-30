@@ -10,13 +10,11 @@ import moment from 'moment';
 
 const workflowConfig = {
   workflowType: [
-    {title: '全部', value: 'search-all'},
     {title: 'svn仓库申请', value: 'svn-apply'},
     {title: 'svn权限分配', value: 'svn-allot'},
     {title: '新员工入职', value: 'staff-entry'}
   ],
   workflowStatus: [
-    {title: '无限制', value: 'all'},
     {title: '已完成', value: 'done'},
     {title: '进行中', value: 'pending'},
     {title: '已取消', value: 'cancel'}

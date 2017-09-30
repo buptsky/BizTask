@@ -51,11 +51,12 @@ class ApplyFilter extends React.Component {
     return (
       <Form layout="inline" onSubmit={this.handleSubmit} style={{padding: '20px 10px',width: '80%'}}>
         <FormItem label="工作流程">
-          {getFieldDecorator('workflow-type', {initialValue: '全部'})(
+          {getFieldDecorator('workflow-type', {initialValue: 'search-all'})(
             <Select style={{ width: 120 }}>
+              <Option style={{ width: 120 }} key="search-all" value="search-all">全部</Option>
               {
                 config.workflowType.map((type)=> {
-                  return (<Option style={{ width: 120 }} key={type.value}>{type.title}</Option>);
+                  return (<Option key={type.value} value={type.value}>{type.title}</Option>);
                 })
               }
             </Select>
@@ -72,11 +73,12 @@ class ApplyFilter extends React.Component {
           )}
         </FormItem>
         <FormItem label="状态">
-          {getFieldDecorator('workflow-type', {initialValue: '无限制'})(
+          {getFieldDecorator('workflow-status', {initialValue: 'all'})(
             <Select style={{ width: 120 }}>
+              <Option style={{ width: 120 }} key="all" value="all">无限制</Option>
               {
                 config.workflowStatus.map((type)=> {
-                  return (<Option style={{ width: 120 }} key={type.value}>{type.title}</Option>);
+                  return (<Option key={type.value}>{type.title}</Option>);
                 })
               }
             </Select>
