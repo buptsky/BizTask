@@ -1,7 +1,7 @@
+import {actionCreator, actionTypes} from '../../action-creator';
 import {Layout} from 'antd';
 const {Sider, Content} = Layout;
 import {connect} from 'react-redux';
-import {actionCreator, actionTypes} from '../../actions/action-creator';
 import TaskMenu from './TaskMenu';
 @connect(
     state => ({}),
