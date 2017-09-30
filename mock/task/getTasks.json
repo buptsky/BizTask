@@ -29,6 +29,25 @@
                 "status": 0,
                 "createTime": "2016-09-12 16:09:06"
             }
+        },{
+            "taskId": "03",
+            "taskName": "任务3",
+            "chargeUser": 1,
+            "startTime": "09.09",
+            "endTime": "09.20",
+            "warning": false,
+            "tagName": "部门任务",
+            "followUsers": [{
+                "id": 1,
+                "name": "翟懿博",
+                "displayName": "博"
+            }, {
+                "id": 2,
+                "name": "梁宵",
+                "displayName": "宵"
+            }],
+            "chargeUserName": "翟懿博",
+            "message": null
         }]
     }, {
         "name": "DOING",

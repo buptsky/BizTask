@@ -13,6 +13,10 @@
   display: inline-block;
   width: 300px;
   margin-left: 30px;
+  background: @grey-4;
+  border-radius: 5px;
+  padding: 2px 8px 8px;
+  vertical-align: top;
 }
 
 .task-list:first-child {
@@ -23,13 +27,50 @@
   height: 35px;
   line-height: 35px;
   font-size: 1.2em;
+  font-weight: bold;
   padding: 0 10px;
-  background-color: @primary-color;
-  color: @text-color-dark;
+  color: @text-color;
+}
+.task-card,.task-card-placeholder {
+  display: block;
+  height: 64px;
+  border-radius: 5px;
+  padding: 4px;
+  margin-top: 10px;
+}
+.task-card-placeholder {
+  background: @grey-7;
+}
+.task-card {
+  cursor: pointer;
+  color: @text-color;
+  background: white;
+}
+.task-card.dragging {
+  background: @grey-7;
+}
+.task-card:first-child {
+  margin-top: 0;
+}
+.task-card-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .task-card-time {
   background: @green-5;
   color: @text-color-dark;
   padding: 2px 5px;
   border-radius: 5px;
+}
+.task-card-member {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  line-height: 30px;
+  border-radius: 50%;
+  background: @cyan-5;
+  text-align: center;
+  color:@text-color-dark;
+  margin-left: 2px;
 }
