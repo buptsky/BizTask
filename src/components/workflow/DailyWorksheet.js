@@ -11,7 +11,7 @@ import {actionCreator} from '../../action-creator';
   state => ({}),
   dispatch => ({
     activeHeaderMenu: ()=> {
-      dispatch(actionCreator('change_header_menu', 'workflow.less'));
+      dispatch(actionCreator('change_header_menu', 'workflow'));
     }
   })
 )
