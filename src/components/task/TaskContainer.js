@@ -12,7 +12,6 @@ function getPlaceholderIndex(y) {
   } else {
     placeholderIndex = Math.floor((yPos - CARD_HEIGHT / 2) / (CARD_HEIGHT + CARD_MARGIN));
   }
-  console.log(placeholderIndex)
   return placeholderIndex;
 }
 
@@ -73,7 +72,7 @@ class TaskContainer extends React.Component {
     });
     // if placeholder index is greater than array.length, display placeholder as last
     if (isPlaceHold) {
-      cardList.push(<div key="placeholder" className="item placeholder"/>);
+      cardList.push(<div key="placeholder" className="task-card-placeholder"/>);
     }
     return connectDropTarget(
       <div className="task-list-container">
