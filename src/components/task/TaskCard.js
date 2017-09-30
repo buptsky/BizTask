@@ -20,7 +20,7 @@ class TaskCard extends React.Component {
           <Icon type="close"/>
         </div>
         <div className="task-card-second-row">
-          <span className="task-card-time">{taskInfo.startTime}-{taskInfo.endTime}</span>
+          <span className="task-card-time"><Icon type="clock-circle-o" />{taskInfo.startTime}-{taskInfo.endTime}</span>
           <span className="task-card-members">
               {this.renderMembers(taskInfo.followUsers)}
           </span>
