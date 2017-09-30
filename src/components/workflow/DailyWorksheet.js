@@ -11,7 +11,7 @@ import {actionCreator} from '../../action-creator';
   state => ({}),
   dispatch => ({
     activeHeaderMenu: ()=> {
-      dispatch(actionCreator('change_header_menu', 'workflow'));
+      dispatch(actionCreator('change_header_menu', 'workflow.less'));
     }
   })
 )
@@ -49,7 +49,7 @@ class DailyWorksheet extends React.Component {
 
   render() {
     return (
-      <Layout>
+      <Layout className="workflow">
         <Sider width={200} style={{ background: '#fff', borderRight: '2px solid #ccc' }}>
           <WorkflowMenu activeKey="daily-worksheet"/>
         </Sider>

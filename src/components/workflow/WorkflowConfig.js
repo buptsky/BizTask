@@ -1,10 +1,11 @@
 /*
  * 工作流参数配置 (部分参数值需要结合线上进行修改，第一版仅做调试使用）
- * workflowType   工作流程下拉列表参数
- * workflowStatus 流程状态下拉列表参数
- * createType     新建工作流中可选的流程类型
- * startDateRange 发起时间datePicker初始参数
- * endDateRange   结束时间datePicker初始参数
+ * workflowType     工作流程下拉列表参数
+ * workflowStatus   流程状态下拉列表参数
+ * createType       新建工作流中可选的流程类型
+ * startDateRange   发起时间datePicker初始参数
+ * endDateRange     结束时间datePicker初始参数
+ * tablePagination  表格分页基础配置
  */
 import moment from 'moment';
 
