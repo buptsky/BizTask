@@ -1,4 +1,4 @@
-import {actionCreator, actionTypes} from '../../action-creator';
+import {actionCreator, actionTypes} from '../../actions/action-creator';
 import {Layout} from 'antd';
 const {Sider, Content} = Layout;
 import {connect} from 'react-redux';

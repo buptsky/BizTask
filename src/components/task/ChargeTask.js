@@ -1,26 +1,28 @@
-import {actionCreator, actionTypes} from '../../action-creator';
+import {actionCreator, actionTypes} from '../../actions/action-creator';
 import {Layout} from 'antd';
+import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import TaskMenu from './TaskMenu';
-import TaskContent from "./TaskContent";
+import TaskContent from './TaskContent';
+import * as CommonActions from '../../actions/common';
 
 const {Sider, Content} = Layout;
 
-@connect(
-  state => ({}),
-  dispatch => ({
-    activeHeaderMenu: () => {
-      dispatch(actionCreator('change_header_menu', 'task'));
-    }
-  })
-)
+function mapStateToProps(state) {
+    return {};
+}
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators(CommonActions, dispatch);
+}
+@connect(mapStateToProps,mapDispatchToProps)
 class Task extends React.Component {
   constructor(props) {
     super(props);
   }
 
   componentDidMount() {
-    this.props.activeHeaderMenu();
+    this.props.activeHeaderMenu('task');
   }
 
   render() {

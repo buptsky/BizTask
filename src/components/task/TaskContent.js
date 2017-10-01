@@ -1,20 +1,33 @@
 import {Spin} from 'antd';
+import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import TaskContainer from './TaskContainer';
 import {DragDropContext} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
+import * as TaskActions from '../../actions/task';
 
+function mapStateToProps(state) {
+    return {
+        isLoading: state.task.isLoading,
+        taskLists: state.task.taskLists
+    };
+}
+
+function mapDispatchToProps(dispatch) {
+    return bindActionCreators(TaskActions, dispatch);
+}
+@connect(mapStateToProps,mapDispatchToProps)
 @DragDropContext(HTML5Backend)
 class TaskContent extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      loading: true,
-      dataSource: []
-    };
   }
 
   componentDidMount() {
-    this.getTasks();
+    this.props.getTasks({
+        userType: 0,  //我负责的任务0，我关注的任务1
+        viewType: 0   //标签视图，将要废弃
+    });
   }
 
   getTasks = () => {
@@ -22,18 +35,9 @@ class TaskContent extends React.Component {
       userType: 0,  //我负责的任务0，我关注的任务1
       viewType: 0   //标签视图，将要废弃
     };
-    fetchData({
-      url: '/task/getTasks.do',
-      data: queryArgs
-    }).then((data) => {
-      this.setState({
-        loading: false,
-        dataSource: data
-      });
-    });
   };
-  renderTasks = (dataSource) => {
-    return dataSource.map((taskList) => {
+  renderTasks = (taskLists) => {
+    return taskLists.map((taskList) => {
       return (
         <div key={taskList.name} className="task-list">
           <div className="task-list-title">
@@ -46,10 +50,10 @@ class TaskContent extends React.Component {
   };
 
   render() {
-    const {loading, dataSource} = this.state;
+    const {isLoading, taskLists} = this.props;
     return (
       <div>
-        {loading ? <Spin tip="Loading..."/> : this.renderTasks(dataSource)}
+        {isLoading ? <Spin tip="Loading..."/> : this.renderTasks(taskLists)}
       </div>
     );
   }
