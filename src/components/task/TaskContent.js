@@ -37,13 +37,17 @@ class TaskContent extends React.Component {
     };
   };
   renderTasks = (taskLists) => {
+    const me = this;
     return taskLists.map((taskList) => {
       return (
         <div key={taskList.name} className="task-list">
           <div className="task-list-title">
             {taskList.name}
           </div>
-          <TaskContainer dataSource={taskList.taskList}/>
+          <TaskContainer
+            moveCard={me.props.moveCard}
+            x={taskList.name}
+            dataSource={taskList.taskList}/>
         </div>
         )
     });
@@ -52,7 +56,7 @@ class TaskContent extends React.Component {
   render() {
     const {isLoading, taskLists} = this.props;
     return (
-      <div>
+      <div style={{height:'100%',display:'flex'}}>
         {isLoading ? <Spin tip="Loading..."/> : this.renderTasks(taskLists)}
       </div>
     );

@@ -1,12 +1,13 @@
 import {Icon} from 'antd';
 import {ItemTypes} from './Constants';
 import {DragSource} from 'react-dnd';
-import { getEmptyImage } from 'react-dnd-html5-backend';
 
 const spec = {
   beginDrag(props,monitor,component) {
     return {
-      taskId: props.taskInfo.taskId
+      taskId: props.taskInfo.taskId,
+      x: props.x,
+      y: props.y
     };
   }
 };
@@ -14,7 +15,6 @@ const spec = {
 function collect(connect, monitor) {
   return {
     connectDragSource: connect.dragSource(),
-    connectDragPreview: connect.dragPreview(),
     isDragging: monitor.isDragging()
   }
 }
@@ -23,11 +23,6 @@ function collect(connect, monitor) {
 class TaskCard extends React.Component {
   constructor(props) {
     super(props);
-  }
-  componentDidMount() {
-    this.props.connectDragPreview(getEmptyImage(), {
-      captureDraggingState: true
-    });
   }
   renderMembers = (members) => {
     return members.map((member) => {
@@ -38,7 +33,7 @@ class TaskCard extends React.Component {
   render() {
     const {connectDragSource,isDragging,taskInfo} = this.props;
     return connectDragSource(
-      <div className="task-card" id={taskInfo.taskId}>
+      <div className="task-card" id={taskInfo.taskId} style={{display:0.5}}>
         <div className="task-card-row">
           <span className="task-card-title">{taskInfo.taskName}</span>
           <Icon type="close"/>

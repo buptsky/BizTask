@@ -8,15 +8,16 @@
   vertical-align: middle;
   margin-top: 7px;
 }
-
 .task-list {
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
   width: 300px;
   margin-left: 30px;
   background: @grey-4;
   border-radius: 5px;
   padding: 2px 8px 8px;
   vertical-align: top;
+  height: 100%;
 }
 
 .task-list:first-child {
@@ -30,6 +31,10 @@
   font-weight: bold;
   padding: 0 10px;
   color: @text-color;
+}
+.task-list-container {
+  flex-grow: 1;
+  overflow-y: auto;
 }
 .task-card,.task-card-placeholder {
   display: block;

@@ -4,7 +4,7 @@ import {DropTarget} from 'react-dnd';
 
 //在DropTarget的hover中实时获取placeholder的index
 function getPlaceholderIndex(y) {
-  // shift placeholder if y position more than card height / 2
+  // 超过card的一半高度，则返回当前card的index，方便在其后面插入placeholder
   const yPos = y - OFFSET_HEIGHT;
   let placeholderIndex;
   if (yPos < CARD_HEIGHT / 2) {
@@ -16,8 +16,25 @@ function getPlaceholderIndex(y) {
 }
 
 const spec = {
-  drop(props) {
+  drop(props, monitor, component) {
+    document.getElementById(monitor.getItem().taskId).style.display = 'block';
+    const { placeholderIndex } = component.state;
+    const lastX = monitor.getItem().x;
+    const lastY = monitor.getItem().y;
+    const nextX = props.x;
+    let nextY = placeholderIndex;
 
+    if (lastY > nextY) { // move top
+      nextY += 1;
+    } else if (lastX !== nextX) { // insert into another list
+      nextY += 1;
+    }
+
+    if (lastX === nextX && lastY === nextY) { // if position equel
+      return;
+    }
+
+    props.moveCard({lastX, lastY, nextX, nextY});
   },
   hover(props, monitor, component) {
     // defines where placeholder is rendered
@@ -48,8 +65,9 @@ class TaskContainer extends React.Component {
   }
 
   render() {
-    const {connectDropTarget, isOver, canDrop, dataSource} = this.props;
+    const {connectDropTarget, isOver, canDrop, dataSource,x} = this.props;
     const {placeholderIndex} = this.state;
+    const placeHolder = <div key="placeholder" className="task-card-placeholder"/>;
     let isPlaceHold = false;
     let cardList = [];
     dataSource.forEach((task, i) => {
@@ -62,17 +80,22 @@ class TaskContainer extends React.Component {
         }
       }
       if (task !== undefined) {
+        //x是所在分类，y是当前card在当前分类中的index
         cardList.push(
-          <TaskCard key={task.taskId} taskInfo={task}/>
+          <TaskCard x={x} y={i} key={task.taskId} taskInfo={task}/>
         );
       }
       if (isOver && canDrop && placeholderIndex === i) {
-        cardList.push(<div key="placeholder" className="task-card-placeholder"/>);
+        cardList.push(placeHolder);
       }
     });
-    // if placeholder index is greater than array.length, display placeholder as last
+    // placeholder的index大于数组长度，则在最后追加placeholder
     if (isPlaceHold) {
-      cardList.push(<div key="placeholder" className="task-card-placeholder"/>);
+      cardList.push(placeHolder);
+    }
+    // 拖拽时当前分类中列表为空
+    if (isOver && canDrop && dataSource.length === 0) {
+      cardList.push(placeHolder);
     }
     return connectDropTarget(
       <div className="task-list-container">

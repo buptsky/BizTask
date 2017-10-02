@@ -18,6 +18,24 @@ export function task(state = initialState, action) {
                 taskLists: action.payload,
                 isLoading: false
             };
+      case actionTypes.move_task_card:
+        const newLists = [...state.taskLists];
+        const { lastX, lastY, nextX, nextY } = action.payload;
+        const sourceList = _.find(newLists,{name:lastX}).taskList;
+        const targetList = _.find(newLists,{name:nextX}).taskList;
+        if (lastX === nextX) {
+          //剪切lastY至nextY
+          sourceList.splice(nextY, 0, sourceList.splice(lastY, 1)[0]);
+        } else {
+          // 目标x添加lastY
+          targetList.splice(nextY, 0, sourceList[lastY]);
+          // 删除原来的lastY
+          sourceList.splice(lastY, 1);
+        }
+        return {
+          ...state,
+          taskLists: newLists
+        }
         default:
             return state;
     }
