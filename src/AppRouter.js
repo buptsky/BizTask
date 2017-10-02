@@ -21,7 +21,6 @@ const AppRouter = (
       </Header>
       <Route exact path="/" render={() => (<Redirect to="/workflow"/>)}/>
       {/*task*/}
-      <Route exact path="/task" render={() => (<Redirect to="/task/charge"/>)}/>
       <Route path="/task/charge" component={ChargeTask}/>
       <Route path="/task/attention" component={AttentionTask}/>
       {/*workflow*/}

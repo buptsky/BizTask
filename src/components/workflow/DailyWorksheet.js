@@ -5,7 +5,7 @@ import WorkflowFilter from './WorkflowFilter';
 import WorkflowTable from './WorkflowTable';
 import WorkflowCreate from './WorkflowCreate';
 import {connect} from 'react-redux';
-import {actionCreator} from '../../action-creator';
+import {actionCreator} from '../../actions/action-creator';
 
 @connect(
   state => ({}),

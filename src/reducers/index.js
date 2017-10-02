@@ -1,15 +1,9 @@
-const initialState = {
-    headerActiveKey: 'workflow'
-};
-const reducer = (state = initialState, action) => {
-    switch (action.type) {
-        case 'change_header_menu':
-            return {
-                ...state,
-                headerActiveKey: action.payload
-            };
-        default:
-            return state;
-    }
-};
-export default reducer;
+import { combineReducers } from 'redux';
+
+import { common } from './common';
+import { task } from './task';
+
+export default combineReducers({
+    common,
+    task
+});
