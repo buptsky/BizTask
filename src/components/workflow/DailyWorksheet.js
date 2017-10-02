@@ -19,13 +19,16 @@ class DailyWorksheet extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      current: 'pending-apply', // 申请类型tab栏
-      showCreatePanel: false
+      currentMenu: 'pending-apply', // 申请类型tab栏
+      showCreatePanel: false, // 控制流程面板显隐
+      filterType: 'pending-apply' // 筛选组件类型
     }
   }
 
   componentDidMount() {
     this.props.activeHeaderMenu();
+    console.log(this.workFilter);
+    // this.workFilter.collectArgs();
   }
 
   closePanel = () => { // 关闭创建流程面板
@@ -39,24 +42,26 @@ class DailyWorksheet extends React.Component {
       showCreatePanel: true
     })
   }
-
-  handleClick = (e) => {
+  // 切换申请类型菜单
+  switchMenu = (e) => {
+    // 这里直接使用menu的key值是由于，key与filter组件接受的type类型是一一对应的
+    this.setState({filterType: e.key})
     console.log('click ', e);
     this.setState({
-      current: e.key,
+      currentMenu: e.key,
     });
   }
 
   render() {
     return (
-      <Layout>
+      <Layout className="workflow">
         <Sider width={200} style={{ background: '#fff', borderRight: '2px solid #ccc' }}>
           <WorkflowMenu activeKey="daily-worksheet"/>
         </Sider>
         <Content style={{padding: '20px', position: 'relative', backgroundColor: '#fff'}}>
           <Menu
-            onClick={this.handleClick}
-            selectedKeys={[this.state.current]}
+            onClick={this.switchMenu}
+            selectedKeys={[this.state.currentMenu]}
             mode="horizontal"
           >
             <Menu.Item key="pending-apply">
@@ -75,7 +80,7 @@ class DailyWorksheet extends React.Component {
               <WorkflowCreate close={this.closePanel}/>
               : ''
           }
-          <WorkflowFilter/>
+          <WorkflowFilter type={this.state.filterType} ref={(filter) => {this.workFilter = filter;}}/>
           <WorkflowTable/>
         </Content>
       </Layout>

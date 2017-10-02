@@ -1,0 +1,60 @@
+.workflow {
+  .timeline {
+    display: inline-block;
+    vertical-align: top;
+    .line-head {
+      .line-split {
+        width: 350px;
+        position: absolute;
+        top: 8px;
+        left: 12px;
+        border-top: 1px solid #ccc;
+      }
+      .line-title {
+        position: relative;
+        padding: 0 5px;
+        left: 110px;
+        top: -3px;
+        display: inline-block;
+        background-color: #fff;
+      }
+      &.success {
+        color: @green-6;
+        .line-split {
+          border-top: 1px solid @green-6;
+        }
+      }
+      &.fail {
+        color: @red-6;
+        .line-split {
+          border-top: 1px solid @red-6;
+        }
+      }
+      &.pending {
+        color: @blue-6;
+        .line-split {
+          border-top: 1px solid @blue-6;
+        }
+      }
+    }
+    .line-check {
+      padding: 5px 0;
+      span {
+        font-weight: 500;
+        margin-right: 5px;
+        color: @blue-6  ;
+      }
+    }
+    .line-remark {
+      width: 350px;
+      line-height: 25px;
+      background-color: #e9e9e9;
+      border-radius: 5px;
+      padding: 5px 8px;
+    }
+  }
+}
+// 调整checkbox-group 中的checkbox 的 margin , 修复多行展示不对齐问题
+.ant-checkbox-group .ant-checkbox-group-item.ant-checkbox-wrapper {
+  margin-left: 0;
+}
