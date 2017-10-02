@@ -92,7 +92,7 @@ class WorkflowTable extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state =  {
+    this.state = {
       current: 1
     }
   }
@@ -110,6 +110,7 @@ class WorkflowTable extends React.Component {
   render() {
     return (
       <Table
+        style={{paddingTop: '20px'}}
         columns={columns}
         dataSource={data}
         pagination={{

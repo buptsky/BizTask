@@ -1,5 +1,7 @@
 import { connect } from 'react-redux';
 import {actionCreator, actionTypes} from '../../action-creator';
+import {Select} from 'antd';
+const Option = Select.Option;
 @connect(
     state => ({}),
     dispatch => ({
@@ -17,7 +19,7 @@ class Score extends React.Component {
     }
     render() {
         return (
-            <h1>hello score</h1>
+         <h1>hello score</h1>
         );
     }
 }

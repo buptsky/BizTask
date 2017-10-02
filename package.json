@@ -13,7 +13,7 @@
   "remark": "2017-09-27",
   "license": "ISC",
   "dependencies": {
-    "antd": "^2.10.0",
+    "antd": "^2.13.4",
     "axios": "^0.15.3",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
