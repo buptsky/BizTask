@@ -45,7 +45,7 @@ class TaskContent extends React.Component {
             {taskList.name}
           </div>
           <TaskContainer
-            moveCard={me.props.moveCard}
+            moveTask={me.props.moveTask}
             x={taskList.name}
             dataSource={taskList.taskList}/>
         </div>
