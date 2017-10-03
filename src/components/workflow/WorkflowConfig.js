@@ -8,6 +8,8 @@
  * tablePagination  表格分页基础配置
  */
 import moment from 'moment';
+import 'moment/locale/zh-cn';
+moment.locale('zh-cn');
 
 const workflowConfig = {
   workflowType: [
@@ -16,9 +18,9 @@ const workflowConfig = {
     {title: '新员工入职', value: 'staff-entry'}
   ],
   workflowStatus: [
-    {title: '已完成', value: 'done'},
-    {title: '进行中', value: 'pending'},
-    {title: '已取消', value: 'cancel'}
+    {title: '已完成', value: '1'},
+    {title: '进行中', value: '2'},
+    {title: '已取消', value: '3'}
   ],
   createType: [
     {title: 'svn仓库申请', value: 'svn-apply'},

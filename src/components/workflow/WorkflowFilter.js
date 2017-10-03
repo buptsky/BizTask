@@ -1,5 +1,5 @@
 /*
- * 组件用于对任务列表进行筛选
+ * 组件用于对申请列表进行筛选
  * 组件维护自身的显示隐藏
  * 接受一个可选参数
  * ①type 筛选申请种类
@@ -9,7 +9,6 @@
 
 import {Form, Button, Select, DatePicker, Input} from 'antd';
 import config from './WorkflowConfig';
-import moment from 'moment';
 
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -23,21 +22,32 @@ class ApplyFilter extends React.Component {
   handleSubmit = (e) => {
     e && e.preventDefault();
     const args = this.props.form.getFieldsValue();
-    if (args['end-rangeTime']) {
-      args.beginDate = moment(args['end-rangeTime'][0]).format('YYYY-MM-DD');
-      args.endDate = moment(args['end-rangeTime'][1]).format('YYYY-MM-DD');
-    }
+    let flowTypeId = '0'; // 工作流程id
     console.log(args);
-    // if (args.rangeTime) {
-    //   args.beginDate = moment(args.rangeTime[0]).format('YYYY-MM-DD');
-    //   args.endDate = moment(args.rangeTime[1]).format('YYYY-MM-DD');
-    // }
-    // delete args.rangeTime;
-    // const selectedNodeId = this.props.selectedNodeId;
-    // args.planId = selectedNodeId.split('-')[0] || '';
-    // args.groupId = selectedNodeId.split('-')[1] || '';
-    // args.pageNo = 1;
-    // this.props.searchIdeaList(args);
+    // 分配工作流程id
+    // 新员工入职选项存在一些问题情况，之后复核
+    if (args['workflow-type'] === 'search-all') {
+      flowTypeId = '0';
+    } else if (args['workflow-type'] === 'svn-apply') {
+      flowTypeId = '101';
+    } else if (args['workflow-type'] === 'svn-allot'){
+      flowTypeId = '102';
+    }
+    // 获取发起时间段
+    args.startTime = [moment(args['start-rangeTime'][0]).format('YYYY-MM-DD'), moment(args['start-rangeTime'][1]).format('YYYY-MM-DD')].join(',');
+    args.endTime = [moment(args['end-rangeTime'][0]).format('YYYY-MM-DD'), moment(args['end-rangeTime'][1]).format('YYYY-MM-DD')].join(',');
+    const submitArgs = {
+      flowTypeId: flowTypeId,
+      flowName: args['workflow-name'],
+      status: args['workflow-status'],
+      startTime: args['startTime'],
+      endTime: args['endTime'],
+      pageSize: config.tablePagination.defaultPageSize.toString(),
+      pageNo: 1,
+      isDone: true, // 这个字段不知道什么用
+      employee: args['workflow-employee'] ? args['workflow-employee'] : ''
+    };
+    this.props.filterChange(submitArgs);
   };
 
   render() {
@@ -68,16 +78,16 @@ class ApplyFilter extends React.Component {
               this.props.type === 'all-apply' ?
                 (
                   <FormItem label="发起人">
-                    {getFieldDecorator('workflow-initiator', {initialValue: ''})(
+                    {getFieldDecorator('workflow-employee', {initialValue: ''})(
                       <Input/>
                     )}
                   </FormItem>
                 ) : null
             }
             <FormItem label="状态">
-              {getFieldDecorator('workflow-status', {initialValue: 'all'})(
+              {getFieldDecorator('workflow-status', {initialValue: '0'})(
                 <Select style={{width: 120}}>
-                  <Option style={{width: 120}} key="all" value="all">无限制</Option>
+                  <Option style={{width: 120}} key="all" value="0">无限制</Option>
                   {
                     config.workflowStatus.map((type) => {
                       return (<Option key={type.value}>{type.title}</Option>);

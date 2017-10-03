@@ -175,7 +175,7 @@ class WorkflowCreate extends React.Component {
           </FormItem>
           <FormItem label="备注" {...formItemLayout}>
             {getFieldDecorator('remark', {initialValue: ''})(
-              <TextArea rows={4} style={{resize: 'none'}}></TextArea>
+                <TextArea rows={4} style={{resize: 'none'}}></TextArea>
             )}
           </FormItem>
           <FormItem {...formItemLayout2}>
@@ -187,7 +187,11 @@ class WorkflowCreate extends React.Component {
             </Button>
           </FormItem>
         </Form>
-        <WorkflowTimeline data={nodeList}/>
+        <div className="time-line-wrapper">
+          <WorkflowTimeline data={nodeList}/>
+          {/*由于难以达到要求的表单布局，此项目单独拆开，表单提交时记得加上*/}
+          <TextArea rows={4} className="note" placeholder="你可以在这里留言"/>
+        </div>
       </Panel>
     );
   }
