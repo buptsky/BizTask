@@ -1,8 +1,14 @@
 import {actionTypes} from "../actions/action-creator";
+import {TaskPanelTypes} from '../components/task/Constants';
 
 const initialState = {
   taskLists: [],
-  isLoading: true
+  isLoading: true,
+  taskPanel: {
+    isShow: false,
+    title: 'Title',
+    taskId: undefined
+  }
 };
 
 export function task(state = initialState, action) {
@@ -45,6 +51,23 @@ export function task(state = initialState, action) {
       return {
         ...state,
         taskLists: listForDelete
+      }
+    case actionTypes.open_task_panel:
+      const args = action.payload;
+      return {
+        ...state,
+        taskPanel: {
+          isShow: true,
+          title: args.type === TaskPanelTypes.NEW ? '创建任务' : '任务详情',
+          taskId: args.taskId
+        }
+      }
+    case actionTypes.close_task_panel:
+      return {
+        ...state,
+        taskPanel: {
+          isShow: false
+        }
       }
     default:
       return state;

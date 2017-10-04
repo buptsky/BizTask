@@ -2,6 +2,7 @@ import {Icon, Modal} from 'antd';
 import {ItemTypes} from './Constants';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import {TaskPanelTypes} from './Constants';
 import {DragSource} from 'react-dnd';
 
 const confirm = Modal.confirm;
@@ -40,9 +41,7 @@ function mapDispatchToProps(dispatch) {
 class TaskCard extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      currentTask: null
-    };
+    this.toDeleteTask = {};
   }
 
   //render参与人
@@ -54,11 +53,9 @@ class TaskCard extends React.Component {
   //点击"删除"按钮，弹出提示框
   showDeleteConfirm = (task) => {
     return (e) => {
-      this.setState({
-        currentTask: task
-      });
+      this.toDeleteTask = task;
       confirm({
-        title: `删除任务`,
+        title: '删除任务',
         content: `确定要删除${task.taskName}吗?`,
         okText: '确定',
         okType: 'danger',
@@ -73,18 +70,24 @@ class TaskCard extends React.Component {
   //确认删除，当前任务的x,y作为参数，前端缓存删除，不等请求响应
   deleteTask = () => {
     const {x, y} = this.props;
-    const taskId = this.state.currentTask.taskId;
+    const taskId = this.toDeleteTask.taskId;
     const delteArgs = {x, y, taskId};
     this.props.deleteTask(delteArgs);
   };
   //编辑任务
-  editTask = () => {
-    console.log('edit');
+  editTask = (task) => {
+    return (e) => {
+      this.props.openTaskPanel({
+        type: TaskPanelTypes.EDIT,
+        taskId: task.taskId
+      });
+    }
   };
+
   render() {
     const {connectDragSource, taskInfo} = this.props;
     return connectDragSource(
-      <div className="task-card" id={taskInfo.taskId} onClick={this.editTask}>
+      <div className="task-card" id={taskInfo.taskId} onClick={this.editTask(taskInfo)}>
         <div className="task-card-row">
           <span className="task-card-title">{taskInfo.taskName}</span>
           <Icon type="close" onClick={this.showDeleteConfirm(taskInfo)}/>

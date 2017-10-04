@@ -38,3 +38,14 @@ export function deleteTask(args) {
     dispatch(actionCreator(actionTypes.delete_task, args));
   };
 };
+
+export function openTaskPanel(args) {
+  return (dispatch) => {
+    dispatch(actionCreator(actionTypes.open_task_panel, args));
+  };
+}
+export function closeTaskPanel(args) {
+  return (dispatch) => {
+    dispatch(actionCreator(actionTypes.close_task_panel, args));
+  };
+}
