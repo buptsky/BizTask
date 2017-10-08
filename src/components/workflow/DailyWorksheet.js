@@ -28,7 +28,8 @@ class DailyWorksheet extends React.Component {
     this.state = {
       currentMenu: 'pending-apply', // 申请类型tab栏
       showCreatePanel: false, // 控制流程面板显隐
-      filterType: 'pending-apply' // 筛选组件类型
+      filterType: 'pending-apply', // 筛选组件类型
+      flowData: {} // 查看已有的流程数据
     }
   }
 
@@ -52,7 +53,6 @@ class DailyWorksheet extends React.Component {
   switchMenu = (e) => {
     // 这里直接使用menu的key值是由于，key与filter组件接受的type类型是一一对应的
     let typeId = 0;
-    console.log('click', e);
     switch (e.key) {
       case 'pending-apply':
         typeId = 1;
@@ -81,6 +81,15 @@ class DailyWorksheet extends React.Component {
     console.log(args);
     this.props.getTableData(args);
   }
+  // 查看/修改表格中的流程
+  operateFlow = (id) => {
+    fetchData({
+      url: '/workflow/getApplicationDetail.do',
+      data: {flowId: id}
+    }).then((data) => { // 获取数据传入流程面板，并开启面板
+      this.setState({flowData: data}, () => {this.openPanel()});
+    });
+  }
 
   render() {
     return (
@@ -107,7 +116,7 @@ class DailyWorksheet extends React.Component {
           <Button type="primary" icon="plus" style={{position: 'absolute', top: '30px', left: '475px'}} onClick={this.openPanel}>新增申请</Button>
           {
             this.state.showCreatePanel ?
-              <WorkflowCreate close={this.closePanel}/>
+              <WorkflowCreate close={this.closePanel} data={this.state.flowData}/>
               : ''
           }
           <WorkflowFilter
@@ -119,6 +128,7 @@ class DailyWorksheet extends React.Component {
             data={this.props.dataSource.list}
             isLoading={this.props.isLoading}
             total={this.props.dataSource.totalNumber}
+            operate={this.operateFlow}
           />
         </Content>
       </Layout>

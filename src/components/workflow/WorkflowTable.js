@@ -6,41 +6,6 @@
 import {Table} from 'antd';
 import config from './WorkflowConfig';
 
-// table列表配置项,字段名与线上数据返回字段名一致
-const columns = [
-  {
-    title: '流程名称',
-    dataIndex: 'flowName',
-    key: 'flowName',
-    render: text => <a href="javascript:void(0)">{text}</a>,
-  },
-  {
-    title: '发起人',
-    dataIndex: 'employee',
-    key: 'employee',
-  },
-  {
-    title: '状态',
-    dataIndex: 'status',
-    key: 'status'
-  },
-  {
-    title: '发起时间',
-    dataIndex: 'startTime',
-    key: 'startTime'
-  },
-  {
-    title: '完结时间',
-    dataIndex: 'endTime',
-    key: 'endTime'
-  },
-  {
-    title: '所属开发组',
-    dataIndex: 'group',
-    key: 'group'
-  }
-];
-
 class WorkflowTable extends React.Component {
 
   constructor(props) {
@@ -68,6 +33,47 @@ class WorkflowTable extends React.Component {
   }
 
   render() {
+    // table列表配置项,字段名与线上数据返回字段名一致
+    const columns = [
+      {
+        title: '流程名称',
+        dataIndex: 'flowName',
+        key: 'flowName',
+        render: (value, row) => {
+          return (
+            <a href="javascript:void(0)"
+               style={{textDecoration: 'none'}}
+               onClick={() => {this.props.operate(row.flowId)}}
+            >{value}</a>
+          );
+        },
+      },
+      {
+        title: '发起人',
+        dataIndex: 'employee',
+        key: 'employee',
+      },
+      {
+        title: '状态',
+        dataIndex: 'status',
+        key: 'status'
+      },
+      {
+        title: '发起时间',
+        dataIndex: 'startTime',
+        key: 'startTime'
+      },
+      {
+        title: '完结时间',
+        dataIndex: 'endTime',
+        key: 'endTime'
+      },
+      {
+        title: '所属开发组',
+        dataIndex: 'group',
+        key: 'group'
+      }
+    ];
     // 由于react的要求，为每条表格数据添加key属性(使用flowId代替)
     const dataSource = this.props.data;
     if (dataSource && dataSource.length > 0) {

@@ -12,10 +12,11 @@ import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
 
 const workflowConfig = {
+  // 101-svn仓库申请 102-svn权限分配 201-新员工入职
   workflowType: [
-    {title: 'svn仓库申请', value: 'svn-apply'},
-    {title: 'svn权限分配', value: 'svn-allot'},
-    {title: '新员工入职', value: 'staff-entry'}
+    {title: 'svn仓库申请', value: '101'},
+    {title: 'svn权限分配', value: '102'},
+    {title: '新员工入职', value: '201'}
   ],
   workflowStatus: [
     {title: '已完成', value: '1'},
@@ -23,8 +24,8 @@ const workflowConfig = {
     {title: '已取消', value: '3'}
   ],
   createType: [
-    {title: 'svn仓库申请', value: 'svn-apply'},
-    {title: 'svn权限分配', value: 'svn-allot'}
+    {title: 'svn仓库申请', value: '101'},
+    {title: 'svn权限分配', value: '102'}
   ],
   startDateRange: {
     quickPiker: {

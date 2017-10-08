@@ -42,8 +42,8 @@ class WorkflowTimeline extends React.Component {
         </div>
         <div className="line-date">{item.dateTime}</div>
         <div className="line-check">
-          <span>{item.status ? item.employee : `等候 ${item.employee} 处理...`}</span>
-          <span>{item.status ? item.status : ''}</span>
+          <span>{item.dateTime ? item.employee : `等候 ${item.employee} 处理...`}</span>
+          <span>{item.dateTime ? item.status : ''}</span>
         </div>
         {
           item.remarks ?

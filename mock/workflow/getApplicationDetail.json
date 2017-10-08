@@ -1,8 +1,8 @@
 {
   "success":true,
   "data": {
-      "taskId ":"102",
-      "flowType": "101",
+      "taskId":"102",
+      "flowTypeId": "101",
       "flowName":"biztask-fe仓库申请",
       "formData":"{\"repositoryName\":\"bizwork-task-fe\",\"manager\":\"zhaiyibo\",\"description\":\"功能描述\",\"needADPublish\":true,\"needFinance\":true,\"need404\":true,\"remarks\":\"备注(remark)\"}", 
       "flowImageUrl":"http://www.baidu.com",

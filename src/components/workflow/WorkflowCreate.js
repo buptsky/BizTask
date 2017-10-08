@@ -21,7 +21,7 @@ const checkOptions = [
   {label: '涉及财务、资金、计费、管理权限等', value: 'limit'},
   {label: '需要404审计', value: '404'}
 ];
-// 时间轴数据测试（以后用mock）
+// 时间轴数据测试（以后用mock）, 线上采集的数据和给的mock数据不一致，待查验
 const nodeList = [
   {name: "发起申请", employee: "陈曦", dateTime: "2017-09-28 19:26:24", status: "已完成", remarks: ""},
   {name: "leader审批", employee: "陈曦", dateTime: "2017-09-28 19:26:24", status: "同意", remarks: "【系统提醒】小组leader申请系统默认通过。"},
@@ -33,7 +33,8 @@ class WorkflowCreate extends React.Component {
     super(props);
     // 这里手动指定了flownamePrefix的默认值,以后可能会动态获取
     this.state = {
-      currentFlowType: 'svn-allot', // 当前的流程类型
+      disableAll: false, // 禁用所有编辑（操作流程中的不可编辑权限）
+      currentFlowType: '102', // 当前的流程类型
       managerTags: [], // 申请流程中仓库管理员
       permissionTags: [], // 申请流程中添加权限人员
       flownamePrefix: `svn权限分配-`, // 流程名称前缀
@@ -43,7 +44,16 @@ class WorkflowCreate extends React.Component {
       permissionInputVisible: false,// 隐藏添加权限人员输入
       permissionType: '读写', // 当前权限人员的权限类型
       message: '', // 本次操作的留言
-      storeManagers: {} // 仓库及管理信息（机制不清）
+      storeManagers: {}, // 仓库及管理信息（机制不清）
+      storePaths: [] // 需要查询的仓库地址集合
+    }
+  }
+
+  componentWillMount() {
+    // 如果是查看/编辑 状态
+    if (this.props.data.canEdit === false) {
+      console.log('disabled');
+      this.setState({disableAll: true})
     }
   }
 
@@ -60,27 +70,21 @@ class WorkflowCreate extends React.Component {
         return;
       }
       // 获取流程类型ID
-      switch (values['create-type']) {
-        case 'svn-apply':
-          commonArgs['flowTypeId'] = 101;
-          break;
-        case 'svn-allot':
-          commonArgs['flowTypeId'] = 102;
-        default:
-      }
+      commonArgs['flowTypeId'] = values['create-type'];
       // 获取流程名称（流程前缀 + 仓库名） (后续需要对名称进行处理，如去掉空格)
       commonArgs['flowName'] = this.state.flownamePrefix + values['create-name'];
       // 本次操作的留言
       commonArgs['message'] = this.state.message;
+      // 本次操作添加的权限人员
+      this.state.permissionTags.forEach((item) => {
+        // 获取人员的权限信息存入persons，读写-> 1 ,只读-> 2
+        persons.push({
+          email: item.split(' ')[0],
+          permission: item.split(' ')[1] === '读写' ? '1' : '2'
+        })
+      });
       // 对于不同的流程类型，formData格式不同
       if (values['create-type'] === 'svn-apply') { // svn仓库申请
-        // 获取人员的权限信息存入persons，读写-> 1 ,只读-> 2
-        this.state.permissionTags.forEach((item) => {
-          persons.push({
-            email: item.split(' ')[0],
-            permission: item.split(' ')[1] === '读写' ? '1' : '2'
-          })
-        });
         formData = {
           repositoryName: values['storage-name'], // 仓库名
           manager: values['storage-manager'], // 仓库管理员
@@ -88,10 +92,17 @@ class WorkflowCreate extends React.Component {
           needADPublish: false, // 后来去掉的选项,一直为false
           needFinance: values['check-opt'].includes('limit'), // 涉及财务等权限
           need404: values['check-opt'].includes('404'), // 需要404审计
-          persons: persons
+          persons: persons, // 权限人员
+          remark: values['remark'] // 备注
         }
       } else if (values['create-type'] === 'svn-allot') { // svn权限分配
-
+        formData = {
+          repositories: this.state.storeManagers.repositories, // 添加的仓库信息
+          needEmailManagers: values['inform-manager'], // 需要邮件通知的管理员
+          managers: this.state.storeManagers.managerIntersection, // 仓库公共管理员
+          persons: persons, // 权限人员
+          remark: values['remark'] // 备注
+        }
       }
       console.log({...commonArgs, formData}); // 最后提交的参数集
     });
@@ -108,7 +119,7 @@ class WorkflowCreate extends React.Component {
       }
     });
     // 如果不是权限分配流程，禁用流程名称输入框
-    if (value !== 'svn-allot') {
+    if (value !== '102') {
       disableInput = true;
     }
     this.setState({
@@ -116,9 +127,10 @@ class WorkflowCreate extends React.Component {
       flownamePrefix: `${newName}-`,
       disableInput: disableInput,
       permissionTags: [], // 重置权限人员
-      message: '' // 重置留言
+      message: '', // 重置留言
+      storeManagers: {}, // 重置仓库及管理信息
+      storePaths: [] // 重置库地址集合
     });
-    console.log(value);
   }
   // 隐藏仓库名input前缀
   hidePrefix = () => {
@@ -217,25 +229,27 @@ class WorkflowCreate extends React.Component {
 
   }
   // 选取仓库路径
-  confirmStorage = (value) => {
-    // 暂时不传递参数，机制不清楚
-    let paths = [];
+  confirmStorage = (path) => {
+    let paths = this.state.storePaths; // 获取当前地址集合
+    if (paths.includes(path)) return; // 如果传递重复路径，则忽略
+    paths.push(path); // 添加新地址
+    this.setState({storePaths: paths});
     // 获取路径信息
     fetchData({
       url: '/svnService/getManagersByPaths.do',
-      data: paths
+      data: {paths}
     }).then((data) => {
       this.setState({
-        storeManagers: data
+        storeManagers: data,
+        storePaths: data.repositories.map((item) => item.path) // 获取到的仓库路径集合
       });
-      // 添加checkbox后即设定为选中状态,清空输入框
+      // 添加邮件通知管理员checkbox后即设定为选中状态,清空输入框
       this.props.form.setFieldsValue({
         'inform-manager': data.managerIntersection,
         'storage-name-allot': ''
       })
     });
   }
-
 
   render() {
     const {getFieldDecorator} = this.props.form;
@@ -245,7 +259,9 @@ class WorkflowCreate extends React.Component {
         return (<Option key={type.value} value={type.value}>{type.title}</Option>);
       })
     );
-
+    // 获取表单回填数据
+    const originData = this.props.data;
+    console.log(originData);
     return (
       <Panel cancel={this.createCancel}
              disableBtn={true}
@@ -259,8 +275,8 @@ class WorkflowCreate extends React.Component {
           {/*工作流程*/}
           <FormItem label="工作流程" {...formItemLayout}>
             {/*这里手动指定了默认初始value,以后可能会动态获取*/}
-            {getFieldDecorator('create-type', {initialValue: 'svn-allot'})(
-              <Select onChange={this.changeType}>
+            {getFieldDecorator('create-type', {initialValue: originData['flowTypeId'] || '102'})(
+              <Select onChange={this.changeType} disabled={this.state.disableAll}>
                 {workflowSelectItem}
               </Select>
             )}
@@ -276,7 +292,7 @@ class WorkflowCreate extends React.Component {
           </FormItem>
           {/*仓库名称（分配逻辑）、仓库添加和管理员通知（仅权限分配流程）*/}
           {
-            this.state.currentFlowType === 'svn-allot' ?
+            this.state.currentFlowType === '102' ?
               (
                 <div>
                   {/*仓库名称*/}
@@ -329,7 +345,7 @@ class WorkflowCreate extends React.Component {
           }
           {/*仓库名称（申请逻辑）、仓库管理员和功能描述（仅仓库申请流程）*/}
           {
-            this.state.currentFlowType === 'svn-apply' ?
+            this.state.currentFlowType === '101' ?
               (
                 <div>
                   {/*仓库名称*/}
@@ -471,13 +487,14 @@ class WorkflowCreate extends React.Component {
         </Form>
         {/*时间线和留言*/}
         <div className="time-line-wrapper">
-          <WorkflowTimeline data={null}/>
+          <WorkflowTimeline data={this.props.data.nodeList || null}/>
           {/*由于难以达到要求的表单布局，此项目单独拆开，表单提交时记得加上*/}
           <TextArea rows={4}
                     value={this.state.message}
                     className="note"
-                    placeholder="你可以在这里留言"
+                    placeholder={this.state.disableAll ? '暂无留言' : "你可以在这里留言"}
                     onChange={this.changeMessage}
+                    disabled={this.state.disableAll}
           />
         </div>
       </Panel>
