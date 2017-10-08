@@ -7,6 +7,11 @@ class WorkflowTimeline extends React.Component {
 
   constructor(props) {
     super(props);
+    this.state = {
+      defaultLine: [
+        {name: "拟稿", employee: "当前用户", dateTime: null, status: null, remarks: null}
+      ]
+    }
   }
 
   renderItem = (item) => {
@@ -58,7 +63,7 @@ class WorkflowTimeline extends React.Component {
   }
 
   render() {
-    const {data} = this.props;
+    const data = this.props.data || this.state.defaultLine;
     return (
       <Timeline className="timeline">
         {

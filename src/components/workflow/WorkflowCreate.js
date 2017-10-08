@@ -9,13 +9,11 @@ const {TextArea} = Input;
 const CheckboxGroup = Checkbox.Group;
 const RadioGroup = Radio.Group;
 // 表单样式结构配置
-// 标签 + 输入
-const formItemLayout = {
+const formItemLayout = { // 标签 + 输入
   labelCol: {span: 6},
   wrapperCol: {span: 16, offset: 1}
 }
-// 仅输入
-const formItemLayout2 = {
+const formItemLayout2 = { // 仅输入
   wrapperCol: {span: 16, offset: 7}
 }
 // 可选check(暂时放在这里，以后根据情况调整）
@@ -35,43 +33,91 @@ class WorkflowCreate extends React.Component {
     super(props);
     // 这里手动指定了flownamePrefix的默认值,以后可能会动态获取
     this.state = {
-      managerTags: [],
-      permissionTags: [],
-      flownamePrefix: `svn权限分配-`,
-      storenamePrefix: 'http://bizsvn.sogou-inc.com/svn/',
+      currentFlowType: 'svn-allot', // 当前的流程类型
+      managerTags: [], // 申请流程中仓库管理员
+      permissionTags: [], // 申请流程中添加权限人员
+      flownamePrefix: `svn权限分配-`, // 流程名称前缀
+      storenamePrefix: 'http://bizsvn.sogou-inc.com/svn/', // 仓库名称前缀
       disableInput: false, // 申请流程中禁用流程名称输入框
       managerInputVisible: false, // 隐藏添加仓库管理员输入
       permissionInputVisible: false,// 隐藏添加权限人员输入
-      permissionType: '读写' // 当前权限人员的权限类型
+      permissionType: '读写', // 当前权限人员的权限类型
+      message: '', // 本次操作的留言
+      storeManagers: {} // 仓库及管理信息（机制不清）
     }
   }
 
   // 表单提交
   handleSubmit = (e) => {
-    this.textInput.focus();
+    // 还没有进行表单检测处理
     e.preventDefault();
+    let commonArgs = {}; // 表单通用数据
+    let formData = {};
+    let persons = []; // 权限人员集合
     this.props.form.validateFields((err, values) => {
-      if (!err) {
-        console.log('Received values of form: ', values);
+      if (err) { // 表单提交错误
+        console.log(err);
+        return;
       }
+      // 获取流程类型ID
+      switch (values['create-type']) {
+        case 'svn-apply':
+          commonArgs['flowTypeId'] = 101;
+          break;
+        case 'svn-allot':
+          commonArgs['flowTypeId'] = 102;
+        default:
+      }
+      // 获取流程名称（流程前缀 + 仓库名） (后续需要对名称进行处理，如去掉空格)
+      commonArgs['flowName'] = this.state.flownamePrefix + values['create-name'];
+      // 本次操作的留言
+      commonArgs['message'] = this.state.message;
+      // 对于不同的流程类型，formData格式不同
+      if (values['create-type'] === 'svn-apply') { // svn仓库申请
+        // 获取人员的权限信息存入persons，读写-> 1 ,只读-> 2
+        this.state.permissionTags.forEach((item) => {
+          persons.push({
+            email: item.split(' ')[0],
+            permission: item.split(' ')[1] === '读写' ? '1' : '2'
+          })
+        });
+        formData = {
+          repositoryName: values['storage-name'], // 仓库名
+          manager: values['storage-manager'], // 仓库管理员
+          description: values['storage-desc'], // 仓库功能描述
+          needADPublish: false, // 后来去掉的选项,一直为false
+          needFinance: values['check-opt'].includes('limit'), // 涉及财务等权限
+          need404: values['check-opt'].includes('404'), // 需要404审计
+          persons: persons
+        }
+      } else if (values['create-type'] === 'svn-allot') { // svn权限分配
+
+      }
+      console.log({...commonArgs, formData}); // 最后提交的参数集
     });
   }
   // 切换流程类型,流程名称前缀联动
   changeType = (value) => {
+    this.props.form.resetFields();  // 重置表单
     let newName = '';
     let disableInput = false;
+    // 获取流程类型名称
     config.createType.forEach((item) => {
       if (item.value === value) {
         newName = item.title;
       }
     });
+    // 如果不是权限分配流程，禁用流程名称输入框
     if (value !== 'svn-allot') {
       disableInput = true;
     }
     this.setState({
+      currentFlowType: value,
       flownamePrefix: `${newName}-`,
-      disableInput: disableInput
-    })
+      disableInput: disableInput,
+      permissionTags: [], // 重置权限人员
+      message: '' // 重置留言
+    });
     console.log(value);
   }
   // 隐藏仓库名input前缀
@@ -116,20 +162,20 @@ class WorkflowCreate extends React.Component {
   // 隐藏添加权限人员输入框
   hidePermissionInput = () => {this.setState({permissionInputVisible: false});}
   // 查找符合条件的管理员(暂时不使用默认的自动补全)
-  searchManager = () => {
+  searchManager = (e) => {
 
   }
   // 添加选中管理员
   confirmManager = (value) => {
-    let tags = this.state.managerTags;
-    if (value && tags.indexOf(value) === -1) {
+    let tags = this.state.managerTags; // 获取保存的管理员标签
+    if (value && tags.indexOf(value) === -1) { // 忽略重复管理员标签
       tags = [...tags, value];
     }
-    console.log(tags);
-    this.setState({
+    this.setState({ // 重设标签，隐藏管理员输入框
       managerTags: tags,
       managerInputVisible: false,
     });
+    this.props.form.setFieldsValue({'storage-manager': tags.join(',')});  // 表单同步
   }
   // 删除管理员
   deleteManager = (removedTag) => {
@@ -149,6 +195,7 @@ class WorkflowCreate extends React.Component {
       permissionTags: tags,
       permissionInputVisible: false,
     });
+    this.props.form.setFieldsValue({'default-add': tags.join(',')});  // 表单同步
   }
   // 删除权限人员
   deletePermission = (removedTag) => {
@@ -161,9 +208,38 @@ class WorkflowCreate extends React.Component {
   changePermission = (e) => {
     this.setState({permissionType: e.target.value})
   }
+  // 记录留言以备表单提交
+  changeMessage = (e) => {
+    this.setState({message: e.target.value});
+  }
+  // 仓库路径搜索
+  searchStorage = (e) => {
+
+  }
+  // 选取仓库路径
+  confirmStorage = (value) => {
+    // 暂时不传递参数，机制不清楚
+    let paths = [];
+    // 获取路径信息
+    fetchData({
+      url: '/svnService/getManagersByPaths.do',
+      data: paths
+    }).then((data) => {
+      this.setState({
+        storeManagers: data
+      });
+      // 添加checkbox后即设定为选中状态,清空输入框
+      this.props.form.setFieldsValue({
+        'inform-manager': data.managerIntersection,
+        'storage-name-allot': ''
+      })
+    });
+  }
+
 
   render() {
     const {getFieldDecorator} = this.props.form;
+    // 新建流程下拉列表选项
     const workflowSelectItem = (
       config.createType.map((type) => {
         return (<Option key={type.value} value={type.value}>{type.title}</Option>);
@@ -198,75 +274,135 @@ class WorkflowCreate extends React.Component {
               />
             )}
           </FormItem>
-          {/*仓库名称*/}
-          <FormItem label="仓库名称" {...formItemLayout}>
-            {getFieldDecorator('storage-name', {initialValue: ''})(
-              <Input addonBefore={this.state.storenamePrefix}
-                     onFocus={this.hidePrefix}
-                     onBlur={this.showPrefix}
-                     onChange={this.syncInput}
-                     ref={(input) => {
-                       this.textInput = input;
-                     }}
-              />
-            )}
-          </FormItem>
-          {/*仓库管理员*/}
-          <FormItem label="仓库管理员" {...formItemLayout} style={{marginBottom: 0}}>
-            {/*隐藏的input用于记录表单数据*/}
-            {getFieldDecorator('storage-manager', {initialValue: ''})(
-              <Input type="hidden"/>
-            )}
-            {this.state.managerInputVisible && (
-              <AutoComplete
-                children={
-                  <Input
-                    ref={(input) => this.managerInput = input}
-                    onBlur={this.hideManagerInput}
-                  />
-                }
-                dataSource={['当当', '淡淡的', '当当的']}
-                onSearch={this.searchManager}
-                onSelect={this.confirmManager}
-              />
-            )}
-            {!this.state.managerInputVisible &&
-            <Button type="dashed" onClick={this.showManagerInput}>+ 新增管理员</Button>}
-          </FormItem>
-          {/*仓库新增管理员显示*/}
-          <Row style={{margin: '10px 0 20px 0'}}>
-            <Col span={16} offset={7}>
-              <div className="manager-tags">
-                {this.state.managerTags.map((tag, index) => {
-                  const tagElem = (
-                    <Tag key={tag}
-                         style={{fontSize: 16, height: 28, lineHeight: '25px'}}
-                         color="#108ee9"
-                         closable={true}
-                         afterClose={() => this.deleteManager(tag)}
-                    >
-                      {tag}
-                    </Tag>
-                  );
-                  return tagElem;
-                })}
-              </div>
-            </Col>
-          </Row>
-          {/*仓库功能描述*/}
-          <FormItem label="仓库功能描述" style={{marginBottom: '5px'}} {...formItemLayout}>
-            {getFieldDecorator('storage-desc', {initialValue: ''})(
-              <TextArea rows={4} style={{resize: 'none'}}></TextArea>
-            )}
-          </FormItem>
-          {/*功能描述多选框*/}
-          <FormItem  {...formItemLayout2}>
-            {getFieldDecorator('check-opt', {
-              initialValue: [],
-            })(
-              <CheckboxGroup options={checkOptions}/>
-            )}
-          </FormItem>
+          {/*仓库名称（分配逻辑）、仓库添加和管理员通知（仅权限分配流程）*/}
+          {
+            this.state.currentFlowType === 'svn-allot' ?
+              (
+                <div>
+                  {/*仓库名称*/}
+                  <FormItem label="仓库名称" {...formItemLayout}>
+                    {getFieldDecorator('storage-name-allot', {initialValue: ''})(
+                      <AutoComplete
+                        children={
+                          <Input
+                            addonBefore={this.state.storenamePrefix}
+                            // onFocus={this.hidePrefix}
+                            // onBlur={this.showPrefix}
+                            ref={(input) => {this.textInput = input;}}
+                          />
+                        }
+                        dataSource={['路径1', '路径2', '路径3']}
+                        onSearch={this.searchStorage}
+                        onSelect={this.confirmStorage}
+                      />
+                    )}
+                  </FormItem>
+                  {/*仓库名称显示及操作*/}
+                  {
+                    this.state.storeManagers['repositories'] &&
+                    this.state.storeManagers['repositories'].map((item, index) => {
+                      const storeElem = (
+                        <Row className="store-wrapper" key={index}>
+                          <Col span={16} offset={7}>
+                            <div className="store-item">
+                              <p className="store-path">{item.path}</p>
+                              <span className="close">删除</span>
+                              <span className="manager">管理员: {item.managers.join(' ')}</span>
+                            </div>
+                          </Col>
+                        </Row>
+                      )
+                      return storeElem;
+                    })
+                  }
+                  {/*管理员通知*/}
+                  <FormItem label="邮件通知以下管理员审批" {...formItemLayout}>
+                    {getFieldDecorator('inform-manager', {initialValue: []})(
+                      <CheckboxGroup
+                        options={this.state.storeManagers.managerIntersection}
+                      />
+                    )}
+                  </FormItem>
+                </div>
+              )
+              : null
+          }
+          {/*仓库名称（申请逻辑）、仓库管理员和功能描述（仅仓库申请流程）*/}
+          {
+            this.state.currentFlowType === 'svn-apply' ?
+              (
+                <div>
+                  {/*仓库名称*/}
+                  <FormItem label="仓库名称" {...formItemLayout}>
+                    {getFieldDecorator('storage-name', {initialValue: ''})(
+                      <Input addonBefore={this.state.storenamePrefix}
+                             onFocus={this.hidePrefix}
+                             onBlur={this.showPrefix}
+                             onChange={this.syncInput}
+                             ref={(input) => {this.textInput = input;}}
+                      />
+                    )}
+                  </FormItem>
+                  {/*仓库管理员*/}
+                  <FormItem label="仓库管理员" {...formItemLayout} style={{marginBottom: 0}}>
+                    {/*隐藏的input用于记录表单数据*/}
+                    {getFieldDecorator('storage-manager', {initialValue: ''})(
+                      <Input type="hidden"/>
+                    )}
+                    {this.state.managerInputVisible && (
+                      <AutoComplete
+                        children={
+                          <Input
+                            ref={(input) => this.managerInput = input}
+                            onBlur={this.hideManagerInput}
+                          />
+                        }
+                        dataSource={['当当', '淡淡的', '当当的']}
+                        onSearch={this.searchManager}
+                        onSelect={this.confirmManager}
+                      />
+                    )}
+                    {!this.state.managerInputVisible &&
+                    <Button type="dashed" onClick={this.showManagerInput}>+ 新增管理员</Button>}
+                  </FormItem>
+                  {/*仓库新增管理员显示*/}
+                  <Row style={{margin: '10px 0 20px 0'}}>
+                    <Col span={16} offset={7}>
+                      <div className="manager-tags">
+                        {this.state.managerTags.map((tag, index) => {
+                          const tagElem = (
+                            <Tag key={tag}
+                                 style={{height: 28, lineHeight: '25px'}}
+                                 color="#108ee9"
+                                 closable={true}
+                                 afterClose={() => this.deleteManager(tag)}
+                            >
+                              {tag}
+                            </Tag>
+                          );
+                          return tagElem;
+                        })}
+                      </div>
+                    </Col>
+                  </Row>
+                  {/*仓库功能描述*/}
+                  <FormItem label="仓库功能描述" style={{marginBottom: '5px'}} {...formItemLayout}>
+                    {getFieldDecorator('storage-desc', {initialValue: ''})(
+                      <TextArea rows={4} style={{resize: 'none'}}></TextArea>
+                    )}
+                  </FormItem>
+                  {/*功能描述多选框*/}
+                  <FormItem  {...formItemLayout2}>
+                    {getFieldDecorator('check-opt', {
+                      initialValue: [],
+                    })(
+                      <CheckboxGroup options={checkOptions}/>
+                    )}
+                  </FormItem>
+                </div>
+              )
+              : null
+          }
           {/*默认添加权限*/}
           <FormItem label="默认给谁添加权限" style={{marginBottom: '5px'}} {...formItemLayout}>
             {getFieldDecorator('default-add', {initialValue: ''})(
@@ -297,15 +433,6 @@ class WorkflowCreate extends React.Component {
               <Radio value="只读">只读</Radio>
             </RadioGroup>
           </FormItem>
-          {/*权限描述*/}
-          {/*<FormItem {...formItemLayout2}>*/}
-          {/*{getFieldDecorator('read-write', {initialValue: 'readAndWirte'})(*/}
-          {/*<RadioGroup>*/}
-          {/*<Radio value="readAndWirte">读写</Radio>*/}
-          {/*<Radio value="onlyRead">只读</Radio>*/}
-          {/*</RadioGroup>*/}
-          {/*)}*/}
-          {/*</FormItem>*/}
           {/*新增权限人员显示*/}
           <Row style={{margin: '10px 0 20px 0'}}>
             <Col span={16} offset={7}>
@@ -313,7 +440,7 @@ class WorkflowCreate extends React.Component {
                 {this.state.permissionTags.map((tag, index) => {
                   const tagElem = (
                     <Tag key={tag}
-                         style={{fontSize: 16, height: 28, lineHeight: '25px'}}
+                         style={{height: 28, lineHeight: '25px'}}
                          color="#108ee9"
                          closable={true}
                          afterClose={() => this.deletePermission(tag)}
@@ -335,17 +462,23 @@ class WorkflowCreate extends React.Component {
           {/*表单提交*/}
           <FormItem {...formItemLayout2}>
             <Button type="primary" htmlType="submit">
-              确认
+              启动
             </Button>
             <Button type="primary" style={{marginLeft: '20px'}} onClick={this.createCancel}>
               取消
             </Button>
           </FormItem>
         </Form>
+        {/*时间线和留言*/}
         <div className="time-line-wrapper">
-          <WorkflowTimeline data={nodeList}/>
+          <WorkflowTimeline data={null}/>
           {/*由于难以达到要求的表单布局，此项目单独拆开，表单提交时记得加上*/}
-          <TextArea rows={4} className="note" placeholder="你可以在这里留言"/>
+          <TextArea rows={4}
+                    value={this.state.message}
+                    className="note"
+                    placeholder="你可以在这里留言"
+                    onChange={this.changeMessage}
+          />
         </div>
       </Panel>
     );
