@@ -53,7 +53,15 @@ class WorkflowCreate extends React.Component {
     // 如果是查看/编辑 状态
     if (this.props.data.canEdit === false) {
       console.log('disabled');
-      this.setState({disableAll: true})
+      this.setState({
+        disableAll: true
+      });
+    }
+    // 对于已存在流程，获取对应表单框架
+    if (this.props.data.flowTypeId) {
+      this.setState({
+        currentFlowType: this.props.data.flowTypeId
+      })
     }
   }
 
@@ -261,6 +269,9 @@ class WorkflowCreate extends React.Component {
     );
     // 获取表单回填数据
     const originData = this.props.data;
+    if (originData.formData) { // 部分数据字符串转json（确认下线上数据是否一致）
+      originData.formData = JSON.parse(originData.formData);
+    }
     console.log(originData);
     return (
       <Panel cancel={this.createCancel}
@@ -471,8 +482,12 @@ class WorkflowCreate extends React.Component {
           </Row>
           {/*备注*/}
           <FormItem label="备注" {...formItemLayout}>
-            {getFieldDecorator('remark', {initialValue: ''})(
-              <TextArea rows={4} style={{resize: 'none'}}></TextArea>
+            {getFieldDecorator('remark', {initialValue: (originData.formData && originData.formData.remark) || ''})(
+              <TextArea rows={4}
+                        style={{resize: 'none'}}
+                        disabled={this.state.disableAll}
+              >
+              </TextArea>
             )}
           </FormItem>
           {/*表单提交*/}
