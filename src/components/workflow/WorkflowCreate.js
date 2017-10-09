@@ -60,7 +60,7 @@ class WorkflowCreate extends React.Component {
     // 对于已存在流程，获取对应表单框架
     if (this.props.data.flowTypeId) {
       this.setState({
-        currentFlowType: this.props.data.flowTypeId
+        currentFlowType: this.props.data.flowTypeId.toString()
       })
     }
   }
@@ -172,7 +172,9 @@ class WorkflowCreate extends React.Component {
     });
   }
   // 隐藏添加仓库管理员输入框
-  hideManagerInput = () => {this.setState({managerInputVisible: false});}
+  hideManagerInput = () => {
+    this.setState({managerInputVisible: false});
+  }
   // 显示添加权限人员输入框
   showPermissionInput = () => {
     this.setState({permissionInputVisible: true}, () => {
@@ -180,7 +182,9 @@ class WorkflowCreate extends React.Component {
     });
   }
   // 隐藏添加权限人员输入框
-  hidePermissionInput = () => {this.setState({permissionInputVisible: false});}
+  hidePermissionInput = () => {
+    this.setState({permissionInputVisible: false});
+  }
   // 查找符合条件的管理员(暂时不使用默认的自动补全)
   searchManager = (e) => {
 
@@ -286,7 +290,8 @@ class WorkflowCreate extends React.Component {
           {/*工作流程*/}
           <FormItem label="工作流程" {...formItemLayout}>
             {/*这里手动指定了默认初始value,以后可能会动态获取*/}
-            {getFieldDecorator('create-type', {initialValue: originData['flowTypeId'] || '102'})(
+            {getFieldDecorator('create-type',
+              {initialValue: (originData['flowTypeId'] && originData['flowTypeId'].toString()) || '102'})(
               <Select onChange={this.changeType} disabled={this.state.disableAll}>
                 {workflowSelectItem}
               </Select>
@@ -315,7 +320,9 @@ class WorkflowCreate extends React.Component {
                             addonBefore={this.state.storenamePrefix}
                             // onFocus={this.hidePrefix}
                             // onBlur={this.showPrefix}
-                            ref={(input) => {this.textInput = input;}}
+                            ref={(input) => {
+                              this.textInput = input;
+                            }}
                           />
                         }
                         dataSource={['路径1', '路径2', '路径3']}
@@ -366,7 +373,9 @@ class WorkflowCreate extends React.Component {
                              onFocus={this.hidePrefix}
                              onBlur={this.showPrefix}
                              onChange={this.syncInput}
-                             ref={(input) => {this.textInput = input;}}
+                             ref={(input) => {
+                               this.textInput = input;
+                             }}
                       />
                     )}
                   </FormItem>

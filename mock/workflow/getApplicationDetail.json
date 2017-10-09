@@ -2,31 +2,31 @@
   "success":true,
   "data": {
       "taskId":"102",
-      "flowTypeId": "101",
-      "flowName":"biztask-fe仓库申请",
+      "flowTypeId": 101,
+      "flowName":"SVN仓库申请-bizwork-task-fe",
       "formData":"{\"repositoryName\":\"bizwork-task-fe\",\"manager\":\"zhaiyibo\",\"description\":\"功能描述\",\"needADPublish\":true,\"needFinance\":true,\"need404\":true,\"remark\":\"备注(remark)\"}",
       "flowImageUrl":"http://www.baidu.com",
-      "remarks":"xxxx", 
       "canAuthorize":true,
       "canEdit": false,
+      "flowId": null,
       "nodeList":[{
-         "name":"创建工作流", 
+         "name":"创建工作流",
          "employee":"翟懿博",
          "dateTime":"2017-01-03 11:30",
-         "status":"完成",
-         "message":"biztask-fe仓库申请，请后续审批人尽快审批"
+         "status":"已完成",
+         "remarks":"biztask-fe仓库申请，请后续审批人尽快审批"
       },{
          "name":"直接领导审核", 
          "employee":"梁宵",
          "dateTime":"2017-01-03 11:50",
-         "status":"通过",
-         "message":"领导审核通过,OP审核"
+         "status":"同意",
+         "remarks":"领导审核通过,OP审核"
       },{
          "name":"OP审核", 
          "employee":"房秀丽",
-         "dateTime":"",
-         "status":"待审核",
-         "message":""
+         "dateTime":null,
+         "status":null,
+         "remarks":null
       }]
   },
   "errorMsg":null,
