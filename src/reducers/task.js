@@ -1,13 +1,15 @@
 import {actionTypes} from "../actions/action-creator";
-import {TaskPanelTypes} from '../components/task/Constants';
+import {TaskModalTypes} from '../components/task/Constants';
 
 const initialState = {
   taskLists: [],
   isLoading: true,
-  taskDetail: {
+  queryArgs: {},
+  taskModal: {
     isShow: false,
     title: 'Title',
-    taskId: undefined
+    taskId: undefined,
+    isSubmitting: false
   }
 };
 
@@ -16,6 +18,10 @@ export function task(state = initialState, action) {
     case actionTypes.get_tasks:
       return {
         ...state,
+        queryArgs: {
+          ...state.queryArgs,
+          ...action.payload
+        },
         isLoading: true
       };
     case actionTypes.get_tasks_success:
@@ -52,21 +58,38 @@ export function task(state = initialState, action) {
         ...state,
         taskLists: listForDelete
       };
-    case actionTypes.open_task_detail:
+    case actionTypes.open_task_modal:
       const args = action.payload;
       return {
         ...state,
-        taskDetail: {
+        taskModal: {
           isShow: true,
-          title: args.type === TaskPanelTypes.NEW ? '创建任务' : '任务详情',
+          title: args.type === TaskModalTypes.NEW ? '创建任务' : '任务详情',
           taskId: args.taskId
         }
       };
-    case actionTypes.close_task_detail:
+    case actionTypes.close_task_modal:
       return {
         ...state,
-        taskDetail: {
+        taskModal: {
           isShow: false
+        }
+      };
+    case actionTypes.add_task:
+      return {
+        ...state,
+        taskModal: {
+          ...state.taskModal,
+          isSubmitting: true
+        }
+      };
+    case actionTypes.add_task_success:
+      return {
+        ...state,
+        taskModal: {
+          ...state.taskModal,
+          isShow: false,
+          isSubmitting: false
         }
       };
     default:
