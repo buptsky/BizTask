@@ -2,7 +2,6 @@
   "success": true,
   "data": {
     "totalNumber": 51,
-    "totalPages": 11,
     "list": [
       {
         "flowId": "bizwork_svnDistribution__0000015EC83CD761CB9DC4431D195C35",
