@@ -56,8 +56,8 @@ class ApplyFilter extends React.Component {
     return (
       this.props.type !== 'pending-apply' ?
         (
-          <Form layout="inline" onSubmit={this.handleSubmit} style={{padding: '20px 10px', width: '80%'}}>
-            <FormItem label="工作流程">
+          <Form layout="inline" onSubmit={this.handleSubmit} style={{padding: '10px 10px', width: '80%'}}>
+            <FormItem label="工作流程" style={{marginTop: '10px'}}>
               {getFieldDecorator('workflow-type', {initialValue: 'search-all'})(
                 <Select style={{width: 120}}>
                   <Option style={{width: 120}} key="search-all" value="search-all">全部</Option>
@@ -69,7 +69,7 @@ class ApplyFilter extends React.Component {
                 </Select>
               )}
             </FormItem>
-            <FormItem label="流程名称">
+            <FormItem label="流程名称" style={{marginTop: '10px'}}>
               {getFieldDecorator('workflow-name', {initialValue: ''})(
                 <Input/>
               )}
@@ -77,14 +77,14 @@ class ApplyFilter extends React.Component {
             {
               this.props.type === 'all-apply' ?
                 (
-                  <FormItem label="发起人">
+                  <FormItem label="发起人" style={{marginTop: '10px'}}>
                     {getFieldDecorator('workflow-employee', {initialValue: ''})(
                       <Input/>
                     )}
                   </FormItem>
                 ) : null
             }
-            <FormItem label="状态">
+            <FormItem label="状态" style={{marginTop: '10px'}}>
               {getFieldDecorator('workflow-status', {initialValue: '0'})(
                 <Select style={{width: 120}}>
                   <Option style={{width: 120}} key="all" value="0">无限制</Option>

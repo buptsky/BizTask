@@ -501,7 +501,7 @@ class WorkflowCreate extends React.Component {
           </FormItem>
         </Form>
         {/*时间线和留言*/}
-        <div className="time-line-wrapper">
+        <div className="time-line-wrapper" style={{width: 'calc(50% - 60px)'}}>
           <WorkflowTimeline data={this.props.data.nodeList || null}/>
           {/*由于难以达到要求的表单布局，此项目单独拆开，表单提交时记得加上*/}
           <TextArea rows={4}
@@ -510,6 +510,7 @@ class WorkflowCreate extends React.Component {
                     placeholder={this.state.disableAll ? '暂无留言' : "你可以在这里留言"}
                     onChange={this.changeMessage}
                     disabled={this.state.disableAll}
+                    style={{width: 350}}
           />
         </div>
       </Panel>

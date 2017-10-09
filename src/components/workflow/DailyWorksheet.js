@@ -39,9 +39,11 @@ class DailyWorksheet extends React.Component {
   }
   // 关闭创建流程面板
   closePanel = () => {
+    // 清除flowdata
     this.setState({
-      showCreatePanel: false
-    })
+      showCreatePanel: false,
+      flowData: {}
+    });
   }
   // 打开创建流程面板
   openPanel = () => {
