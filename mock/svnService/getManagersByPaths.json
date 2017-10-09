@@ -1,6 +1,6 @@
 {"success": true,
     "data": {
-        "repositorys":[{
+        "repositories":[{
             "path": "svn.bizwork.sogou-inc.com",
             "managers": ["zhaiyibo@sogou.com"]
         },{
