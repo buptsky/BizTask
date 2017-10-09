@@ -7,16 +7,17 @@ import HTML5Backend from 'react-dnd-html5-backend';
 import * as TaskActions from '../../actions/task';
 
 function mapStateToProps(state) {
-    return {
-        isLoading: state.task.isLoading,
-        taskLists: state.task.taskLists
-    };
+  return {
+    isLoading: state.task.isLoading,
+    taskLists: state.task.taskLists
+  };
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators(TaskActions, dispatch);
+  return bindActionCreators(TaskActions, dispatch);
 }
-@connect(mapStateToProps,mapDispatchToProps)
+
+@connect(mapStateToProps, mapDispatchToProps)
 @DragDropContext(HTML5Backend)
 class TaskContent extends React.Component {
   constructor(props) {
@@ -25,17 +26,11 @@ class TaskContent extends React.Component {
 
   componentDidMount() {
     this.props.getTasks({
-        userType: 0,  //我负责的任务0，我关注的任务1
-        viewType: 0   //标签视图，将要废弃
+      userType: 0,  //我负责的任务0，我关注的任务1
+      viewType: 0   //标签视图，将要废弃
     });
   }
 
-  getTasks = () => {
-    const queryArgs = {
-      userType: 0,  //我负责的任务0，我关注的任务1
-      viewType: 0   //标签视图，将要废弃
-    };
-  };
   renderTasks = (taskLists) => {
     const me = this;
     return taskLists.map((taskList) => {
@@ -45,18 +40,18 @@ class TaskContent extends React.Component {
             {taskList.name}
           </div>
           <TaskContainer
-            moveCard={me.props.moveCard}
+            moveTask={me.props.moveTask}
             x={taskList.name}
             dataSource={taskList.taskList}/>
         </div>
-        )
+      )
     });
   };
 
   render() {
-    const {isLoading, taskLists} = this.props;
+    const {isLoading, taskLists, taskPanel} = this.props;
     return (
-      <div style={{height:'100%',display:'flex'}}>
+      <div style={{height: '100%', display: 'flex', marginTop: '10px'}}>
         {isLoading ? <Spin tip="Loading..."/> : this.renderTasks(taskLists)}
       </div>
     );

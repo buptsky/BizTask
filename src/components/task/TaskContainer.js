@@ -19,6 +19,7 @@ const spec = {
   drop(props, monitor, component) {
     document.getElementById(monitor.getItem().taskId).style.display = 'block';
     const { placeholderIndex } = component.state;
+    const taskId = monitor.getItem().taskId;
     const lastX = monitor.getItem().x;
     const lastY = monitor.getItem().y;
     const nextX = props.x;
@@ -33,8 +34,7 @@ const spec = {
     if (lastX === nextX && lastY === nextY) { // if position equel
       return;
     }
-
-    props.moveCard({lastX, lastY, nextX, nextY});
+    props.moveTask({taskId, lastX, lastY, nextX, nextY});
   },
   hover(props, monitor, component) {
     // defines where placeholder is rendered

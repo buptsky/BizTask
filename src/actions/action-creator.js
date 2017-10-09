@@ -9,4 +9,8 @@ export const actionTypes = {
   move_task_card: 'move_task_card',
   get_workflow_data: 'get_table_data', // 获取流程列表数据
   get_workflow_data_success: 'get_workflow_data_success' // 成功获取流程列表数据
+  move_task: 'move_task',
+  delete_task: 'delete_task',
+  open_task_panel: 'open_task_panel',
+  close_task_panel: 'close_task_panel'
 };
