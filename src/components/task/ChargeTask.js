@@ -1,9 +1,9 @@
-import {Button, Layout} from 'antd';
+import {Button, Layout, Modal} from 'antd';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import TaskMenu from './TaskMenu';
 import TaskContent from './TaskContent';
-import TaskPanel from './TaskPanel';
+import TaskDetail from './TaskDetail';
 import {TaskPanelTypes} from './Constants';
 import * as CommonActions from '../../actions/common';
 import * as TaskActions from '../../actions/task';
@@ -12,15 +12,15 @@ const {Sider, Content} = Layout;
 
 function mapStateToProps(state) {
   return {
-    taskPanel: state.task.taskPanel
+    taskDetail: state.task.taskDetail
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     activeHeaderMenu: CommonActions.activeHeaderMenu,
-    openTaskPanel: TaskActions.openTaskPanel,
-    closeTaskPanel: TaskActions.closeTaskPanel
+    openTaskDetail: TaskActions.openTaskDetail,
+    closeTaskDetail: TaskActions.closeTaskDetail
   }, dispatch);
 }
 
@@ -35,16 +35,16 @@ class Task extends React.Component {
   }
 
   newTask = () => {
-    this.props.openTaskPanel({
+    this.props.openTaskDetail({
       type: TaskPanelTypes.NEW
     });
   };
-  closePanel = () => {
-    this.props.closeTaskPanel();
+  closeDetail = () => {
+    this.props.closeTaskDetail();
   };
 
   render() {
-    const {taskPanel} = this.props;
+    const {taskDetail} = this.props;
     return (
       <Layout>
         <Sider>
@@ -52,14 +52,15 @@ class Task extends React.Component {
         </Sider>
         <Content style={{padding: "20px"}}>
           <Button type="primary" icon="plus" style={{}} onClick={this.newTask}>添加任务</Button>
-          {
-            taskPanel.isShow ?
-              <TaskPanel
-                title={taskPanel.title}
-                close={this.closePanel}
-                taskId={taskPanel.taskId}/>
-              : ''
-          }
+          <Modal
+            title={taskDetail.title}
+            visible={taskDetail.isShow}
+            onCancel={this.closeDetail}
+            footer={null}
+            maskClosable={false}
+          >
+            <TaskDetail closeDetail={this.closeDetail}/>
+          </Modal>
           <TaskContent/>
         </Content>
       </Layout>

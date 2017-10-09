@@ -4,7 +4,7 @@ import {TaskPanelTypes} from '../components/task/Constants';
 const initialState = {
   taskLists: [],
   isLoading: true,
-  taskPanel: {
+  taskDetail: {
     isShow: false,
     title: 'Title',
     taskId: undefined
@@ -41,7 +41,7 @@ export function task(state = initialState, action) {
       return {
         ...state,
         taskLists: newLists
-      }
+      };
     case actionTypes.delete_task:
       const listForDelete = [...state.taskLists];
       const {x, y} = action.payload;
@@ -51,24 +51,24 @@ export function task(state = initialState, action) {
       return {
         ...state,
         taskLists: listForDelete
-      }
-    case actionTypes.open_task_panel:
+      };
+    case actionTypes.open_task_detail:
       const args = action.payload;
       return {
         ...state,
-        taskPanel: {
+        taskDetail: {
           isShow: true,
           title: args.type === TaskPanelTypes.NEW ? '创建任务' : '任务详情',
           taskId: args.taskId
         }
-      }
-    case actionTypes.close_task_panel:
+      };
+    case actionTypes.close_task_detail:
       return {
         ...state,
-        taskPanel: {
+        taskDetail: {
           isShow: false
         }
-      }
+      };
     default:
       return state;
   }

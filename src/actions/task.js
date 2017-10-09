@@ -39,13 +39,13 @@ export function deleteTask(args) {
   };
 };
 
-export function openTaskPanel(args) {
+export function openTaskDetail(args) {
   return (dispatch) => {
-    dispatch(actionCreator(actionTypes.open_task_panel, args));
+    dispatch(actionCreator(actionTypes.open_task_detail, args));
   };
 }
-export function closeTaskPanel(args) {
+export function closeTaskDetail(args) {
   return (dispatch) => {
-    dispatch(actionCreator(actionTypes.close_task_panel, args));
+    dispatch(actionCreator(actionTypes.close_task_detail, args));
   };
 }

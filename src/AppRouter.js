@@ -17,6 +17,7 @@ const AppRouter = (
         <Link to="/">
           <div className="logo"/>
         </Link>
+        {/*load common data in here*/}
         <HeadMenu/>
       </Header>
       <Route exact path="/" render={() => (<Redirect to="/workflow"/>)}/>
