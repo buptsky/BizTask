@@ -1,11 +1,12 @@
 import TaskCard from './TaskCard';
 import {ItemTypes, OFFSET_HEIGHT, CARD_HEIGHT, CARD_MARGIN} from './Constants';
+import {findDOMNode} from 'react-dom';
 import {DropTarget} from 'react-dnd';
 
 //在DropTarget的hover中实时获取placeholder的index
-function getPlaceholderIndex(y) {
+function getPlaceholderIndex(y, scrollY) {
   // 超过card的一半高度，则返回当前card的index，方便在其后面插入placeholder
-  const yPos = y - OFFSET_HEIGHT;
+  const yPos = y - OFFSET_HEIGHT + scrollY;
   let placeholderIndex;
   if (yPos < CARD_HEIGHT / 2) {
     placeholderIndex = -1; // place at the start
@@ -18,7 +19,7 @@ function getPlaceholderIndex(y) {
 const spec = {
   drop(props, monitor, component) {
     document.getElementById(monitor.getItem().taskId).style.display = 'block';
-    const { placeholderIndex } = component.state;
+    const {placeholderIndex} = component.state;
     const taskId = monitor.getItem().taskId;
     const lastX = monitor.getItem().x;
     const lastY = monitor.getItem().y;
@@ -38,7 +39,7 @@ const spec = {
   },
   hover(props, monitor, component) {
     // defines where placeholder is rendered
-    const placeholderIndex = getPlaceholderIndex(monitor.getClientOffset().y);
+    const placeholderIndex = getPlaceholderIndex(monitor.getClientOffset().y, findDOMNode(component).scrollTop);
     component.setState({placeholderIndex});
     // when drag begins, we hide the card and only display cardDragPreview
     const item = monitor.getItem();
@@ -65,7 +66,7 @@ class TaskContainer extends React.Component {
   }
 
   render() {
-    const {connectDropTarget, isOver, canDrop, dataSource,x} = this.props;
+    const {connectDropTarget, isOver, canDrop, dataSource, x} = this.props;
     const {placeholderIndex} = this.state;
     const placeHolder = <div key="placeholder" className="task-card-placeholder"/>;
     let isPlaceHold = false;

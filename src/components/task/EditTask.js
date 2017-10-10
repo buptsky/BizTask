@@ -1,5 +1,4 @@
 import {Form, Input, Button, DatePicker, Select, Row, Col, Timeline, Spin} from 'antd';
-import Panel from '../common/panel/panel';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 
@@ -157,14 +156,11 @@ class EditTask extends React.Component {
   };
 
   render() {
-    const {onCancel, isLoading} = this.props;
+    const {isLoading} = this.props;
     return (
-      <Panel cancel={onCancel}
-             disableBtn={true}
-             panelTitle="任务详情"
-      >
+      <div>
         {isLoading ? <Spin/> : this.renderForm()}
-      </Panel>
+      </div>
     );
   }
 }

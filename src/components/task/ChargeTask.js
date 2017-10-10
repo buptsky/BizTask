@@ -3,6 +3,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import TaskMenu from './TaskMenu';
 import TaskContent from './TaskContent';
+import Panel from '../common/panel/panel';
 import NewTask from './NewTask';
 import EditTask  from './EditTask';
 import * as CommonActions from '../../actions/common';
@@ -57,11 +58,14 @@ class Task extends React.Component {
             <NewTask onCancel={closeNewTask}/>
           </Modal>
           <TaskContent/>
-          {
-            editTask.isShow ?
-              <EditTask onCancel={closeEditTask}/>
-              : ''
-          }
+          <Panel
+            visible={editTask.isShow}
+            onCancel={closeEditTask}
+            title="任务详情"
+            footer={false}
+          >
+            <EditTask onCancel={closeEditTask}/>
+          </Panel>
         </Content>
       </Layout>
     );

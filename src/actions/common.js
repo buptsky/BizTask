@@ -11,7 +11,17 @@ export function loadAllPerson() {
     fetchData({
       url: '/user/getAll.do',
     }).then(data => {
-      dispatch(actionCreator(actionTypes.load_all_person, data));
+      dispatch(actionCreator(actionTypes.load_all_person_success, data));
+    });
+  }
+};
+
+export function loadUserInfo() {
+  return (dispatch) => {
+    fetchData({
+      url: '/user/getUserInfo.do',
+    }).then(data => {
+      dispatch(actionCreator(actionTypes.load_user_info_success, data));
     });
   }
 };
