@@ -62,8 +62,8 @@ class ApplyFilter extends React.Component {
                 <Select style={{width: 120}}>
                   <Option style={{width: 120}} key="search-all" value="search-all">全部</Option>
                   {
-                    config.workflowType.map((type) => {
-                      return (<Option key={type.value} value={type.value}>{type.title}</Option>);
+                    this.props.flowTypes.map((type) => {
+                      return (<Option key={type.flowTypeId} value={type.flowTypeId.toString()}>{type.flowTypeName}</Option>);
                     })
                   }
                 </Select>

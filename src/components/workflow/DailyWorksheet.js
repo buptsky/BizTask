@@ -1,7 +1,7 @@
 import WorkflowMenu from './WorkflowMenu';
 import WorkflowFilter from './WorkflowFilter';
 import WorkflowTable from './WorkflowTable';
-import WorkflowCreate from './WorkflowCreate';
+import WorkflowPanel from './WorkflowPanel';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {actionCreator} from '../../actions/action-creator';
@@ -16,7 +16,7 @@ const {Sider, Content} = Layout;
     dataSource: state.workflow.tableData
   }),
   dispatch => ({
-    activeHeaderMenu: ()=> {
+    activeHeaderMenu: () => {
       dispatch(actionCreator('change_header_menu', 'workflow'));
     },
     getTableData: bindActionCreators(getTableData, dispatch)
@@ -29,14 +29,34 @@ class DailyWorksheet extends React.Component {
       currentMenu: 'pending-apply', // 申请类型tab栏
       showCreatePanel: false, // 控制流程面板显隐
       filterType: 'pending-apply', // 筛选组件类型
-      flowData: {} // 查看已有的流程数据
+      flowTypes: [],
+      flowData: {}, // 查看已有的流程数据
     }
+  }
+
+  componentWillMount() {
+    const flowTypes = [];
+    // 获取所有流程
+    fetchData({
+      url: '/workflow/getFlowTypes.do',
+      data: {}
+    }).then((data) => {
+      data.forEach((flowType) => {
+        flowType['subFlowTypeList'].forEach((subFlowType) => {
+          flowTypes.push(subFlowType);
+        });
+      });
+      this.setState({
+        flowTypes
+      });
+    });
   }
 
   componentDidMount() {
     this.props.activeHeaderMenu();
     this.props.getTableData(); // 获取table数据
   }
+
   // 关闭创建流程面板
   closePanel = () => {
     // 清除flowdata
@@ -89,14 +109,17 @@ class DailyWorksheet extends React.Component {
       url: '/workflow/getApplicationDetail.do',
       data: {flowId: id}
     }).then((data) => { // 获取数据传入流程面板，并开启面板
-      this.setState({flowData: data}, () => {this.openPanel()});
+      this.setState({flowData: data}, () => {
+        this.openPanel()
+      });
+      console.log(data);
     });
   }
 
   render() {
     return (
       <Layout className="workflow">
-        <Sider width={200} style={{ background: '#fff', borderRight: '2px solid #ccc' }}>
+        <Sider width={200} style={{background: '#fff', borderRight: '2px solid #ccc'}}>
           <WorkflowMenu activeKey="daily-worksheet"/>
         </Sider>
         <Content style={{padding: '20px', position: 'relative', backgroundColor: '#fff'}}>
@@ -106,24 +129,30 @@ class DailyWorksheet extends React.Component {
             mode="horizontal"
           >
             <Menu.Item key="pending-apply">
-              <Icon type="hourglass" />待处理的申请
+              <Icon type="hourglass"/>待处理的申请
             </Menu.Item>
             <Menu.Item key="my-apply">
-              <Icon type="user" />我的申请
+              <Icon type="user"/>我的申请
             </Menu.Item>
             <Menu.Item key="all-apply">
-              <Icon type="team" />所有人的申请
+              <Icon type="team"/>所有人的申请
             </Menu.Item>
           </Menu>
-          <Button type="primary" icon="plus" style={{position: 'absolute', top: '30px', left: '475px'}} onClick={this.openPanel}>新增申请</Button>
+          <Button type="primary" icon="plus" style={{position: 'absolute', top: '30px', left: '475px'}}
+                  onClick={this.openPanel}>新增申请</Button>
           {
             this.state.showCreatePanel ?
-              <WorkflowCreate close={this.closePanel} data={this.state.flowData}/>
+              <WorkflowPanel
+                close={this.closePanel}
+                data={this.state.flowData}
+                flowTypes={this.state.flowTypes}
+              />
               : ''
           }
           <WorkflowFilter
             type={this.state.filterType}
             filterChange={this.filterChange}
+            flowTypes={this.state.flowTypes}
           />
           <WorkflowTable
             pageChange={this.tablePageChange}
@@ -137,4 +166,5 @@ class DailyWorksheet extends React.Component {
     );
   }
 }
+
 export default DailyWorksheet;
