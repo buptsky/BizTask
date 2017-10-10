@@ -27,6 +27,7 @@ class SvnApplyForm extends React.Component {
     super(props);
     // 这里手动指定了flownamePrefix的默认值,以后可能会动态获取
     this.state = {
+      originData: {}, // 回填表单数据中的formData
       disableAll: false, // 禁用所有编辑（操作流程中的不可编辑权限）
       flownamePrefix: `svn权限申请-`, // 流程名称前缀
       storenamePrefix: 'http://bizsvn.sogou-inc.com/svn/', // 仓库名称前缀
@@ -38,12 +39,37 @@ class SvnApplyForm extends React.Component {
   }
 
   componentWillMount() {
+    // 获取表单回填数据
+    let originData = this.props.data;
+    let tags = [];
+    // 格式化表单数据
+    if (originData.formData) {
+      this.setState({
+        originData: {...originData, formData: JSON.parse(originData.formData)}
+      }, () => { // 设置权限人员数据
+        this.state.originData.formData.persons.forEach((person) => {
+          if (person.permission === '1') {
+            tags.push(`${person.email} 读写`);
+          } else {
+            tags.push(`${person.email} 只读`);
+          }
+        });
+        this.setState({permissionTags: tags});
+      });
+    }
     // 如果是查看/编辑 状态
-    if (this.props.data.canEdit === false) {
-      console.log('disabled');
+    if (originData.canEdit === false) {
       this.setState({
         disableAll: true
       });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.permissionInputVisible) {
+      // 这里直接访问了底层dom元素是为了使select组件的输入框获取焦点
+      // 暂时只找到这种解决方案，因为不使用datasource时，发现children中的input自定义失效了
+      ReactDOM.findDOMNode(this.permissionInput).click();
     }
   }
 
@@ -94,11 +120,7 @@ class SvnApplyForm extends React.Component {
   }
   // 显示添加权限人员输入框
   showPermissionInput = () => {
-    this.setState({permissionInputVisible: true}, () => {
-      // 这里直接访问了底层dom元素是为了使select组件的输入框获取焦点
-      // 暂时只找到这种解决方案，因为不使用datasource时，发现children中的input自定义失效了
-      ReactDOM.findDOMNode(this.permissionInput).click();
-    });
+    this.setState({permissionInputVisible: true});
   }
   // 隐藏添加权限人员输入框
   hidePermissionInput = () => {
@@ -134,6 +156,7 @@ class SvnApplyForm extends React.Component {
     this.setState({
       permissionTags: tags,
       permissionInputVisible: false,
+      permissionPersons: []
     });
     this.props.form.setFieldsValue({'default-add': tags.join(',')});  // 表单同步
   }
@@ -150,23 +173,18 @@ class SvnApplyForm extends React.Component {
   }
 
   render() {
-    let formData = {};
     let flowName = '';
     let formCheck = [];
     const {getFieldDecorator} = this.props.form;
-    // 获取表单回填数据
-    const originData = this.props.data;
-    // 格式化表单数据
-    if (originData.formData) {
-      formData = JSON.parse(originData.formData);
-    }
+    const originData = this.state.originData;
+    const formData = originData.formData ? originData.formData : {};
     // 表单回填的流程名称
     if (originData.flowName) {
       flowName = originData.flowName.split('-').slice(1).join('-');
     }
     // 表单回填中多选框处理
-    formData.needFinance ? formCheck.push('limit'): '';
-    formData.need404 ? formCheck.push('404'): '';
+    formData.needFinance ? formCheck.push('limit') : '';
+    formData.need404 ? formCheck.push('404') : '';
     // 仓库管理员下拉选项
     const managerOptions = this.props.persons.map((person) => {
       return <Option key={person.name}>{person.name}</Option>;
@@ -191,14 +209,15 @@ class SvnApplyForm extends React.Component {
           <FormItem label="仓库名称" {...formItemLayout1}>
             <span>http://bizsvn.sogou-inc.com/svn/</span>
             {getFieldDecorator('storage-name', {
-              initialValue: (formData.repositoryName) || ''})(
+              initialValue: formData.repositoryName || ''
+            })(
               <Input onChange={this.syncInput} disabled={this.state.disableAll}/>
             )}
           </FormItem>
           {/*仓库管理员*/}
           <FormItem label="仓库管理员" {...formItemLayout1}>
             {getFieldDecorator('storage-manager',
-              {initialValue: (formData.manager && formData.manager.split(','))|| []})(
+              {initialValue: (formData.manager && formData.manager.split(',')) || []})(
               <Select mode="multiple" disabled={this.state.disableAll}>
                 {managerOptions}
               </Select>
@@ -223,48 +242,47 @@ class SvnApplyForm extends React.Component {
             {getFieldDecorator('default-add', {initialValue: ''})(
               <Input type="hidden"/>
             )}
-            {this.state.permissionInputVisible && (
-              <AutoComplete
-                onSelect={this.confirmPermission}
-                onSearch={this.searchPermissionPersons}
-                onBlur={this.hidePermissionInput}
-                ref={(input) => this.permissionInput = input}
-                style={{width: '45%'}}
-              >
-                {permissionOptions}
-              </AutoComplete>
-            )}
-            {!this.state.permissionInputVisible &&
-            <Button type="dashed" onClick={this.showPermissionInput}>+ 新增成员</Button>}
+            {
+              this.state.permissionInputVisible ? (
+                  <AutoComplete
+                    onSelect={this.confirmPermission}
+                    onSearch={this.searchPermissionPersons}
+                    onBlur={this.hidePermissionInput}
+                    ref={(input) => this.permissionInput = input}
+                    style={{width: '45%'}}
+                  >
+                    {permissionOptions}
+                  </AutoComplete>
+                ) : (
+                  <Button type="dashed" onClick={this.showPermissionInput} disabled={this.state.disableAll}>+新增成员</Button>
+                )
+            }
             {/*权限描述*/}
             <RadioGroup defaultValue={"读写"}
                         onChange={this.changePermission}
                         style={{paddingLeft: '30px'}}
+                        disabled={this.state.disableAll}
             >
               <Radio value="读写">读写</Radio>
               <Radio value="只读">只读</Radio>
             </RadioGroup>
+            {/*新增权限人员显示*/}
+            <div className="permission-tags" style={{margin: '10px 0 20px 0'}}>
+              {this.state.permissionTags.map((tag, index) => {
+                const tagElem = (
+                  <Tag key={tag}
+                       style={{height: 28, lineHeight: '25px'}}
+                       color="#108ee9"
+                       closable={!this.state.disableAll}
+                       afterClose={() => this.deletePermission(tag)}
+                  >
+                    {tag}
+                  </Tag>
+                );
+                return tagElem;
+              })}
+            </div>
           </FormItem>
-          {/*新增权限人员显示*/}
-          <Row style={{margin: '10px 0 20px 0'}}>
-            <Col span={16} offset={7}>
-              <div className="permission-tags">
-                {this.state.permissionTags.map((tag, index) => {
-                  const tagElem = (
-                    <Tag key={tag}
-                         style={{height: 28, lineHeight: '25px'}}
-                         color="#108ee9"
-                         closable={true}
-                         afterClose={() => this.deletePermission(tag)}
-                    >
-                      {tag}
-                    </Tag>
-                  );
-                  return tagElem;
-                })}
-              </div>
-            </Col>
-          </Row>
           {/*备注*/}
           <FormItem label="备注" {...formItemLayout1}>
             {getFieldDecorator('remark', {initialValue: formData.remark || ''})(
@@ -277,10 +295,15 @@ class SvnApplyForm extends React.Component {
           </FormItem>
           {/*表单提交*/}
           <FormItem {...formItemLayout2}>
-            <Button type="primary" htmlType="submit">
-              启动
-            </Button>
-            <Button type="primary" style={{marginLeft: '20px'}} onClick={this.props.close}>
+            {/*仅创建流程*/}
+            {
+              !this.state.originData.formData && (
+                <Button type="primary" htmlType="submit" style={{marginRight: '20px'}}>
+                  启动
+                </Button>
+              )
+            }
+            <Button type="primary" onClick={this.props.close}>
               取消
             </Button>
           </FormItem>

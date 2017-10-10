@@ -55,6 +55,14 @@ class SvnPermissionForm extends React.Component {
     // }
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.permissionInputVisible) {
+      // 这里直接访问了底层dom元素是为了使select组件的输入框获取焦点
+      // 暂时只找到这种解决方案，因为不使用datasource时，发现children中的input自定义失效了
+      ReactDOM.findDOMNode(this.permissionInput).click();
+    }
+  }
+
   // 表单提交
   handleSubmit = (e) => {
     // 还没有进行表单检测处理
@@ -91,11 +99,6 @@ class SvnPermissionForm extends React.Component {
       console.log({...commonArgs, formData}); // 最后提交的参数集
     });
   }
-  // 取消创建流程，关闭面板
-  createCancel = () => {
-    this.props.close();
-    console.log('panel cancel');
-  }
   // 查找符合条件的权限人员(暂时不使用默认的自动补全)
   searchPermissionPersons = (value) => {
     let ret = [];
@@ -113,11 +116,7 @@ class SvnPermissionForm extends React.Component {
   }
   // 显示添加权限人员输入框
   showPermissionInput = () => {
-    this.setState({permissionInputVisible: true}, () => {
-      // 这里直接访问了底层dom元素是为了使select组件的输入框获取焦点
-      // 暂时只找到这种解决方案，因为不使用datasource时，发现children中的input自定义失效了
-      ReactDOM.findDOMNode(this.permissionInput).click();
-    });
+    this.setState({permissionInputVisible: true});
   }
   // 隐藏添加权限人员输入框
   hidePermissionInput = () => {
@@ -138,6 +137,7 @@ class SvnPermissionForm extends React.Component {
     this.setState({
       permissionTags: tags,
       permissionInputVisible: false,
+      permissionPersons: []
     });
     this.props.form.setFieldsValue({'default-add': tags.join(',')});  // 表单同步
   }
@@ -230,25 +230,24 @@ class SvnPermissionForm extends React.Component {
                 {pathOptions}
               </AutoComplete>
             )}
+            {/*仓库名称显示及操作*/}
+            {
+              this.state.storeManagers['repositories'] &&
+              this.state.storeManagers['repositories'].map((item, index) => {
+                const storeElem = (
+                  <div className="store-wrapper" key={index}>
+                      <div className="store-item">
+                        <p className="store-path">{item.path}</p>
+                        <span className="close">删除</span>
+                        <span className="manager">管理员: {item.managers.join(' ')}</span>
+                      </div>
+                  </div>
+                )
+                return storeElem;
+              })
+            }
           </FormItem>
-          {/*仓库名称显示及操作*/}
-          {
-            this.state.storeManagers['repositories'] &&
-            this.state.storeManagers['repositories'].map((item, index) => {
-              const storeElem = (
-                <Row className="store-wrapper" key={index}>
-                  <Col span={16} offset={7}>
-                    <div className="store-item">
-                      <p className="store-path">{item.path}</p>
-                      <span className="close">删除</span>
-                      <span className="manager">管理员: {item.managers.join(' ')}</span>
-                    </div>
-                  </Col>
-                </Row>
-              )
-              return storeElem;
-            })
-          }
+
           {/*管理员通知*/}
           <FormItem label="邮件通知以下管理员审批" {...formItemLayout1}>
             {getFieldDecorator('inform-manager', {initialValue: []})(
@@ -262,48 +261,47 @@ class SvnPermissionForm extends React.Component {
             {getFieldDecorator('default-add', {initialValue: ''})(
               <Input type="hidden"/>
             )}
-            {this.state.permissionInputVisible && (
-              <AutoComplete
-                onSelect={this.confirmPermission}
-                onSearch={this.searchPermissionPersons}
-                onBlur={this.hidePermissionInput}
-                ref={(input) => this.permissionInput = input}
-                style={{width: '45%'}}
-              >
-                {permissionOptions}
-              </AutoComplete>
-            )}
-            {!this.state.permissionInputVisible &&
-            <Button type="dashed" onClick={this.showPermissionInput}>+ 新增成员</Button>}
+            {
+              this.state.permissionInputVisible ? (
+                <AutoComplete
+                  onSelect={this.confirmPermission}
+                  onSearch={this.searchPermissionPersons}
+                  onBlur={this.hidePermissionInput}
+                  ref={(input) => this.permissionInput = input}
+                  style={{width: '45%'}}
+                >
+                  {permissionOptions}
+                </AutoComplete>
+              ) : (
+                <Button type="dashed" onClick={this.showPermissionInput} disabled={this.state.disableAll}>+新增成员</Button>
+              )
+            }
             {/*权限描述*/}
             <RadioGroup defaultValue={"读写"}
                         onChange={this.changePermission}
                         style={{paddingLeft: '30px'}}
+                        disabled={this.state.disableAll}
             >
               <Radio value="读写">读写</Radio>
               <Radio value="只读">只读</Radio>
             </RadioGroup>
+            {/*新增权限人员显示*/}
+            <div className="permission-tags" style={{margin: '10px 0 20px 0'}}>
+              {this.state.permissionTags.map((tag, index) => {
+                const tagElem = (
+                  <Tag key={tag}
+                       style={{height: 28, lineHeight: '25px'}}
+                       color="#108ee9"
+                       closable={!this.state.disableAll}
+                       afterClose={() => this.deletePermission(tag)}
+                  >
+                    {tag}
+                  </Tag>
+                );
+                return tagElem;
+              })}
+            </div>
           </FormItem>
-          {/*新增权限人员显示*/}
-          <Row style={{margin: '10px 0 20px 0'}}>
-            <Col span={16} offset={7}>
-              <div className="permission-tags">
-                {this.state.permissionTags.map((tag, index) => {
-                  const tagElem = (
-                    <Tag key={tag}
-                         style={{height: 28, lineHeight: '25px'}}
-                         color="#108ee9"
-                         closable={true}
-                         afterClose={() => this.deletePermission(tag)}
-                    >
-                      {tag}
-                    </Tag>
-                  );
-                  return tagElem;
-                })}
-              </div>
-            </Col>
-          </Row>
           {/*备注*/}
           <FormItem label="备注" {...formItemLayout1}>
             {getFieldDecorator('remark', {initialValue: (originData.formData && originData.formData.remark) || ''})(

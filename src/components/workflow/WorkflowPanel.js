@@ -143,7 +143,7 @@ class WorkflowPanel extends React.Component {
               <TextArea rows={4}
                         value={this.state.message}
                         className="note"
-                        placeholder={this.state.disableAll ? '暂无留言' : "你可以在这里留言"}
+                        placeholder={this.state.disableAll ? '' : "你可以在这里留言"}
                         onChange={this.changeMessage}
                         disabled={this.state.disableAll}
               />

@@ -4,7 +4,7 @@
       "taskId":"102",
       "flowTypeId": 101,
       "flowName":"SVN仓库申请-bizwork-task-fe",
-      "formData":"{\"repositoryName\":\"bizwork-task-fe\",\"manager\":\"zhaiyibo\",\"description\":\"功能描述\",\"needADPublish\":true,\"needFinance\":true,\"need404\":true,\"remark\":\"备注(remark)\"}",
+      "formData":"{\"repositoryName\":\"bizwork-task-fe\",\"manager\":\"zhaiyibo\",\"description\":\"功能描述\",\"needADPublish\":true,\"needFinance\":true,\"need404\":true,\"persons\":[{\"email\":\"weilin\",\"permission\":\"1\"},{\"email\":\"shangyan200758\",\"permission\":\"1\"}],\"remark\":\"备注(remark)\"}",
       "flowImageUrl":"http://www.baidu.com",
       "canAuthorize":true,
       "canEdit": false,
