@@ -8,17 +8,16 @@ const SelectOption = Select.Option;
 const {TextArea} = Input;
 const FormItem = Form.Item;
 const formItemLayout = { // 标签 + 输入
-  labelCol: {span: 6},
+  labelCol: {span: 5},
   wrapperCol: {span: 16, offset: 1}
 };
 
 function mapStateToProps(state) {
   return {
-    taskId: state.task.taskModal.taskId,
     persons: state.common.commonData.persons,
     personsAndGroups: state.common.commonData.personsAndGroups,
-    isSubmitting: state.task.taskModal.isSubmitting,
-    queryArgs: state.task.queryArgs   //添加、修改完根据此参数重新查询task列表
+    isSubmitting: state.task.newTask.isSubmitting,
+    queryArgs: state.task.queryArgs   //添加完根据此参数重新查询task列表
   };
 }
 
@@ -27,26 +26,9 @@ function mapDispatchToProps(dispatch) {
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
-class TaskModal extends React.Component {
+class NewTask extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      taskInfo: {}
-    };
-  }
-
-  componentDidMount() {
-    const {taskId} = this.props;
-    if (taskId) {
-      fetchData({
-        url: '/task/getTaskDetail.do',
-        data: {taskId}
-      }).then((data) => {
-        this.setState({
-          taskInfo: data
-        });
-      });
-    }
   }
 
   handleSubmit = (e) => {
@@ -67,8 +49,6 @@ class TaskModal extends React.Component {
 
   render() {
     const {onCancel, persons, personsAndGroups, isSubmitting} = this.props;
-    const {taskInfo} = this.state;
-    const defaultRangeTime = taskInfo.rangeTime;
     const {getFieldDecorator} = this.props.form;
     const chargeSelectOptions = persons.map((person) => {
       return <SelectOption key={person.name}>{person.label}</SelectOption>;
@@ -83,7 +63,6 @@ class TaskModal extends React.Component {
           {...formItemLayout}
         >
           {getFieldDecorator('taskName', {
-            initialValue: taskInfo.taskName || '',
             rules: [{required: true, message: '请输入任务名'}],
           })(
             <Input/>
@@ -94,7 +73,6 @@ class TaskModal extends React.Component {
           {...formItemLayout}
         >
           {getFieldDecorator('chargeUser', {
-            initialValue: taskInfo.chargeUser || '',
             rules: [{required: true, message: '请选择负责人'}],
           })(
             <Select showSearch>
@@ -106,9 +84,7 @@ class TaskModal extends React.Component {
           label="关注人"
           {...formItemLayout}
         >
-          {getFieldDecorator('followUsers', {
-            initialValue: taskInfo.followUsers || [],
-          })(
+          {getFieldDecorator('followUsers')(
             <Select mode="multiple">
               {attentionSelectOptions}
             </Select>
@@ -118,9 +94,7 @@ class TaskModal extends React.Component {
           label="任务时限"
           {...formItemLayout}
         >
-          {getFieldDecorator('rangeTime', {
-            initialValue: defaultRangeTime? [moment(defaultRangeTime[0]),moment(defaultRangeTime[1])] : [],
-          })(
+          {getFieldDecorator('rangeTime')(
             <RangePicker/>
           )}
         </FormItem>
@@ -128,9 +102,7 @@ class TaskModal extends React.Component {
           label="任务描述"
           {...formItemLayout}
         >
-          {getFieldDecorator('description',{
-            initialValue: taskInfo.description || [],
-          })(
+          {getFieldDecorator('description')(
             <TextArea rows={4}/>
           )}
         </FormItem>
@@ -148,4 +120,4 @@ class TaskModal extends React.Component {
   }
 }
 
-export default Form.create()(TaskModal);
+export default Form.create()(NewTask);

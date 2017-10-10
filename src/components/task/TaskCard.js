@@ -2,7 +2,6 @@ import {Icon, Modal} from 'antd';
 import {ItemTypes} from './Constants';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
-import {TaskModalTypes} from './Constants';
 import {DragSource} from 'react-dnd';
 
 const confirm = Modal.confirm;
@@ -77,8 +76,7 @@ class TaskCard extends React.Component {
   //编辑任务
   editTask = (task) => {
     return (e) => {
-      this.props.openTaskModal({
-        type: TaskModalTypes.EDIT,
+      this.props.openEditTask({
         taskId: task.taskId
       });
     }

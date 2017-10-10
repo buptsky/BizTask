@@ -14,8 +14,11 @@ export const actionTypes = {
   get_tasks_success: 'get_tasks_success',
   move_task: 'move_task',
   delete_task: 'delete_task',
-  open_task_modal: 'open_task_modal',
-  close_task_modal: 'close_task_modal',
+  open_new_task: 'open_new_task',
+  close_new_task: 'close_new_task',
   add_task: 'add_task',
-  add_task_success: 'add_task_success'
+  add_task_success: 'add_task_success',
+  open_edit_task: 'open_edit_task',
+  close_edit_task: 'close_edit_task',
+  get_task_detail_success: 'get_task_detail_success'
 };

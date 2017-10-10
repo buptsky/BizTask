@@ -51,7 +51,7 @@ class TaskContent extends React.Component {
   render() {
     const {isLoading, taskLists} = this.props;
     return (
-      <div style={{height: '100%', display: 'flex', marginTop: '10px'}}>
+      <div style={{display: 'flex', marginTop: '10px', flexGrow: 1}}>
         {isLoading ? <Spin tip="Loading..."/> : this.renderTasks(taskLists)}
       </div>
     );
