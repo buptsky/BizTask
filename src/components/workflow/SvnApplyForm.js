@@ -3,7 +3,7 @@ import config from './WorkflowConfig';
 import {connect} from 'react-redux';
 import ReactDOM from 'react-dom';
 // 表单样式配置
-const { formItemLayout1, formItemLayout2}  = config;
+const {formItemLayout1, formItemLayout2} = config;
 // antd 组件配置
 const FormItem = Form.Item;
 const Option = Select.Option;
@@ -86,20 +86,6 @@ class SvnApplyForm extends React.Component {
       console.log({...commonArgs, formData}); // 最后提交的参数集
     });
   }
-  // 隐藏仓库名input前缀
-  hidePrefix = () => {
-    // 由于改变input组件的前缀会使其失去焦点，所以这里需要再次触发focus使其重获焦点
-    // 而setState的更新是异步更新，所以需要在更新成功后的回调中进行焦点的再次获取
-    this.setState({storenamePrefix: ''}, () => {
-      this.textInput.focus();
-    });
-  }
-  // 显示仓库名input前缀
-  showPrefix = () => {
-    this.setState({
-      storenamePrefix: 'http://bizsvn.sogou-inc.com/svn/'
-    });
-  }
   // 同步输入 （可能影响性能，可优化）
   syncInput = (e) => {
     this.props.form.setFieldsValue({
@@ -120,7 +106,7 @@ class SvnApplyForm extends React.Component {
   }
   // 查找符合条件的权限人员(暂时不使用默认的自动补全)
   searchPermissionPersons = (value) => {
-    let ret  = [];
+    let ret = [];
     if (value) {
       // 权限人员集合
       const persons = this.props.persons.map((person) => person.name);
@@ -162,13 +148,27 @@ class SvnApplyForm extends React.Component {
   changePermission = (e) => {
     this.setState({permissionType: e.target.value})
   }
-  
+
   render() {
+    let formData = {};
+    let flowName = '';
+    let formCheck = [];
     const {getFieldDecorator} = this.props.form;
     // 获取表单回填数据
     const originData = this.props.data;
+    // 格式化表单数据
+    if (originData.formData) {
+      formData = JSON.parse(originData.formData);
+    }
+    // 表单回填的流程名称
+    if (originData.flowName) {
+      flowName = originData.flowName.split('-').slice(1).join('-');
+    }
+    // 表单回填中多选框处理
+    formData.needFinance ? formCheck.push('limit'): '';
+    formData.need404 ? formCheck.push('404'): '';
     // 仓库管理员下拉选项
-    const managerOptions = this.props.persons.map((person)=>{
+    const managerOptions = this.props.persons.map((person) => {
       return <Option key={person.name}>{person.name}</Option>;
     });
     // 权限人员下拉选项
@@ -183,43 +183,39 @@ class SvnApplyForm extends React.Component {
         >
           {/*流程名称*/}
           <FormItem label="流程名称" {...formItemLayout1}>
-            {getFieldDecorator('create-name', {initialValue: ''})(
+            {getFieldDecorator('create-name', {initialValue: flowName || ''})(
               <Input addonBefore={this.state.flownamePrefix} disabled/>
             )}
           </FormItem>
           {/*仓库名称*/}
           <FormItem label="仓库名称" {...formItemLayout1}>
-            {getFieldDecorator('storage-name', {initialValue: ''})(
-              <Input addonBefore={this.state.storenamePrefix}
-                     onFocus={this.hidePrefix}
-                     onBlur={this.showPrefix}
-                     onChange={this.syncInput}
-                     ref={(input) => {
-                       this.textInput = input;
-                     }}
-              />
+            <span>http://bizsvn.sogou-inc.com/svn/</span>
+            {getFieldDecorator('storage-name', {
+              initialValue: (formData.repositoryName) || ''})(
+              <Input onChange={this.syncInput} disabled={this.state.disableAll}/>
             )}
           </FormItem>
           {/*仓库管理员*/}
           <FormItem label="仓库管理员" {...formItemLayout1}>
-            {getFieldDecorator('storage-manager', {initialValue: []})(
-              <Select mode="multiple">
+            {getFieldDecorator('storage-manager',
+              {initialValue: (formData.manager && formData.manager.split(','))|| []})(
+              <Select mode="multiple" disabled={this.state.disableAll}>
                 {managerOptions}
               </Select>
             )}
           </FormItem>
           {/*仓库功能描述*/}
           <FormItem label="仓库功能描述" style={{marginBottom: '5px'}} {...formItemLayout1}>
-            {getFieldDecorator('storage-desc', {initialValue: ''})(
-              <TextArea rows={4} style={{resize: 'none'}}></TextArea>
+            {getFieldDecorator('storage-desc', {initialValue: formData.description || ''})(
+              <TextArea rows={4} style={{resize: 'none'}} disabled={this.state.disableAll}></TextArea>
             )}
           </FormItem>
           {/*功能描述多选框*/}
           <FormItem  {...formItemLayout2}>
             {getFieldDecorator('check-opt', {
-              initialValue: [],
+              initialValue: formCheck || [],
             })(
-              <CheckboxGroup options={checkOptions}/>
+              <CheckboxGroup options={checkOptions} disabled={this.state.disableAll}/>
             )}
           </FormItem>
           {/*默认添加权限*/}
@@ -271,7 +267,7 @@ class SvnApplyForm extends React.Component {
           </Row>
           {/*备注*/}
           <FormItem label="备注" {...formItemLayout1}>
-            {getFieldDecorator('remark', {initialValue: (originData.formData && originData.formData.remark) || ''})(
+            {getFieldDecorator('remark', {initialValue: formData.remark || ''})(
               <TextArea rows={4}
                         style={{resize: 'none'}}
                         disabled={this.state.disableAll}

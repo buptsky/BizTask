@@ -91,20 +91,6 @@ class SvnPermissionForm extends React.Component {
       console.log({...commonArgs, formData}); // 最后提交的参数集
     });
   }
-  // 隐藏仓库名input前缀
-  hidePrefix = () => {
-    // 由于改变input组件的前缀会使其失去焦点，所以这里需要再次触发focus使其重获焦点
-    // 而setState的更新是异步更新，所以需要在更新成功后的回调中进行焦点的再次获取
-    this.setState({storenamePrefix: ''}, () => {
-      this.textInput.focus();
-    });
-  }
-  // 显示仓库名input前缀
-  showPrefix = () => {
-    this.setState({
-      storenamePrefix: 'http://bizsvn.sogou-inc.com/svn/'
-    });
-  }
   // 取消创建流程，关闭面板
   createCancel = () => {
     this.props.close();
@@ -238,16 +224,6 @@ class SvnPermissionForm extends React.Component {
             <span>http://bizsvn.sogou-inc.com/svn/</span>
             {getFieldDecorator('storage-name-allot', {initialValue: ''})(
               <AutoComplete
-                // children={
-                //   <Input
-                //     addonBefore={this.state.storenamePrefix}
-                //     onFocus={this.hidePrefix}
-                //     onBlur={this.showPrefix}
-                //     ref={(input) => {
-                //       this.textInput = input;
-                //     }}
-                //   />
-                // }
                 onSearch={this.searchStorage}
                 onSelect={this.confirmStorage}
               >

@@ -129,7 +129,9 @@ class WorkflowPanel extends React.Component {
                         style={{width: '100%'}}
                         className="create-type"
                         defaultValue="102"
+                        value={this.state.currentFlowType}
                         onSelect={this.changeType}
+                        disabled={this.state.disableAll}
                       >
                         {workflowSelectItem}
                       </Select>
