@@ -1,14 +1,29 @@
 {
-    "success": true,
-    "data": [{
-        "flowTypeName": "全部",
-        "flowTypeId": 1,
-        "subFlowTypeList": [{
-            "flowTypeName": "SVN仓库申请",
-            "flowTypeId": 101
-        }, {
-            "flowTypeName": "SVN权限分配",
-            "flowTypeId": 102
-        }]
-    }]
+  "success": true,
+  "data": [
+    {
+      "flowTypeName": "svn",
+      "flowTypeId": 1,
+      "subFlowTypeList": [
+        {
+          "flowTypeName": "SVN仓库申请",
+          "flowTypeId": 101
+        },
+        {
+          "flowTypeName": "SVN权限分配",
+          "flowTypeId": 102
+        }
+      ]
+    },
+    {
+      "flowTypeName": "入职",
+      "flowTypeId": 2,
+      "subFlowTypeList": [
+        {
+          "flowTypeName": "新员工入职",
+          "flowTypeId": 201
+        }
+      ]
+    }
+  ]
 }
