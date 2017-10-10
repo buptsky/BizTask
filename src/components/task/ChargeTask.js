@@ -3,8 +3,8 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import TaskMenu from './TaskMenu';
 import TaskContent from './TaskContent';
-import TaskDetail from './TaskDetail';
-import {TaskPanelTypes} from './Constants';
+import TaskModal from './TaskModal';
+import {TaskModalTypes} from './Constants';
 import * as CommonActions from '../../actions/common';
 import * as TaskActions from '../../actions/task';
 
@@ -12,15 +12,15 @@ const {Sider, Content} = Layout;
 
 function mapStateToProps(state) {
   return {
-    taskDetail: state.task.taskDetail
+    taskModal: state.task.taskModal
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     activeHeaderMenu: CommonActions.activeHeaderMenu,
-    openTaskDetail: TaskActions.openTaskDetail,
-    closeTaskDetail: TaskActions.closeTaskDetail
+    openTaskModal: TaskActions.openTaskModal,
+    closeTaskModal: TaskActions.closeTaskModal
   }, dispatch);
 }
 
@@ -35,16 +35,14 @@ class Task extends React.Component {
   }
 
   newTask = () => {
-    this.props.openTaskDetail({
-      type: TaskPanelTypes.NEW
+    this.props.openTaskModal({
+      type: TaskModalTypes.NEW,
+      taskId: undefined
     });
-  };
-  closeDetail = () => {
-    this.props.closeTaskDetail();
   };
 
   render() {
-    const {taskDetail} = this.props;
+    const {taskModal, closeTaskModal} = this.props;
     return (
       <Layout>
         <Sider>
@@ -53,13 +51,13 @@ class Task extends React.Component {
         <Content style={{padding: "20px"}}>
           <Button type="primary" icon="plus" style={{}} onClick={this.newTask}>添加任务</Button>
           <Modal
-            title={taskDetail.title}
-            visible={taskDetail.isShow}
-            onCancel={this.closeDetail}
+            title={taskModal.title}
+            visible={taskModal.isShow}
+            onCancel={closeTaskModal}
             footer={null}
             maskClosable={false}
           >
-            <TaskDetail closeDetail={this.closeDetail}/>
+            <TaskModal onCancel={closeTaskModal}/>
           </Modal>
           <TaskContent/>
         </Content>

@@ -2,19 +2,9 @@
     "success": 1,
     "data": {
         "taskName": "任务1",
-        "startTime": "2016-07-08",
-        "endTime": "2016-09-08",
-        "chargeUser": 1,
-        "chargeUserName": "翟懿博",
-        "followUsers": [{
-            "id": "1",
-            "name": "翟懿博",
-            "displayName": "博"
-        }, {
-            "id": "2",
-            "name": "梁宵",
-            "displayName": "宵"
-        }],
+        "rangeTime": ["2016-07-08","2016-09-08"],
+        "chargeUser": "zhaiyibo",
+        "followUsers": ["zhaiyibo","liangxiao"],
         "description": "这里是任务描述",
         "fileList": [{
             "fileName": "附件1",
@@ -22,19 +12,6 @@
         }, {
             "fileName": "附件2",
             "filePath": "http://sogou.com"
-        }],
-        "tags": [{
-            "id": 1,
-            "name": "标签1",
-            "color": "grey"
-        }, {
-            "id": 2,
-            "name": "标签2",
-            "color": "blue"
-        }, {
-            "id": 3,
-            "name": "标签3",
-            "color": "#59c203"
         }],
         "optionLog": [{
             "operator": "陈曦",
