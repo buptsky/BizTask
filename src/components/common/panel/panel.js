@@ -37,7 +37,6 @@ class Panel extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (nextProps.visible) {
       this.setState({
         showFlag: true,
