@@ -3,8 +3,9 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import TaskMenu from './TaskMenu';
 import TaskContent from './TaskContent';
-import TaskModal from './TaskModal';
-import {TaskModalTypes} from './Constants';
+import Panel from '../common/panel/panel';
+import NewTask from './NewTask';
+import EditTask  from './EditTask';
 import * as CommonActions from '../../actions/common';
 import * as TaskActions from '../../actions/task';
 
@@ -12,15 +13,15 @@ const {Sider, Content} = Layout;
 
 function mapStateToProps(state) {
   return {
-    taskModal: state.task.taskModal
+    newTask: state.task.newTask,
+    editTask: state.task.editTask
   };
 }
 
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
-    activeHeaderMenu: CommonActions.activeHeaderMenu,
-    openTaskModal: TaskActions.openTaskModal,
-    closeTaskModal: TaskActions.closeTaskModal
+    ...CommonActions,
+    ...TaskActions
   }, dispatch);
 }
 
@@ -35,31 +36,36 @@ class Task extends React.Component {
   }
 
   newTask = () => {
-    this.props.openTaskModal({
-      type: TaskModalTypes.NEW,
-      taskId: undefined
-    });
+    this.props.openNewTask();
   };
 
   render() {
-    const {taskModal, closeTaskModal} = this.props;
+    const {newTask, closeNewTask, editTask, closeEditTask} = this.props;
     return (
       <Layout>
         <Sider>
           <TaskMenu activeKey="chargeTask"/>
         </Sider>
-        <Content style={{padding: "20px"}}>
-          <Button type="primary" icon="plus" style={{}} onClick={this.newTask}>添加任务</Button>
+        <Content style={{padding: "20px", display: "flex", flexDirection: "column"}}>
+          <Button type="primary" icon="plus" style={{width: "110px"}} onClick={this.newTask}>添加任务</Button>
           <Modal
-            title={taskModal.title}
-            visible={taskModal.isShow}
-            onCancel={closeTaskModal}
+            title="创建任务"
+            visible={newTask.isShow}
+            onCancel={closeNewTask}
             footer={null}
             maskClosable={false}
           >
-            <TaskModal onCancel={closeTaskModal}/>
+            <NewTask onCancel={closeNewTask}/>
           </Modal>
           <TaskContent/>
+          <Panel
+            visible={editTask.isShow}
+            onCancel={closeEditTask}
+            title="任务详情"
+            footer={false}
+          >
+            <EditTask onCancel={closeEditTask}/>
+          </Panel>
         </Content>
       </Layout>
     );

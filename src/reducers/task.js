@@ -1,14 +1,17 @@
 import {actionTypes} from "../actions/action-creator";
-import {TaskModalTypes} from '../components/task/Constants';
 
 const initialState = {
   taskLists: [],
   isLoading: true,
   queryArgs: {},
-  taskModal: {
+  newTask: {
     isShow: false,
-    title: 'Title',
-    taskId: undefined,
+    isSubmitting: false
+  },
+  editTask: {
+    taskDetail: {},
+    isShow: false,
+    isLoading: false,
     isSubmitting: false
   }
 };
@@ -58,38 +61,61 @@ export function task(state = initialState, action) {
         ...state,
         taskLists: listForDelete
       };
-    case actionTypes.open_task_modal:
-      const args = action.payload;
+    case actionTypes.open_new_task:
       return {
         ...state,
-        taskModal: {
-          isShow: true,
-          title: args.type === TaskModalTypes.NEW ? '创建任务' : '任务详情',
-          taskId: args.taskId
+        newTask: {
+          isShow: true
         }
       };
-    case actionTypes.close_task_modal:
+    case actionTypes.close_new_task:
       return {
         ...state,
-        taskModal: {
+        newTask: {
           isShow: false
         }
       };
     case actionTypes.add_task:
       return {
         ...state,
-        taskModal: {
-          ...state.taskModal,
+        newTask: {
+          ...state.newTask,
           isSubmitting: true
         }
       };
     case actionTypes.add_task_success:
       return {
         ...state,
-        taskModal: {
-          ...state.taskModal,
+        newTask: {
+          ...state.newTask,
           isShow: false,
           isSubmitting: false
+        }
+      };
+    case actionTypes.open_edit_task:
+      return {
+        ...state,
+        editTask: {
+          ...state.editTask,
+          isShow: true,
+          isLoading: true
+        }
+      };
+    case actionTypes.get_task_detail_success:
+      return {
+        ...state,
+        editTask: {
+          ...state.editTask,
+          isLoading: false,
+          taskDetail: action.payload
+        }
+      };
+    case actionTypes.close_edit_task:
+      return {
+        ...state,
+        editTask: {
+          ...state.editTask,
+          isShow: false
         }
       };
     default:

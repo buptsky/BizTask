@@ -1,5 +1,6 @@
 const theme = {
   "@font-size-base": "14px",
+  "@disabled-color": "#000",
   "@text-color": "#333",
   "@grey-1": "#fbfbfb",
   "@grey-2": "#f7f7f7",
