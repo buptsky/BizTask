@@ -2,6 +2,7 @@ import WorkflowMenu from './WorkflowMenu';
 import WorkflowFilter from './WorkflowFilter';
 import WorkflowTable from './WorkflowTable';
 import WorkflowPanel from './WorkflowPanel';
+import Panel from '../common/panel/panel';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {actionCreator} from '../../actions/action-creator';
@@ -31,6 +32,7 @@ class DailyWorksheet extends React.Component {
       filterType: 'pending-apply', // 筛选组件类型
       flowTypes: [],
       flowData: {}, // 查看已有的流程数据
+      test: false
     }
   }
 
@@ -69,7 +71,7 @@ class DailyWorksheet extends React.Component {
   openPanel = () => {
     this.setState({
       showCreatePanel: true
-    })
+    });
   }
   // 切换申请类型菜单
   switchMenu = (e) => {
@@ -110,7 +112,7 @@ class DailyWorksheet extends React.Component {
       data: {flowId: id}
     }).then((data) => { // 获取数据传入流程面板，并开启面板
       this.setState({flowData: data}, () => {
-        this.openPanel()
+        this.openPanel();
       });
       console.log(data);
     });
@@ -138,17 +140,23 @@ class DailyWorksheet extends React.Component {
               <Icon type="team"/>所有人的申请
             </Menu.Item>
           </Menu>
-          <Button type="primary" icon="plus" style={{position: 'absolute', top: '30px', left: '475px'}}
-                  onClick={this.openPanel}>新增申请</Button>
-          {
-            this.state.showCreatePanel ?
-              <WorkflowPanel
-                close={this.closePanel}
-                data={this.state.flowData}
-                flowTypes={this.state.flowTypes}
-              />
-              : ''
-          }
+          <Button type="primary"
+                  icon="plus"
+                  style={{position: 'absolute', top: '30px', left: '475px'}}
+                  onClick={this.openPanel}>新增申请
+          </Button>
+          <Panel
+            visible={this.state.showCreatePanel}
+            onCancel={this.closePanel}
+            title="创建流程"
+            footer={false}
+          >
+            <WorkflowPanel
+              data={this.state.flowData}
+              flowTypes={this.state.flowTypes}
+              close={this.closePanel}
+            />
+          </Panel>
           <WorkflowFilter
             type={this.state.filterType}
             filterChange={this.filterChange}

@@ -1,5 +1,4 @@
 import {Select, Input, Row, Col} from 'antd';
-import Panel from '../common/panel/panel';
 import WorkflowTimeline from './WorkflowTimeline';
 import SvnPermissionForm from './SvnPermissionForm';
 import SvnApplyForm from './SvnApplyForm';
@@ -60,11 +59,6 @@ class WorkflowPanel extends React.Component {
       message: '' // 重置留言
     });
   }
-  // 取消创建流程，关闭面板
-  createCancel = () => {
-    this.props.close();
-    console.log('panel cancel');
-  }
   // 记录留言以备表单提交
   changeMessage = (e) => {
     this.setState({message: e.target.value});
@@ -90,12 +84,12 @@ class WorkflowPanel extends React.Component {
     switch (this.state.currentFlowType) {
       case '101':
         flowForm = (
-          <SvnApplyForm data={this.props.data} message={this.state.message}/>
+          <SvnApplyForm data={this.props.data} message={this.state.message} close={this.props.close}/>
         )
         break;
       case '102':
         flowForm = (
-          <SvnPermissionForm data={this.props.data} message={this.state.message}/>
+          <SvnPermissionForm data={this.props.data} message={this.state.message} close={this.props.close}/>
         )
         break;
       case '201':
@@ -106,10 +100,7 @@ class WorkflowPanel extends React.Component {
     }
 
     return (
-      <Panel cancel={this.createCancel}
-             disableBtn={true}
-             panelTitle="创建流程"
-      >
+      <div className="workflow-panel">
         <Row>
           {/*左侧表单*/}
           <Col span={12} className="panel-left">
@@ -159,7 +150,7 @@ class WorkflowPanel extends React.Component {
             </div>
           </Col>
         </Row>
-      </Panel>
+      </div>
     );
   }
 }

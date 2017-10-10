@@ -319,7 +319,7 @@ class SvnPermissionForm extends React.Component {
             <Button type="primary" htmlType="submit">
               启动
             </Button>
-            <Button type="primary" style={{marginLeft: '20px'}} onClick={this.createCancel}>
+            <Button type="primary" style={{marginLeft: '20px'}} onClick={this.props.close}>
               取消
             </Button>
           </FormItem>
