@@ -1,5 +1,16 @@
 import {actionCreator, actionTypes} from './action-creator';
 
+/*刷新task列表，在add和update完成后调用*/
+const refreshTaskList = (dispatch, queryArgs) => {
+  dispatch(actionCreator(actionTypes.get_tasks, queryArgs));
+  fetchData({
+    url: '/task/getTasks.do',
+    data: queryArgs
+  }).then(data => {
+    dispatch(actionCreator(actionTypes.get_tasks_success, data));
+  });
+};
+
 export function getTasks(args) {
   return (dispatch) => {
     dispatch(actionCreator(actionTypes.get_tasks, args));
@@ -59,14 +70,7 @@ export function addTask(addArgs, queryArgs) {
       data: addArgs
     }).then(() => {
       dispatch(actionCreator(actionTypes.add_task_success));
-      /*刷新task列表*/
-      dispatch(actionCreator(actionTypes.get_tasks, queryArgs));
-      fetchData({
-        url: '/task/getTasks.do',
-        data: queryArgs
-      }).then(data => {
-        dispatch(actionCreator(actionTypes.get_tasks_success, data));
-      });
+      refreshTaskList(dispatch, queryArgs);
     });
   };
 }
@@ -79,6 +83,19 @@ export function openEditTask(args) {
       data: args
     }).then(data => {
       dispatch(actionCreator(actionTypes.get_task_detail_success, data));
+    });
+  };
+}
+
+export function updateTask(args, queryArgs) {
+  return (dispatch) => {
+    dispatch(actionCreator(actionTypes.update_task));
+    fetchData({
+      url: '/task/updateTask.do',
+      data: args
+    }).then(data => {
+      dispatch(actionCreator(actionTypes.update_task_success));
+      refreshTaskList(dispatch, queryArgs);
     });
   };
 }

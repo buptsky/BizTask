@@ -8,6 +8,7 @@ import NewTask from './NewTask';
 import EditTask  from './EditTask';
 import * as CommonActions from '../../actions/common';
 import * as TaskActions from '../../actions/task';
+import {TaskListTypes} from './Constants';
 
 const {Sider, Content} = Layout;
 
@@ -30,8 +31,7 @@ class Task extends React.Component {
   constructor(props) {
     super(props);
   }
-
-  componentDidMount() {
+  componentWillMount() {
     this.props.activeHeaderMenu('task');
   }
 
@@ -40,11 +40,11 @@ class Task extends React.Component {
   };
 
   render() {
-    const {newTask, closeNewTask, editTask, closeEditTask} = this.props;
+    const {newTask, closeNewTask, editTask, closeEditTask, type} = this.props;
     return (
       <Layout>
         <Sider>
-          <TaskMenu activeKey="chargeTask"/>
+          <TaskMenu activeKey={type || TaskListTypes.CHARGE}/>
         </Sider>
         <Content style={{padding: "20px", display: "flex", flexDirection: "column"}}>
           <Button type="primary" icon="plus" style={{width: "110px"}} onClick={this.newTask}>添加任务</Button>
@@ -57,7 +57,7 @@ class Task extends React.Component {
           >
             <NewTask onCancel={closeNewTask}/>
           </Modal>
-          <TaskContent/>
+          <TaskContent type={type}/>
           <Panel
             visible={editTask.isShow}
             onCancel={closeEditTask}
