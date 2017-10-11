@@ -65,7 +65,7 @@ class WorkflowPanel extends React.Component {
   }
 
   render() {
-    const { flowTypes, data } = this.props;
+    const {flowTypes, data} = this.props;
     let availableTypes = [];
     // 如果是新建流程模式，则不添加新员工入职选项
     if (!data.flowTypeId) {
@@ -140,13 +140,16 @@ class WorkflowPanel extends React.Component {
             <div className="time-line-wrapper">
               <WorkflowTimeline data={this.props.data.nodeList || null}/>
               {/*由于难以达到要求的表单布局，此项目单独拆开，表单提交时记得加上*/}
-              <TextArea rows={4}
-                        value={this.state.message}
-                        className="note"
-                        placeholder={this.state.disableAll ? '' : "你可以在这里留言"}
-                        onChange={this.changeMessage}
-                        disabled={this.state.disableAll}
-              />
+              {
+                !this.state.disableAll && (
+                  <TextArea rows={4}
+                            value={this.state.message}
+                            className="note"
+                            placeholder="你可以在这里留言"
+                            onChange={this.changeMessage}
+                  />
+                )
+              }
             </div>
           </Col>
         </Row>

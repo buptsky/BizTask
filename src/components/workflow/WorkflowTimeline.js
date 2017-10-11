@@ -1,5 +1,6 @@
 /*
  * 时间轴组件，用于展示流程进度
+ * 根据不同的流程状态，显示对应的提示图标和颜色
  */
 import {Timeline, Icon} from 'antd';
 
@@ -68,18 +69,34 @@ class WorkflowTimeline extends React.Component {
       <Timeline className="timeline">
         {
           data.map((item, index) => {
-            let flag = index === data.length - 1;
+            let flag = !item.dateTime;
             let ret = this.renderItem(item);
+            let dot = "";
+            if (item.status === "拒绝") {
+              dot = (<Icon type="exclamation-circle-o" style={{color: ret.color}}></Icon>);
+            }
             return (
               <Timeline.Item
-              key={item.name}
-              dot={flag ? <Icon type="clock-circle-o" style={{color: ret.color}}></Icon> : ''}
-              color={ret.color}
+                key={item.dateTime}
+                dot={flag ? <Icon type="clock-circle-o" style={{color: ret.color}}></Icon> : dot}
+                color={ret.color}
               >{ret.content}</Timeline.Item>)
           })
+        }
+        {/*流程已经完成*/}
+        {
+          (data[data.length - 1].dateTime && data[data.length - 1].status !== '拒绝') &&
+            (
+              <Timeline.Item
+                key="end"
+                dot={<Icon type="check-circle-o" style={{color: "#00a854"}}></Icon>}
+                color="#00a854"
+              ><span style={{color: "#00a854"}}>流程已经通过！</span></Timeline.Item>
+            )
         }
       </Timeline>
     );
   }
 }
+
 export default WorkflowTimeline;

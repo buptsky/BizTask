@@ -238,51 +238,69 @@ class SvnApplyForm extends React.Component {
             )}
           </FormItem>
           {/*默认添加权限*/}
-          <FormItem label="默认给谁添加权限" style={{marginBottom: '5px'}} {...formItemLayout1}>
-            {getFieldDecorator('default-add', {initialValue: ''})(
-              <Input type="hidden"/>
-            )}
-            {
-              this.state.permissionInputVisible ? (
-                  <AutoComplete
-                    onSelect={this.confirmPermission}
-                    onSearch={this.searchPermissionPersons}
-                    onBlur={this.hidePermissionInput}
-                    ref={(input) => this.permissionInput = input}
-                    style={{width: '45%'}}
-                  >
-                    {permissionOptions}
-                  </AutoComplete>
-                ) : (
-                  <Button type="dashed" onClick={this.showPermissionInput} disabled={this.state.disableAll}>+新增成员</Button>
+          {
+            !this.state.disableAll && (
+              <FormItem label="默认给谁添加权限" style={{marginBottom: '5px'}} {...formItemLayout1}>
+                {getFieldDecorator('default-add', {initialValue: ''})(
+                  <Input type="hidden"/>
+                )}
+                {
+                  this.state.permissionInputVisible ? (
+                    <AutoComplete
+                      onSelect={this.confirmPermission}
+                      onSearch={this.searchPermissionPersons}
+                      onBlur={this.hidePermissionInput}
+                      ref={(input) => this.permissionInput = input}
+                      style={{width: '45%'}}
+                    >
+                      {permissionOptions}
+                    </AutoComplete>
+                  ) : (
+                    <Button type="dashed" onClick={this.showPermissionInput} disabled={this.state.disableAll}>+新增成员</Button>
+                  )
+                }
+                {/*权限描述*/}
+                <RadioGroup defaultValue={"读写"}
+                            onChange={this.changePermission}
+                            style={{paddingLeft: '30px'}}
+                            disabled={this.state.disableAll}
+                >
+                  <Radio value="读写">读写</Radio>
+                  <Radio value="只读">只读</Radio>
+                </RadioGroup>
+              </FormItem>
+            )
+          }
+          {/*新增权限人员显示*/}
+          <Row style={{margin:'10px 0 24px 0'}}>
+            {/*禁用编辑模式下展示，用于配合显示隐藏*/}
+            <Col span={6} style={{textAlign: 'right'}}>
+              {
+                this.state.disableAll && (
+                  <div className="ant-form-item-label">
+                    <label title="默认给谁添加权限">默认给谁添加权限</label>
+                  </div>
                 )
-            }
-            {/*权限描述*/}
-            <RadioGroup defaultValue={"读写"}
-                        onChange={this.changePermission}
-                        style={{paddingLeft: '30px'}}
-                        disabled={this.state.disableAll}
-            >
-              <Radio value="读写">读写</Radio>
-              <Radio value="只读">只读</Radio>
-            </RadioGroup>
-            {/*新增权限人员显示*/}
-            <div className="permission-tags" style={{margin: '10px 0 20px 0'}}>
-              {this.state.permissionTags.map((tag, index) => {
-                const tagElem = (
-                  <Tag key={tag}
-                       style={{height: 28, lineHeight: '25px'}}
-                       color="#108ee9"
-                       closable={!this.state.disableAll}
-                       afterClose={() => this.deletePermission(tag)}
-                  >
-                    {tag}
-                  </Tag>
-                );
-                return tagElem;
-              })}
-            </div>
-          </FormItem>
+              }
+            </Col>
+            <Col span={16} offset={1}>
+              <div className="permission-tags">
+                {this.state.permissionTags.map((tag, index) => {
+                  const tagElem = (
+                    <Tag key={tag}
+                         style={{height: 32, lineHeight: '28px'}}
+                         color="#108ee9"
+                         closable={!this.state.disableAll}
+                         afterClose={() => this.deletePermission(tag)}
+                    >
+                      {tag}
+                    </Tag>
+                  );
+                  return tagElem;
+                })}
+              </div>
+            </Col>
+          </Row>
           {/*备注*/}
           <FormItem label="备注" {...formItemLayout1}>
             {getFieldDecorator('remark', {initialValue: formData.remark || ''})(
