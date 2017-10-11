@@ -3,47 +3,37 @@ import WorkflowTimeline from './WorkflowTimeline';
 import SvnPermissionForm from './SvnPermissionForm';
 import SvnApplyForm from './SvnApplyForm';
 import NewEmployeeForm from './NewEmployeeForm';
+import {connect} from 'react-redux';
 // antd 组件配置
 const {TextArea} = Input;
 const Option = Select.Option;
 
+@connect(
+  state => ({
+    flowDetailData: state.workflow.flowDetailData
+  }),
+  dispatch => ({})
+)
 class WorkflowPanel extends React.Component {
   constructor(props) {
     super(props);
     // 这里手动指定了flownamePrefix的默认值,以后可能会动态获取
     this.state = {
       disableAll: false, // 禁用所有编辑（操作流程中的不可编辑权限）
-      flowTypes: [], // 所有流程
       currentFlowType: '102', // 当前的流程类型
       message: '', // 本次操作的留言
     }
   }
 
   componentWillMount() {
-    const flowTypes = [];
-    // 获取所有流程
-    fetchData({
-      url: '/workflow/getFlowTypes.do',
-      data: {}
-    }).then((data) => {
-      data.forEach((flowType) => {
-        flowType['subFlowTypeList'].forEach((subFlowType) => {
-          // 如果是新建流程模式，则不添加新员工入职选项
-          if (this.props.data.flowTypeId || subFlowType.flowTypeId !== 201) {
-            flowTypes.push(subFlowType);
-          }
-        });
-      });
-      this.setState({
-        flowTypes
-      });
-    });
     // 判断当前是新建流程还是查看/修改流程
-    if (this.props.data.flowTypeId) { // 非新建流程
+    console.log(this.props.flowDetailData.flowTypeId);
+    if (this.props.flowDetailData.flowTypeId) { // 非新建流程
       this.setState({
-        currentFlowType: this.props.data.flowTypeId.toString(),
+        currentFlowType: this.props.flowDetailData.flowTypeId.toString(),
       });
-      if (!this.props.data.canEdit) { // 不可编辑
+      console.log(this.props.flowDetailData.canEdit);
+      if (!this.props.flowDetailData.canEdit) { // 不可编辑
         this.setState({
           disableAll: true
         });
@@ -65,10 +55,10 @@ class WorkflowPanel extends React.Component {
   }
 
   render() {
-    const {flowTypes, data} = this.props;
+    const {flowTypes, flowDetailData} = this.props;
     let availableTypes = [];
     // 如果是新建流程模式，则不添加新员工入职选项
-    if (!data.flowTypeId) {
+    if (!flowDetailData.flowTypeId) {
       availableTypes = flowTypes.filter((type) => type.flowTypeId !== 201);
     } else {
       availableTypes = flowTypes;
@@ -84,17 +74,17 @@ class WorkflowPanel extends React.Component {
     switch (this.state.currentFlowType) {
       case '101':
         flowForm = (
-          <SvnApplyForm data={this.props.data} message={this.state.message} close={this.props.close}/>
+          <SvnApplyForm message={this.state.message} close={this.props.close}/>
         )
         break;
       case '102':
         flowForm = (
-          <SvnPermissionForm data={this.props.data} message={this.state.message} close={this.props.close}/>
+          <SvnPermissionForm message={this.state.message} close={this.props.close}/>
         )
         break;
       case '201':
         flowForm = (
-          <NewEmployeeForm data={this.props.data} message={this.state.message}/>
+          <NewEmployeeForm message={this.state.message}/>
         )
         break;
     }
@@ -114,7 +104,7 @@ class WorkflowPanel extends React.Component {
               <Col span={16} offset={1}>
                 {/*保证默认选中异步返回的请求数据*/}
                 {
-                  this.state.flowTypes.length ?
+                  this.props.flowTypes.length ?
                     (
                       <Select
                         style={{width: '100%'}}
@@ -138,7 +128,7 @@ class WorkflowPanel extends React.Component {
           {/*右侧时间线和留言*/}
           <Col span={10} offset={2} className="panel-right">
             <div className="time-line-wrapper">
-              <WorkflowTimeline data={this.props.data.nodeList || null}/>
+              <WorkflowTimeline data={this.props.flowDetailData.nodeList || null}/>
               {/*由于难以达到要求的表单布局，此项目单独拆开，表单提交时记得加上*/}
               {
                 !this.state.disableAll && (

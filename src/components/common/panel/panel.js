@@ -2,13 +2,13 @@
  * panel 面板通用组件
  * 面板控制自身的显示隐藏
  * props参数（可选）
- * visible[Boolean] 面板是否可见
+ * visible[Boolean] 面板是否可见 / loading[Boolean] 是否需要异步加载数据
  * title[string] 面板标题 / footer[Boolean] 是否展示操作按钮
  * onOk[Function] 点击确认回调 / onCancel[Function] 点击右上角叉或取消按钮的回调
  */
 import React from 'react';
 import './panel.css';
-import {Icon, Button} from 'antd';
+import {Icon, Button, Spin} from 'antd';
 // 控制antd icon,button组件的样式
 const commonStyle = {
   icon: {
@@ -42,7 +42,7 @@ class Panel extends React.Component {
         showFlag: true,
         open: true
       });
-    } else if (nextProps.visible === false && this.state.open){
+    } else if (nextProps.visible === false && this.state.open) {
       this.setState({
         wrapperClass: 'panel-wrapper close'
       }, () => { // 延时关闭
@@ -103,33 +103,41 @@ class Panel extends React.Component {
     return (
       <div className="bizwork-panel" style={maskStyle}>
         {this.state.showFlag &&
-          (
-            <div className={this.state.wrapperClass}>
-              <div className="panel-header">
-                <div className="title">{(this.props && this.props.title) || 'title'}</div>
-                <Icon type="close"
-                      style={iconStyle}
-                      onMouseEnter={this.toggleHover}
-                      onMouseLeave={this.toggleHover}
-                      onClick={this.close}/>
-              </div>
-              {/*Panel内容区由用户提供*/}
-              <div className="panel-content">
-                {/*暂时只支持传入一个react元素*/}
-                {this.props.children}
-              </div>
-              {/*某些情况下不应该使用panel提供的确认取消按钮，如表单提交*/}
-              {
-                (this.props.footer === false) ? '' :
-                  (
-                    <div className="panel-footer">
-                      <Button type="primary" style={commonStyle.button} onClick={this.confirm}>确认</Button>
-                      <Button type="primary" onClick={this.close}>取消</Button>
-                    </div>
-                  )
-              }
+        (
+          <div className={this.state.wrapperClass}>
+            <div className="panel-header">
+              <div className="title">{(this.props && this.props.title) || 'title'}</div>
+              <Icon type="close"
+                    style={iconStyle}
+                    onMouseEnter={this.toggleHover}
+                    onMouseLeave={this.toggleHover}
+                    onClick={this.close}/>
             </div>
-          )
+            {/*Panel内容区由用户提供*/}
+            {
+              this.props.loading ?
+                (
+                  <Spin size="large" style={{position: 'absolute', left: '50%', top:'50%'}} />
+                )
+                : (
+                  <div className="panel-content">
+                    {/*暂时只支持传入一个react元素*/}
+                    {this.props.children}
+                  </div>
+                )
+            }
+            {/*某些情况下不应该使用panel提供的确认取消按钮，如表单提交*/}
+            {
+              (this.props.footer === false) ? '' :
+                (
+                  <div className="panel-footer">
+                    <Button type="primary" style={commonStyle.button} onClick={this.confirm}>确认</Button>
+                    <Button type="primary" onClick={this.close}>取消</Button>
+                  </div>
+                )
+            }
+          </div>
+        )
         }
       </div>
 

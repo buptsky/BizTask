@@ -13,7 +13,8 @@ const RadioGroup = Radio.Group;
 
 @connect(
   state => ({
-    persons: state.common.commonData.persons
+    persons: state.common.commonData.persons,
+    flowDetailData: state.workflow.flowDetailData
   }),
   dispatch => ({})
 )
@@ -39,31 +40,24 @@ class SvnPermissionForm extends React.Component {
 
   componentWillMount() {
     // 查看模式
-    if (this.props.data.flowTypeId) {
+    if (this.props.flowDetailData.flowTypeId) {
       // 获取表单回填数据
-      let originData = this.props.data;
+      let originData = this.props.flowDetailData;
       let tags = [];
-      // 格式化表单数据
-      if (originData.formData) {
-        this.setState({
-          originData: {...originData, formData: JSON.parse(originData.formData)}
-        }, () => {
-          // 设置权限人员数据,仓库数据
-          let repositories = this.state.originData.formData.repositories;
-          let managerIntersection = this.state.originData.formData.needEmailManagers;
-          this.state.originData.formData.persons.forEach((person) => {
-            if (person.permission === '1') {
-              tags.push(`${person.email} 读写`);
-            } else {
-              tags.push(`${person.email} 只读`);
-            }
-          });
-          this.setState({
-            permissionTags: tags,
-            storeManagers: {repositories, managerIntersection}
-          });
-        });
-      }
+      // 设置权限人员数据,仓库数据
+      let repositories = originData.formData.repositories;
+      let managerIntersection = originData.formData.needEmailManagers;
+      originData.formData.persons.forEach((person) => {
+        if (person.permission === '1') {
+          tags.push(`${person.email} 读写`);
+        } else {
+          tags.push(`${person.email} 只读`);
+        }
+      });
+      this.setState({
+        permissionTags: tags,
+        storeManagers: {repositories, managerIntersection}
+      });
       // 如果是查看/编辑 状态
       if (originData.canEdit === false) {
         this.setState({
@@ -180,8 +174,8 @@ class SvnPermissionForm extends React.Component {
   changePermission = (e) => {
     this.setState({permissionType: e.target.value})
   }
-  // 仓库路径搜索
-  searchStorage = (value) => {
+  // 仓库路径筛选
+  filterStorage = (value) => {
     let ret = [];
     if (value) {
       // 数据过滤
@@ -198,11 +192,25 @@ class SvnPermissionForm extends React.Component {
     let paths = this.state.storePaths; // 获取当前地址集合
     if (paths.includes(path)) return; // 如果传递重复路径，则忽略
     paths.push(path); // 添加新地址
-    this.setState({storePaths: paths});
+    this.setState({storePaths: paths}, () => {
+      this.searchStorage();
+    });
+  }
+  // 删除仓库路径
+  deleteStorage = (path) => {
+    let newPaths = this.state.storePaths.filter((item) => {
+      return item !== path;
+    });
+    this.setState({storePaths: newPaths}, () => {
+      this.searchStorage();
+    });
+  }
+  // 仓库路径查询
+  searchStorage = () => {
     // 获取路径信息
     fetchData({
       url: '/svnService/getManagersByPaths.do',
-      data: {paths}
+      data: {path: this.state.storePaths}
     }).then((data) => {
       this.setState({
         storeManagers: data,
@@ -220,7 +228,7 @@ class SvnPermissionForm extends React.Component {
     let flowName = '';
     const {getFieldDecorator} = this.props.form;
     // 获取表单回填数据
-    const originData = this.state.originData;
+    const originData = this.props.flowDetailData;
     const formData = originData.formData ? originData.formData : {};
     // 表单回填的流程名称
     if (originData.flowName) {
@@ -257,7 +265,7 @@ class SvnPermissionForm extends React.Component {
               !this.state.disableAll && (
                 getFieldDecorator('storage-name-allot', {initialValue: ''})(
                   <AutoComplete
-                    onSearch={this.searchStorage}
+                    onSearch={this.filterStorage}
                     onSelect={this.confirmStorage}
                     disabled={this.state.disableAll}
                   >
@@ -274,7 +282,9 @@ class SvnPermissionForm extends React.Component {
                   <div className="store-wrapper" key={index}>
                     <div className="store-item">
                       <p className="store-path">{item.path}</p>
-                      <span className="close">{!this.state.disableAll && ''}</span>
+                      <span className="close" onClick={() => {
+                        this.deleteStorage(item.path);
+                      }}>{this.state.disableAll ? '' : '删除'}</span>
                       <span className="manager">管理员: {item.managers.join(' ')}</span>
                     </div>
                   </div>
