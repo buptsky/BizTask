@@ -6,21 +6,27 @@ import Panel from '../common/panel/panel';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {actionCreator} from '../../actions/action-creator';
-import {getTableData} from '../../actions/workflow';
+import {getFlowData} from '../../actions/workflow';
+import {getFlowDetailData} from '../../actions/workflow';
+import {clearFlowDetailData} from '../../actions/workflow';
 import {Layout, Menu, Icon, Button} from 'antd';
 
 const {Sider, Content} = Layout;
 
 @connect(
   state => ({
-    isLoading: state.workflow.isLoading,
-    dataSource: state.workflow.tableData
+    isLoading: state.workflow.flowLoading,
+    dataSource: state.workflow.flowData,
+    flowDetailData: state.workflow.flowDetailData,
+    flowDetailLoading: state.workflow.flowDetailLoading
   }),
   dispatch => ({
     activeHeaderMenu: () => {
       dispatch(actionCreator('change_header_menu', 'workflow'));
     },
-    getTableData: bindActionCreators(getTableData, dispatch)
+    getFlowData: bindActionCreators(getFlowData, dispatch),
+    getFlowDetailData: bindActionCreators(getFlowDetailData, dispatch),
+    clearFlowDetailData: bindActionCreators(clearFlowDetailData, dispatch)
   })
 )
 class DailyWorksheet extends React.Component {
@@ -30,9 +36,7 @@ class DailyWorksheet extends React.Component {
       currentMenu: 'pending-apply', // 申请类型tab栏
       showCreatePanel: false, // 控制流程面板显隐
       filterType: 'pending-apply', // 筛选组件类型
-      flowTypes: [],
-      flowData: {}, // 查看已有的流程数据
-      test: false
+      flowTypes: []
     }
   }
 
@@ -56,7 +60,7 @@ class DailyWorksheet extends React.Component {
 
   componentDidMount() {
     this.props.activeHeaderMenu();
-    this.props.getTableData(); // 获取table数据
+    this.props.getFlowData(); // 获取table数据
   }
 
   // 关闭创建流程面板
@@ -64,8 +68,8 @@ class DailyWorksheet extends React.Component {
     // 清除flowdata
     this.setState({
       showCreatePanel: false,
-      flowData: {}
     });
+    this.props.clearFlowDetailData();
   }
   // 打开创建流程面板
   openPanel = () => {
@@ -92,30 +96,35 @@ class DailyWorksheet extends React.Component {
       filterType: e.key,
       currentMenu: e.key,
     });
-    this.props.getTableData({typeId: typeId});
+    this.props.getFlowData({typeId: typeId});
   }
   // table分页变化
   tablePageChange = (args) => {
-    this.props.getTableData({
+    this.props.getFlowData({
       ...args
     });
   }
   // filter筛选条件变化
   filterChange = (args) => {
     console.log(args);
-    this.props.getTableData(args);
+    this.props.getFlowData(args);
   }
   // 查看/修改表格中的流程
   operateFlow = (id) => {
-    fetchData({
-      url: '/workflow/getApplicationDetailTest.do',
-      data: {flowId: id}
-    }).then((data) => { // 获取数据传入流程面板，并开启面板
-      this.setState({flowData: data}, () => {
-        this.openPanel();
-      });
-      console.log(data);
-    });
+    console.log(id);
+    this.props.getFlowDetailData(id);
+    this.openPanel();
+    // fetchData({
+    //   url: '/workflow/getApplicationDetailTest2.do',
+    //   data: {flowId: id}
+    // }).then((data) => { // 获取数据传入流程面板，并开启面板
+    //   // 数据格式化处理
+    //   this.setState({
+    //     flowData: {...data, formData: JSON.parse(data.formData)}
+    //   }, () => {
+    //     this.openPanel();
+    //   })
+    // });
   }
 
   render() {
@@ -148,11 +157,11 @@ class DailyWorksheet extends React.Component {
           <Panel
             visible={this.state.showCreatePanel}
             onCancel={this.closePanel}
-            title={this.state.flowData.flowTypeId ? '查看流程' : '创建流程'}
+            title={this.props.flowDetailData.flowTypeId ? '查看流程' : '创建流程'}
             footer={false}
+            loading={this.props.flowDetailLoading}
           >
             <WorkflowPanel
-              data={this.state.flowData}
               flowTypes={this.state.flowTypes}
               close={this.closePanel}
             />

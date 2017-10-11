@@ -18,7 +18,8 @@ const checkOptions = [
 
 @connect(
   state => ({
-    persons: state.common.commonData.persons
+    persons: state.common.commonData.persons,
+    flowDetailData: state.workflow.flowDetailData
   }),
   dispatch => ({})
 )
@@ -27,7 +28,6 @@ class SvnApplyForm extends React.Component {
     super(props);
     // 这里手动指定了flownamePrefix的默认值,以后可能会动态获取
     this.state = {
-      originData: {}, // 回填表单数据中的formData
       disableAll: false, // 禁用所有编辑（操作流程中的不可编辑权限）
       flownamePrefix: `svn权限申请-`, // 流程名称前缀
       storenamePrefix: 'http://bizsvn.sogou-inc.com/svn/', // 仓库名称前缀
@@ -39,29 +39,26 @@ class SvnApplyForm extends React.Component {
   }
 
   componentWillMount() {
-    // 获取表单回填数据
-    let originData = this.props.data;
-    let tags = [];
-    // 格式化表单数据
-    if (originData.formData) {
-      this.setState({
-        originData: {...originData, formData: JSON.parse(originData.formData)}
-      }, () => { // 设置权限人员数据
-        this.state.originData.formData.persons.forEach((person) => {
-          if (person.permission === '1') {
-            tags.push(`${person.email} 读写`);
-          } else {
-            tags.push(`${person.email} 只读`);
-          }
+    // 若为查看流程
+    if (this.props.flowDetailData.flowTypeId) {
+      // 获取表单回填数据
+      let originData = this.props.flowDetailData;
+      let tags = [];
+      // 设置权限人员数据
+      originData.formData.persons.forEach((person) => {
+        if (person.permission === '1') {
+          tags.push(`${person.email} 读写`);
+        } else {
+          tags.push(`${person.email} 只读`);
+        }
+      });
+      this.setState({permissionTags: tags});
+      // 如果是查看/编辑 状态
+      if (originData.canEdit === false) {
+        this.setState({
+          disableAll: true
         });
-        this.setState({permissionTags: tags});
-      });
-    }
-    // 如果是查看/编辑 状态
-    if (originData.canEdit === false) {
-      this.setState({
-        disableAll: true
-      });
+      }
     }
   }
 
@@ -176,7 +173,7 @@ class SvnApplyForm extends React.Component {
     let flowName = '';
     let formCheck = [];
     const {getFieldDecorator} = this.props.form;
-    const originData = this.state.originData;
+    const originData = this.props.flowDetailData;
     const formData = originData.formData ? originData.formData : {};
     // 表单回填的流程名称
     if (originData.flowName) {
@@ -315,7 +312,7 @@ class SvnApplyForm extends React.Component {
           <FormItem {...formItemLayout2}>
             {/*仅创建流程*/}
             {
-              !this.state.originData.formData && (
+              !originData.formData && (
                 <Button type="primary" htmlType="submit" style={{marginRight: '20px'}}>
                   启动
                 </Button>

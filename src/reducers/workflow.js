@@ -5,7 +5,8 @@ const startTime = [config.startDateRange.initialRange[0].format('YYYY-MM-DD'),co
 const endTime = [config.endDateRange.initialRange[0].format('YYYY-MM-DD'),config.endDateRange.initialRange[1].format('YYYY-MM-DD')].join(',');
 
 const initialState = {
-  tableData: [],
+  flowData: [],
+  flowDetailData: {},
   queryArgs: {
     typeId: 1,
     flowTypeId: 0,
@@ -18,7 +19,8 @@ const initialState = {
     employee: '',
     isDone: true
   },
-  isLoading: true
+  flowLoading: true,
+  flowDetailLoading: true
 };
 
 export function workflow(state = initialState, action) {
@@ -26,19 +28,30 @@ export function workflow(state = initialState, action) {
     case actionTypes.get_workflow_data:
       return {
         ...state,
-        loading: true
+        flowLoading: true
       };
     case actionTypes.get_workflow_data_success:
       return {
         ...state,
-        tableData: action.payload,
-        isLoading: false
+        flowData: action.payload,
+        flowLoading: false
       };
-    // case actionTypes.change_query_args:
-    //   return {
-    //     ...state,
-    //     queryArgs: Object.assign(state.queryArgs, action.payload)
-    //   };
+    case actionTypes.get_flow_detail:
+      return {
+        ...state,
+        flowDetailLoading: true
+      };
+    case actionTypes.get_flow_detail_success:
+      return {
+        ...state,
+        flowDetailData: action.payload,
+        flowDetailLoading: false
+      };
+    case actionTypes.clear_flow_detail:
+      return {
+        ...state,
+        flowDetailData: {},
+      };
     default:
       return state;
   }
