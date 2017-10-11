@@ -1,6 +1,7 @@
 import {Form, Input, Button, DatePicker, Select, Row, Col, Timeline, Spin} from 'antd';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
+import * as TaskActions from '../../actions/task';
 
 const {RangePicker} = DatePicker;
 const SelectOption = Select.Option;
@@ -21,7 +22,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return bindActionCreators({}, dispatch);
+  return bindActionCreators(TaskActions, dispatch);
 }
 
 @connect(mapStateToProps, mapDispatchToProps)
@@ -54,7 +55,8 @@ class EditTask extends React.Component {
             return moment(time).format('YYYY-MM-DD');
           });
         }
-        this.props.addTask(values, this.props.queryArgs);
+        values.taskId = this.props.taskDetail.taskId;
+        this.props.updateTask(values, this.props.queryArgs);
       }
     });
   };

@@ -118,6 +118,23 @@ export function task(state = initialState, action) {
           isShow: false
         }
       };
+    case actionTypes.update_task:
+      return {
+        ...state,
+        editTask: {
+          ...state.editTask,
+          isSubmitting: true
+        }
+      };
+    case actionTypes.update_task_success:
+      return {
+        ...state,
+        editTask: {
+          ...state.editTask,
+          isShow: false,
+          isSubmitting: false
+        }
+      };
     default:
       return state;
   }

@@ -81,7 +81,15 @@ class TaskCard extends React.Component {
       });
     }
   };
-
+  //开始、结束时间
+  renderRangeTime = (taskInfo) => {
+    return (
+      <span className="task-card-time">
+            <Icon type="clock-circle-o" className="mr5"/>
+            {taskInfo.startTime}-{taskInfo.endTime}
+      </span>
+    );
+  };
   render() {
     const {connectDragSource, taskInfo} = this.props;
     return connectDragSource(
@@ -91,7 +99,7 @@ class TaskCard extends React.Component {
           <Icon type="close" onClick={this.showDeleteConfirm(taskInfo)}/>
         </div>
         <div className="task-card-row mt5">
-          <span className="task-card-time"><Icon type="clock-circle-o"/>{taskInfo.startTime}-{taskInfo.endTime}</span>
+          {taskInfo.startTime ? this.renderRangeTime(taskInfo) : null}
           <span className="task-card-members">
               {this.renderMembers(taskInfo.followUsers)}
           </span>

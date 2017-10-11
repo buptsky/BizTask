@@ -41,6 +41,7 @@ class DailyWorksheet extends React.Component {
   }
 
   componentWillMount() {
+    this.props.activeHeaderMenu();
     const flowTypes = [];
     // 获取所有流程
     fetchData({

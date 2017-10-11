@@ -24,5 +24,7 @@ export const actionTypes = {
   add_task_success: 'add_task_success',
   open_edit_task: 'open_edit_task',
   close_edit_task: 'close_edit_task',
-  get_task_detail_success: 'get_task_detail_success'
+  get_task_detail_success: 'get_task_detail_success',
+  update_task: 'update_task',
+  update_task_success: 'update_task_success'
 };
