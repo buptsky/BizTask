@@ -22,6 +22,7 @@ class SvnPermissionForm extends React.Component {
     super(props);
     // 这里手动指定了flownamePrefix的默认值,以后可能会动态获取
     this.state = {
+      originData: {}, // 回填表单数据中的formData
       disableAll: false, // 禁用所有编辑（操作流程中的不可编辑权限）
       flownamePrefix: `svn权限分配-`, // 流程名称前缀
       storenamePrefix: 'http://bizsvn.sogou-inc.com/svn/', // 仓库名称前缀
@@ -37,22 +38,57 @@ class SvnPermissionForm extends React.Component {
   }
 
   componentWillMount() {
-    // 获取所有可用仓库路径
-    fetchData({
-      url: '/svnService/getRepositories.do',
-      data: {}
-    }).then((data) => {
-      this.setState({
-        allPaths: data
-      })
-    });
-    // 如果是查看/编辑 状态
-    // if (this.props.data.canEdit === false) {
-    //   console.log('disabled');
-    //   this.setState({
-    //     disableAll: true
-    //   });
-    // }
+    // 查看模式
+    if (this.props.data.flowTypeId) {
+      // 获取表单回填数据
+      let originData = this.props.data;
+      let tags = [];
+      // 格式化表单数据
+      if (originData.formData) {
+        this.setState({
+          originData: {...originData, formData: JSON.parse(originData.formData)}
+        }, () => {
+          // 设置权限人员数据,仓库数据
+          let repositories = this.state.originData.formData.repositories;
+          let managerIntersection = this.state.originData.formData.needEmailManagers;
+          this.state.originData.formData.persons.forEach((person) => {
+            if (person.permission === '1') {
+              tags.push(`${person.email} 读写`);
+            } else {
+              tags.push(`${person.email} 只读`);
+            }
+          });
+          this.setState({
+            permissionTags: tags,
+            storeManagers: {repositories, managerIntersection}
+          });
+        });
+      }
+      // 如果是查看/编辑 状态
+      if (originData.canEdit === false) {
+        this.setState({
+          disableAll: true
+        });
+      }
+    } else {
+      // 新建模式,获取所有可用仓库路径
+      fetchData({
+        url: '/svnService/getRepositories.do',
+        data: {}
+      }).then((data) => {
+        this.setState({
+          allPaths: data
+        })
+      });
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    if (this.state.permissionInputVisible) {
+      // 这里直接访问了底层dom元素是为了使select组件的输入框获取焦点
+      // 暂时只找到这种解决方案，因为不使用datasource时，发现children中的input自定义失效了
+      ReactDOM.findDOMNode(this.permissionInput).click();
+    }
   }
 
   // 表单提交
@@ -91,11 +127,6 @@ class SvnPermissionForm extends React.Component {
       console.log({...commonArgs, formData}); // 最后提交的参数集
     });
   }
-  // 取消创建流程，关闭面板
-  createCancel = () => {
-    this.props.close();
-    console.log('panel cancel');
-  }
   // 查找符合条件的权限人员(暂时不使用默认的自动补全)
   searchPermissionPersons = (value) => {
     let ret = [];
@@ -113,11 +144,7 @@ class SvnPermissionForm extends React.Component {
   }
   // 显示添加权限人员输入框
   showPermissionInput = () => {
-    this.setState({permissionInputVisible: true}, () => {
-      // 这里直接访问了底层dom元素是为了使select组件的输入框获取焦点
-      // 暂时只找到这种解决方案，因为不使用datasource时，发现children中的input自定义失效了
-      ReactDOM.findDOMNode(this.permissionInput).click();
-    });
+    this.setState({permissionInputVisible: true});
   }
   // 隐藏添加权限人员输入框
   hidePermissionInput = () => {
@@ -138,6 +165,7 @@ class SvnPermissionForm extends React.Component {
     this.setState({
       permissionTags: tags,
       permissionInputVisible: false,
+      permissionPersons: []
     });
     this.props.form.setFieldsValue({'default-add': tags.join(',')});  // 表单同步
   }
@@ -184,18 +212,20 @@ class SvnPermissionForm extends React.Component {
       this.props.form.setFieldsValue({
         'inform-manager': data.managerIntersection,
         'storage-name-allot': ''
-      })
+      });
     });
   }
 
   render() {
+    let flowName = '';
     const {getFieldDecorator} = this.props.form;
-    // 新建流程下拉列表选项
     // 获取表单回填数据
-    const originData = this.props.data;
-    // if (originData.formData) { // 部分数据字符串转json（确认下线上数据是否一致）
-    //   originData.formData = JSON.parse(originData.formData);
-    // }
+    const originData = this.state.originData;
+    const formData = originData.formData ? originData.formData : {};
+    // 表单回填的流程名称
+    if (originData.flowName) {
+      flowName = originData.flowName.split('-').slice(1).join('-');
+    }
     // 仓库路径下拉选项
     const pathOptions = this.state.filterpaths.map((path) => {
       return <Option key={path}>{path}</Option>;
@@ -212,88 +242,110 @@ class SvnPermissionForm extends React.Component {
         >
           {/*流程名称*/}
           <FormItem label="流程名称" {...formItemLayout1}>
-            {getFieldDecorator('create-name', {initialValue: ''})(
+            {getFieldDecorator('create-name', {initialValue: flowName || ''})(
               <Input
                 addonBefore={this.state.flownamePrefix}
-                disabled={this.state.disableInput}
+                disabled={this.state.disableAll}
               />
             )}
           </FormItem>
           {/*仓库名称*/}
           <FormItem label="仓库名称" {...formItemLayout1}>
             <span>http://bizsvn.sogou-inc.com/svn/</span>
-            {getFieldDecorator('storage-name-allot', {initialValue: ''})(
-              <AutoComplete
-                onSearch={this.searchStorage}
-                onSelect={this.confirmStorage}
-              >
-                {pathOptions}
-              </AutoComplete>
-            )}
-          </FormItem>
-          {/*仓库名称显示及操作*/}
-          {
-            this.state.storeManagers['repositories'] &&
-            this.state.storeManagers['repositories'].map((item, index) => {
-              const storeElem = (
-                <Row className="store-wrapper" key={index}>
-                  <Col span={16} offset={7}>
+            {/*禁用编辑情况下隐藏*/}
+            {
+              !this.state.disableAll && (
+                getFieldDecorator('storage-name-allot', {initialValue: ''})(
+                  <AutoComplete
+                    onSearch={this.searchStorage}
+                    onSelect={this.confirmStorage}
+                    disabled={this.state.disableAll}
+                  >
+                    {pathOptions}
+                  </AutoComplete>
+                )
+              )
+            }
+            {/*仓库名称显示及操作*/}
+            {
+              this.state.storeManagers['repositories'] &&
+              this.state.storeManagers['repositories'].map((item, index) => {
+                const storeElem = (
+                  <div className="store-wrapper" key={index}>
                     <div className="store-item">
                       <p className="store-path">{item.path}</p>
-                      <span className="close">删除</span>
+                      <span className="close">{!this.state.disableAll && ''}</span>
                       <span className="manager">管理员: {item.managers.join(' ')}</span>
                     </div>
-                  </Col>
-                </Row>
-              )
-              return storeElem;
-            })
-          }
+                  </div>
+                )
+                return storeElem;
+              })
+            }
+          </FormItem>
           {/*管理员通知*/}
           <FormItem label="邮件通知以下管理员审批" {...formItemLayout1}>
-            {getFieldDecorator('inform-manager', {initialValue: []})(
+            {getFieldDecorator('inform-manager', {initialValue: formData.needEmailManagers || []})(
               <CheckboxGroup
                 options={this.state.storeManagers.managerIntersection}
+                disabled={this.state.disableAll}
               />
             )}
           </FormItem>
           {/*默认添加权限*/}
-          <FormItem label="默认给谁添加权限" style={{marginBottom: '5px'}} {...formItemLayout1}>
-            {getFieldDecorator('default-add', {initialValue: ''})(
-              <Input type="hidden"/>
-            )}
-            {this.state.permissionInputVisible && (
-              <AutoComplete
-                onSelect={this.confirmPermission}
-                onSearch={this.searchPermissionPersons}
-                onBlur={this.hidePermissionInput}
-                ref={(input) => this.permissionInput = input}
-                style={{width: '45%'}}
-              >
-                {permissionOptions}
-              </AutoComplete>
-            )}
-            {!this.state.permissionInputVisible &&
-            <Button type="dashed" onClick={this.showPermissionInput}>+ 新增成员</Button>}
-            {/*权限描述*/}
-            <RadioGroup defaultValue={"读写"}
-                        onChange={this.changePermission}
-                        style={{paddingLeft: '30px'}}
-            >
-              <Radio value="读写">读写</Radio>
-              <Radio value="只读">只读</Radio>
-            </RadioGroup>
-          </FormItem>
+          {
+            !this.state.disableAll && (
+              <FormItem label="默认给谁添加权限" style={{marginBottom: '5px'}} {...formItemLayout1}>
+                {getFieldDecorator('default-add', {initialValue: ''})(
+                  <Input type="hidden"/>
+                )}
+                {
+                  this.state.permissionInputVisible ? (
+                    <AutoComplete
+                      onSelect={this.confirmPermission}
+                      onSearch={this.searchPermissionPersons}
+                      onBlur={this.hidePermissionInput}
+                      ref={(input) => this.permissionInput = input}
+                      style={{width: '45%'}}
+                    >
+                      {permissionOptions}
+                    </AutoComplete>
+                  ) : (
+                    <Button type="dashed" onClick={this.showPermissionInput} disabled={this.state.disableAll}>+新增成员</Button>
+                  )
+                }
+                {/*权限描述*/}
+                <RadioGroup defaultValue={"读写"}
+                            onChange={this.changePermission}
+                            style={{paddingLeft: '30px'}}
+                            disabled={this.state.disableAll}
+                >
+                  <Radio value="读写">读写</Radio>
+                  <Radio value="只读">只读</Radio>
+                </RadioGroup>
+              </FormItem>
+            )
+          }
           {/*新增权限人员显示*/}
-          <Row style={{margin: '10px 0 20px 0'}}>
-            <Col span={16} offset={7}>
+          <Row style={{margin:'10px 0 24px 0'}}>
+            {/*禁用编辑模式下展示，用于配合显示隐藏*/}
+            <Col span={6} style={{textAlign: 'right'}}>
+              {
+                this.state.disableAll && (
+                  <div className="ant-form-item-label">
+                    <label title="默认给谁添加权限">默认给谁添加权限</label>
+                  </div>
+                )
+              }
+            </Col>
+            <Col span={16} offset={1}>
               <div className="permission-tags">
                 {this.state.permissionTags.map((tag, index) => {
                   const tagElem = (
                     <Tag key={tag}
-                         style={{height: 28, lineHeight: '25px'}}
+                         style={{height: 32, lineHeight: '28px'}}
                          color="#108ee9"
-                         closable={true}
+                         closable={!this.state.disableAll}
                          afterClose={() => this.deletePermission(tag)}
                     >
                       {tag}
@@ -306,7 +358,7 @@ class SvnPermissionForm extends React.Component {
           </Row>
           {/*备注*/}
           <FormItem label="备注" {...formItemLayout1}>
-            {getFieldDecorator('remark', {initialValue: (originData.formData && originData.formData.remark) || ''})(
+            {getFieldDecorator('remark', {initialValue: formData.remark || ''})(
               <TextArea rows={4}
                         style={{resize: 'none'}}
                         disabled={this.state.disableAll}

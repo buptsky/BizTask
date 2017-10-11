@@ -59,9 +59,10 @@
     resize: none;
   }
   .store-wrapper {
-    margin-top: -10px;
+    margin-top: 10px;
     .store-item {
       position: relative;
+      line-height: 24px;
       .store-path {
         margin-bottom: 5px;
       }
@@ -92,5 +93,9 @@
   // 调整checkbox-group 中的checkbox 的 margin , 修复多行展示不对齐问题
   .ant-checkbox-group .ant-checkbox-group-item.ant-checkbox-wrapper {
     margin-left: 0;
+  }
+  // 调整组件禁用后的文字颜色
+  .ant-select-selection__choice {
+    color: rgba(0, 0, 0, 0.85) !important;
   }
 }

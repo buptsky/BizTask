@@ -108,7 +108,7 @@ class DailyWorksheet extends React.Component {
   // 查看/修改表格中的流程
   operateFlow = (id) => {
     fetchData({
-      url: '/workflow/getApplicationDetail.do',
+      url: '/workflow/getApplicationDetailTest.do',
       data: {flowId: id}
     }).then((data) => { // 获取数据传入流程面板，并开启面板
       this.setState({flowData: data}, () => {
@@ -148,7 +148,7 @@ class DailyWorksheet extends React.Component {
           <Panel
             visible={this.state.showCreatePanel}
             onCancel={this.closePanel}
-            title="创建流程"
+            title={this.state.flowData.flowTypeId ? '查看流程' : '创建流程'}
             footer={false}
           >
             <WorkflowPanel
