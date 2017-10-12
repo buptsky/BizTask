@@ -14,17 +14,14 @@ export const actionTypes = {
   get_flow_detail_success: 'get_flow_detail_success', // 成功获取流程详情
   clear_flow_detail: 'clear_flow_detail', // 清空流程详细数据
   /*task*/
-  get_tasks: 'get_tasks',
-  get_tasks_success: 'get_tasks_success',
-  move_task: 'move_task',
-  delete_task: 'delete_task',
-  open_new_task: 'open_new_task',
-  close_new_task: 'close_new_task',
-  add_task: 'add_task',
-  add_task_success: 'add_task_success',
-  open_edit_task: 'open_edit_task',
-  close_edit_task: 'close_edit_task',
-  get_task_detail_success: 'get_task_detail_success',
-  update_task: 'update_task',
-  update_task_success: 'update_task_success'
+  get_tasks: 'get_tasks',         //获取任务列表
+  get_tasks_success: 'get_tasks_success', //成功获取任务列表
+  move_task: 'move_task',         //任务拖拽
+  delete_task: 'delete_task',     //删除任务
+  open_new_task: 'open_new_task', //打开新建任务Modal
+  close_new_task: 'close_new_task', //关闭新建任务Modal
+  add_task: 'add_task',             //新建任务
+  add_task_success: 'add_task_success', //成功新建任务
+  open_edit_task: 'open_edit_task',     //打开编辑任务Panel
+  close_edit_task: 'close_edit_task',   //关闭编辑任务Panel
 };

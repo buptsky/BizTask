@@ -1,29 +1,43 @@
 {
-    "success": 1,
-    "data": {
-        "taskName": "任务1",
-        "rangeTime": ["2016-07-08","2016-09-08"],
-        "chargeUser": "zhaiyibo",
-        "followUsers": ["zhaiyibo","liangxiao"],
-        "description": "这里是任务描述",
-        "fileList": [{
-            "fileName": "附件1",
-            "filePath": "http://sogou.com"
-        }, {
-            "fileName": "附件2",
-            "filePath": "http://sogou.com"
-        }],
-        "optionLog": [{
-            "operator": "陈曦",
-            "operation": "创建事件",
-            "opetationTime": "07-11 16:10:00"
-        }, {
-            "operator": "翟懿博",
-            "operation": "更改事件状态",
-            "opetationTime": "07-13 16:10:00"
-        }]
-    },
-    "errorCode": 500,
-    "errorMsg": "系统异常",
-    "totalNumber": 10
+  "success": 1,
+  "data": {
+    "taskName": "任务1",
+    "rangeTime": [
+      "2016-07-08",
+      "2016-09-08"
+    ],
+    "chargeUser": "zhaiyibo",
+    "followUsers": [
+      "zhaiyibo",
+      "liangxiao"
+    ],
+    "description": "这里是任务描述",
+    "fileList": [
+      {
+        "fid": "bizwork_default_class_70d84d07-6ac2-454e-af79-29dd2ca8fbf2_97703c180baec1116c669931b14e1d92",
+        "fileName": "big-plane.png",
+        "filePath": "http://api.task.bizwork.sogou:80/task/downloadFile.do?filePath=bizwork_default_class_70d84d07-6ac2-454e-af79-29dd2ca8fbf2_97703c180baec1116c669931b14e1d92&fileName=big-plane.png"
+      },
+      {
+        "fid": "bizwork_default_class_a7f2b55c-2deb-4e80-a073-f8584679c0f0_57155fc218c86022a84fa0c4dfe89f8c",
+        "fileName": "chart.png",
+        "filePath": "http://api.task.bizwork.sogou:80/task/downloadFile.do?filePath=bizwork_default_class_a7f2b55c-2deb-4e80-a073-f8584679c0f0_57155fc218c86022a84fa0c4dfe89f8c&fileName=chart.png"
+      }
+    ],
+    "optionLog": [
+      {
+        "operator": "陈曦",
+        "operation": "创建事件",
+        "opetationTime": "07-11 16:10:00"
+      },
+      {
+        "operator": "翟懿博",
+        "operation": "更改事件状态",
+        "opetationTime": "07-13 16:10:00"
+      }
+    ]
+  },
+  "errorCode": 500,
+  "errorMsg": "系统异常",
+  "totalNumber": 10
 }

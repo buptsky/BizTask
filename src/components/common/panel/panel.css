@@ -1,6 +1,6 @@
 /*panel面板样式配置，不包括antd样式配置*/
 .bizwork-panel .panel-wrapper {
-  animation: slider 0.3s ease-in;
+  /*animation: slider 0.3s ease-in;*/
   position: absolute;
   left: 25%;
   right: 0;
@@ -10,7 +10,8 @@
   box-shadow: -3px 0px 8px #aaa;
 }
 .bizwork-panel .panel-wrapper.close {
-  animation: slider-out 0.3s ease-out;
+  /*animation: slider-out 0.3s ease-out;*/
+  left: 100%; right: -75%
 }
 
 .bizwork-panel .panel-header {

@@ -77,14 +77,15 @@ export function addTask(addArgs, queryArgs) {
 
 export function openEditTask(args) {
   return (dispatch) => {
-    dispatch(actionCreator(actionTypes.open_edit_task));
-    fetchData({
-      url: '/task/getTaskDetail.do',
-      data: args
-    }).then(data => {
-      dispatch(actionCreator(actionTypes.get_task_detail_success, data));
-    });
+    dispatch(actionCreator(actionTypes.open_edit_task,args.taskId));
+
   };
+}
+
+export function uploadTaskFile(file) {
+  return (dispatch) => {
+    dispatch(actionCreator(actionTypes.upload_task_file, file));
+  }
 }
 
 export function updateTask(args, queryArgs) {
