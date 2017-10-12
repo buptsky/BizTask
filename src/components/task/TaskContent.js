@@ -5,7 +5,7 @@ import TaskContainer from './TaskContainer';
 import {DragDropContext} from 'react-dnd';
 import HTML5Backend from 'react-dnd-html5-backend';
 import * as TaskActions from '../../actions/task';
-
+import {TaskListTypes} from './Constants';
 function mapStateToProps(state) {
   return {
     isLoading: state.task.isLoading,
@@ -25,10 +25,15 @@ class TaskContent extends React.Component {
   }
 
   componentDidMount() {
-    this.props.getTasks({
+    const {type} = this.props;
+    let queryArgs = {
       userType: 0,  //我负责的任务0，我关注的任务1
       viewType: 0   //标签视图，将要废弃
-    });
+    };
+    if(type === TaskListTypes.ATTENTION) {
+      queryArgs.userType = 1;
+    }
+    this.props.getTasks(queryArgs);
   }
 
   renderTasks = (taskLists) => {
