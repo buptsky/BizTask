@@ -14,7 +14,8 @@ const RadioGroup = Radio.Group;
 @connect(
   state => ({
     persons: state.common.commonData.persons,
-    flowDetailData: state.workflow.flowDetailData
+    flowDetailData: state.workflow.flowDetailData,
+    repositories: state.workflow.repositories
   }),
   dispatch => ({})
 )
@@ -33,8 +34,7 @@ class SvnPermissionForm extends React.Component {
       permissionPersons: [], // 权限人员自动补全的动态数据源
       storeManagers: {}, // 仓库及管理信息（机制不清）
       storePaths: [], // 需要查询的仓库地址集合
-      allPaths: [], // 所有可用仓库地址
-      filterpaths: [] // 筛选后的仓库地址
+      filterPaths: [] // 筛选后的仓库地址
     }
   }
 
@@ -64,16 +64,6 @@ class SvnPermissionForm extends React.Component {
           disableAll: true
         });
       }
-    } else {
-      // 新建模式,获取所有可用仓库路径
-      fetchData({
-        url: '/svnService/getRepositories.do',
-        data: {}
-      }).then((data) => {
-        this.setState({
-          allPaths: data
-        })
-      });
     }
   }
 
@@ -179,12 +169,12 @@ class SvnPermissionForm extends React.Component {
     let ret = [];
     if (value) {
       // 数据过滤
-      ret = this.state.allPaths.filter((path) => {
+      ret = this.props.repositories.filter((path) => {
         return path.indexOf(value) !== -1;
       });
     }
     this.setState({
-      filterpaths: ret
+      filterPaths: ret
     });
   }
   // 选取仓库路径
@@ -235,7 +225,7 @@ class SvnPermissionForm extends React.Component {
       flowName = originData.flowName.split('-').slice(1).join('-');
     }
     // 仓库路径下拉选项
-    const pathOptions = this.state.filterpaths.map((path) => {
+    const pathOptions = this.state.filterPaths.map((path) => {
       return <Option key={path}>{path}</Option>;
     });
     // 权限人员下拉选项

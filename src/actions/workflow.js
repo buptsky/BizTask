@@ -18,7 +18,7 @@ export function getFlowDetailData (flowId) {
   return (dispatch, getState) => {
     dispatch(actionCreator(actionTypes.get_flow_detail));
     fetchData({
-      url: '/workflow/getApplicationDetailTest.do',
+      url: '/workflow/getApplicationDetailTest4.do',
       data: {flowId}
     }).then((data) => {
       // 格式化处理数据
@@ -34,4 +34,15 @@ export function clearFlowDetailData (flowId) {
   }
 };
 
+export function getRepositories () {
+  return (dispatch, getState) => {
+    dispatch(actionCreator(actionTypes.get_repositories));
+    fetchData({
+      url: '/svnService/getRepositories.do',
+      data: {}
+    }).then((data) => {
+      dispatch(actionCreator(actionTypes.get_repositories_success, data));
+    });
+  }
+};
 

@@ -7,15 +7,14 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {actionCreator} from '../../actions/action-creator';
 import {getFlowData} from '../../actions/workflow';
-import {getFlowDetailData} from '../../actions/workflow';
-import {clearFlowDetailData} from '../../actions/workflow';
+import {getFlowDetailData, clearFlowDetailData, getRepositories} from '../../actions/workflow';
 import {Layout, Menu, Icon, Button} from 'antd';
 
 const {Sider, Content} = Layout;
 
 @connect(
   state => ({
-    isLoading: state.workflow.flowLoading,
+    tableLoading: state.workflow.flowLoading,
     dataSource: state.workflow.flowData,
     flowDetailData: state.workflow.flowDetailData,
     flowDetailLoading: state.workflow.flowDetailLoading
@@ -26,7 +25,8 @@ const {Sider, Content} = Layout;
     },
     getFlowData: bindActionCreators(getFlowData, dispatch),
     getFlowDetailData: bindActionCreators(getFlowDetailData, dispatch),
-    clearFlowDetailData: bindActionCreators(clearFlowDetailData, dispatch)
+    clearFlowDetailData: bindActionCreators(clearFlowDetailData, dispatch),
+    getRepositories: bindActionCreators(getRepositories, dispatch)
   })
 )
 class DailyWorksheet extends React.Component {
@@ -61,6 +61,7 @@ class DailyWorksheet extends React.Component {
   componentDidMount() {
     this.props.activeHeaderMenu();
     this.props.getFlowData(); // 获取table数据
+    this.props.getRepositories(); // 获取svn仓库数据
   }
 
   // 关闭创建流程面板
@@ -69,7 +70,7 @@ class DailyWorksheet extends React.Component {
     this.setState({
       showCreatePanel: false,
     });
-    this.props.clearFlowDetailData();
+    this.props.clearFlowDetailData(); // 清空redux中相关数据
   }
   // 打开创建流程面板
   openPanel = () => {
@@ -111,20 +112,8 @@ class DailyWorksheet extends React.Component {
   }
   // 查看/修改表格中的流程
   operateFlow = (id) => {
-    console.log(id);
-    this.props.getFlowDetailData(id);
-    this.openPanel();
-    // fetchData({
-    //   url: '/workflow/getApplicationDetailTest2.do',
-    //   data: {flowId: id}
-    // }).then((data) => { // 获取数据传入流程面板，并开启面板
-    //   // 数据格式化处理
-    //   this.setState({
-    //     flowData: {...data, formData: JSON.parse(data.formData)}
-    //   }, () => {
-    //     this.openPanel();
-    //   })
-    // });
+    this.props.getFlowDetailData(id); // 异步获取流程详情数据
+    this.openPanel(); // 打开面板
   }
 
   render() {
@@ -174,7 +163,7 @@ class DailyWorksheet extends React.Component {
           <WorkflowTable
             pageChange={this.tablePageChange}
             data={this.props.dataSource.list}
-            isLoading={this.props.isLoading}
+            isLoading={this.props.tableLoading}
             total={this.props.dataSource.totalNumber}
             operate={this.operateFlow}
           />

@@ -27,12 +27,10 @@ class WorkflowPanel extends React.Component {
 
   componentWillMount() {
     // 判断当前是新建流程还是查看/修改流程
-    console.log(this.props.flowDetailData.flowTypeId);
     if (this.props.flowDetailData.flowTypeId) { // 非新建流程
       this.setState({
         currentFlowType: this.props.flowDetailData.flowTypeId.toString(),
       });
-      console.log(this.props.flowDetailData.canEdit);
       if (!this.props.flowDetailData.canEdit) { // 不可编辑
         this.setState({
           disableAll: true
@@ -52,6 +50,10 @@ class WorkflowPanel extends React.Component {
   // 记录留言以备表单提交
   changeMessage = (e) => {
     this.setState({message: e.target.value});
+  }
+  // 获取留言内容
+  getMessage = () => {
+    return this.state.message;
   }
 
   render() {
@@ -84,7 +86,7 @@ class WorkflowPanel extends React.Component {
         break;
       case '201':
         flowForm = (
-          <NewEmployeeForm message={this.state.message}/>
+          <NewEmployeeForm getMsg={this.getMessage} close={this.props.close}/>
         )
         break;
     }
@@ -130,8 +132,9 @@ class WorkflowPanel extends React.Component {
             <div className="time-line-wrapper">
               <WorkflowTimeline data={this.props.flowDetailData.nodeList || null}/>
               {/*由于难以达到要求的表单布局，此项目单独拆开，表单提交时记得加上*/}
+              {/*调试的时候总是展示*/}
               {
-                !this.state.disableAll && (
+                !this.state.disableAll || (
                   <TextArea rows={4}
                             value={this.state.message}
                             className="note"

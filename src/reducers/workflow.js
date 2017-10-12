@@ -5,8 +5,9 @@ const startTime = [config.startDateRange.initialRange[0].format('YYYY-MM-DD'),co
 const endTime = [config.endDateRange.initialRange[0].format('YYYY-MM-DD'),config.endDateRange.initialRange[1].format('YYYY-MM-DD')].join(',');
 
 const initialState = {
-  flowData: [],
-  flowDetailData: {},
+  flowData: [], // 流程数据
+  flowDetailData: {}, // 流程详情数据
+  repositories: [], // svn仓库数据
   queryArgs: {
     typeId: 1,
     flowTypeId: 0,
@@ -19,8 +20,9 @@ const initialState = {
     employee: '',
     isDone: true
   },
-  flowLoading: true,
-  flowDetailLoading: true
+  flowLoading: false,
+  flowDetailLoading: false,
+  repositoryLoading: false // 仓库数据加载中，暂时不使用此数据
 };
 
 export function workflow(state = initialState, action) {
@@ -51,6 +53,17 @@ export function workflow(state = initialState, action) {
       return {
         ...state,
         flowDetailData: {},
+      };
+    case actionTypes.get_repositories:
+      return {
+        ...state,
+        repositoryLoading: true
+      };
+    case actionTypes.get_repositories_success:
+      return {
+        ...state,
+        repositories: action.payload,
+        repositoryLoading: false
       };
     default:
       return state;

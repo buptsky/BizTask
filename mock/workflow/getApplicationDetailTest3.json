@@ -1,0 +1,68 @@
+{
+  "success": true,
+  "data": {
+    "flowId": null,
+    "taskId": "405233",
+    "flowTypeId": 201,
+    "flowName": "新人入职-陈曦",
+    "formData": "{\"employeeId\":204516,\"groupId\":35,\"weixin\":\"t\",\"email\":\"chenxisi0848@sogou-inc.com\",\"leader\":\"夏先波\",\"name\":\"陈曦\",\"step\":2,\"qq\":\"t\"}",
+    "flowImageUrl": "http://bizflow.sogou-inc.com/process/runninginfoByBusinessKey/bizwork_entryProcess__0000015E9ED4EC440B9D763D76B2E068",
+    "businessKey": "bizwork_entryProcess__0000015E9ED4EC440B9D763D76B2E068",
+    "canAuthorize": false,
+    "canEdit": false,
+    "canDelete": false,
+    "nodeList": [
+      {
+        "name": "发起申请",
+        "employee": "陈曦",
+        "dateTime": "2017-09-20 18:28:27",
+        "status": "已完成",
+        "remarks": null
+      },
+      {
+        "name": "新员工操作",
+        "employee": "陈曦",
+        "dateTime": "2017-09-20 18:28:28",
+        "status": "同意",
+        "remarks": "【系统提醒】小组leader申请系统默认通过。"
+      },
+      {
+        "name": "leader审批",
+        "employee": "陈曦",
+        "dateTime": "2017-09-22 10:31:20",
+        "status": "拒绝",
+        "remarks": null
+      },
+      {
+        "name": "新员工操作",
+        "employee": "陈曦",
+        "dateTime": "2017-09-22 10:31:24",
+        "status": "拒绝",
+        "remarks": null
+      },
+      {
+        "name": "leader审批",
+        "employee": "陈曦",
+        "dateTime": "2017-09-22 10:31:31",
+        "status": "拒绝",
+        "remarks": null
+      },
+      {
+        "name": "新员工操作",
+        "employee": "陈曦",
+        "dateTime": "2017-09-22 10:31:45",
+        "status": "同意",
+        "remarks": null
+      },
+      {
+        "name": "leader审批",
+        "employee": "陈曦",
+        "dateTime": "",
+        "status": null,
+        "remarks": null
+      }
+    ]
+  },
+  "errorMsg": null,
+  "errorCode": 0
+}

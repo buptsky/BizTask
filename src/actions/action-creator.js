@@ -8,11 +8,13 @@ export const actionTypes = {
   load_all_person_success: 'load_all_person_success',
   load_user_info_success: 'load_user_info_success',
   /*workflow*/
-  get_workflow_data: 'get_table_data', // 获取流程列表数据
+  get_workflow_data: 'get_workflow_data', // 获取流程列表数据
   get_workflow_data_success: 'get_workflow_data_success', // 成功获取流程列表数据
   get_flow_detail: 'get_flow_detail', // 获取流程详情
   get_flow_detail_success: 'get_flow_detail_success', // 成功获取流程详情
   clear_flow_detail: 'clear_flow_detail', // 清空流程详细数据
+  get_repositories: 'get_repositories', // 获取仓库路径数据
+  get_repositories_success: 'get_repositories_success', // 成功获取仓库路径数据
   /*task*/
   get_tasks: 'get_tasks',
   get_tasks_success: 'get_tasks_success',

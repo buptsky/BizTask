@@ -40,7 +40,8 @@ class Panel extends React.Component {
     if (nextProps.visible) {
       this.setState({
         showFlag: true,
-        open: true
+        open: true,
+        wrapperClass: 'panel-wrapper open'
       });
     } else if (nextProps.visible === false && this.state.open) {
       this.setState({
@@ -117,7 +118,7 @@ class Panel extends React.Component {
             {
               this.props.loading ?
                 (
-                  <Spin size="large" style={{position: 'absolute', left: '50%', top:'50%'}} />
+                  <Spin size="large" style={{position: 'absolute', left: '50%', top: '50%'}}/>
                 )
                 : (
                   <div className="panel-content">

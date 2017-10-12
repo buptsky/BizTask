@@ -159,9 +159,7 @@ class SvnApplyForm extends React.Component {
   }
   // 删除权限人员
   deletePermission = (removedTag) => {
-    console.log(removedTag);
     const tags = this.state.permissionTags.filter(tag => tag !== removedTag);
-    console.log(tags);
     this.setState({permissionTags: tags})
   }
   // 切换分配权限的类型

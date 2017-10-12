@@ -1,0 +1,47 @@
+{
+  "success": true,
+  "data": {
+    "flowId": null,
+    "taskId": null,
+    "flowTypeId": 201,
+    "flowName": "新人入职-陈凯",
+    "formData": "{\"groupSpec\":\"http:\\/\\/bizsvn.sogou-inc.com\\/svn\\/biztech\\/bizdev_pl\\/CRM相关文档\",\"depInfo\":\"http:\\/\\/biztech.sogou-inc.com\\/\",\"employeeId\":117051,\"software\":\"\",\"weixin\":\"kchen7979\",\"groupInfo\":\"http:\\/\\/biztech.sogou-inc.com\\/wiki\\/index.php\\/Crm\",\"leader\":\"夏先波\",\"name\":\"陈凯\",\"groupDoc\":\"http:\\/\\/biztech.sogou-inc.com\\/wiki\\/index.php\\/相关规范\",\"svn\":[\"crm-visittool-ios\",\"crm-bo-ka\",\"crm-agent\",\"crm-mis\",\"crm-report\",\"crm-mobilebo-web\",\"crm-userservice\",\"crm-visittool-server\",\"crm-academy\",\"crm-ws\",\"crm-ppt\",\"crm-script\",\"crm-doc\",\"crm-taskbar\",\"crm-realtimecost\",\"sogou-pms\",\"crm-gateway\",\"changelog:\\/2017\"],\"step\":3,\"qq\":\"66331070\"}",
+    "flowImageUrl": "http://bizflow.sogou-inc.com/process/runninginfoByBusinessKey/bizwork_entryProcess__0000015E9ECADBB681283DFB092F68B7",
+    "businessKey": "bizwork_entryProcess__0000015E9ECADBB681283DFB092F68B7",
+    "canAuthorize": false,
+    "canEdit": false,
+    "canDelete": false,
+    "nodeList": [
+      {
+        "name": "发起申请",
+        "employee": "陈凯",
+        "dateTime": "2017-09-20 18:17:28",
+        "status": "已完成",
+        "remarks": null
+      },
+      {
+        "name": "新员工操作",
+        "employee": "陈凯",
+        "dateTime": "2017-09-21 10:15:30",
+        "status": "同意",
+        "remarks": null
+      },
+      {
+        "name": "leader审批",
+        "employee": "夏先波",
+        "dateTime": "2017-09-21 16:44:06",
+        "status": "同意",
+        "remarks": null
+      },
+      {
+        "name": "入职须知",
+        "employee": "陈凯",
+        "dateTime": "2017-09-28 13:37:51",
+        "status": "同意",
+        "remarks": null
+      }
+    ]
+  },
+  "errorMsg": null,
+  "errorCode": 0
+}
