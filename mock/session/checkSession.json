@@ -1,6 +1,5 @@
 {
-    "success": true,
+    "errno": 0,
     "data": null,
-    "errorCode": 500,
-    "errorMsg": "系统异常"
+    "errmsg": ""
 }

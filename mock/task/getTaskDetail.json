@@ -1,5 +1,5 @@
 {
-  "success": 1,
+  "errno": 0,
   "data": {
     "taskName": "任务1",
     "rangeTime": [
@@ -36,8 +36,5 @@
         "opetationTime": "07-13 16:10:00"
       }
     ]
-  },
-  "errorCode": 500,
-  "errorMsg": "系统异常",
-  "totalNumber": 10
+  }
 }

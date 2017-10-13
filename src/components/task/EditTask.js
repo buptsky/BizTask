@@ -36,7 +36,8 @@ class EditTask extends React.Component {
     this.state = {
       taskDetail: {},
       fileList: [],
-      isLoading: true
+      isLoading: true,
+      isSubmitting: false
     };
   }
 
@@ -47,28 +48,22 @@ class EditTask extends React.Component {
         taskId: this.props.taskId
       }
     }).then(data => {
+      const stateFileList = data.fileList.map((file) => {
+        return {
+          uid: file.fid,
+          name: file.fileName,
+          url: file.filePath,
+          status: 'done'
+        };
+      });
       this.setState({
         taskDetail: data,
-        fileList: data.fileList || [],
+        fileList: stateFileList,
         isLoading: false
       });
     });
   }
 
-  /*根据请求的fileList生成Upload组件需要的fileList格式*/
-  getFileList = (fileList) => {
-    if (!fileList || fileList.length < 1) {
-      return [];
-    }
-    return fileList.map((file) => {
-      return {
-        uid: file.fid,
-        name: file.fileName,
-        url: file.filePath,
-        status: 'done'
-      }
-    });
-  };
   /*渲染TimeLine部分*/
   renderTimeLine = (taskDetail) => {
     return (
@@ -91,29 +86,46 @@ class EditTask extends React.Component {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
+        this.setState({
+          isSubmitting: true
+        });
         if (values.rangeTime) {
-          /*values.startTime = moment(values.rangeTime[0]).format('YYYY-MM-DD');
-          values.endTime = moment(values.rangeTime[1]).format('YYYY-MM-DD');*/
-          values.rangeTime = values.rangeTime.map((time) => {
+          values.startTime = moment(values.rangeTime[0]).format('YYYY-MM-DD');
+          values.endTime = moment(values.rangeTime[1]).format('YYYY-MM-DD');
+          values.rangeTime = undefined;
+          /*values.rangeTime = values.rangeTime.map((time) => {
             return moment(time).format('YYYY-MM-DD');
-          });
+          });*/
         }
-        values.taskId = this.props.taskDetail.taskId;
+        values.taskId = this.props.taskId;
         values.messageContent = this.message;
-        values.fileList = this.props.taskDetail.fileList;
-        this.props.updateTask(values, this.props.queryArgs);
+        /*附件列表*/
+        values.attachment = this.state.fileList.map((file) => {
+          return `${file.uid}*${file.name}`   //接口格式需要
+        });
+        fetchData({
+          url: '/task/updateTask.do',
+          data: values
+        }).then(() => {
+          this.setState({
+            isSubmitting: false
+          });
+          this.props.closeEditTask();
+          this.props.getTasks(this.props.queryArgs);
+        });
       }
     });
   };
 
-  renderForm = (taskDetail, fileList) => {
+  renderForm = () => {
     const {
       onCancel,
       persons,
-      personsAndGroups,
-      isSubmitting
+      personsAndGroups
     } = this.props;
     const {getFieldDecorator} = this.props.form;
+
+    const {taskDetail, fileList, isSubmitting} = this.state;
     const chargeSelectOptions = persons.map((person) => {
       return <SelectOption key={person.name}>{person.label}</SelectOption>;
     });
@@ -127,25 +139,26 @@ class EditTask extends React.Component {
       //action: 'api/task/upload_attachment',
       action: '/upload/upload.do',
       onChange(info) {
-        if (info.file.status === 'error') {
-          message.error(`${info.file.name} 上传失败.`);
-        } else if (info.file.status === 'done') {
-          let newFileList = [...fileList];
-          newFileList.push(info.file.response.data);
-
+        let fileList = info.fileList;
+        const file = info.file;
+        if (file.status === 'uploading') {
+          me.setState({fileList});
         }
-        //let fileList = info.fileList;
-        me.setState({
-          fileList: newFileList
-        });
+        if (file.status === 'done') {
+          /*根据服务器的响应生成新的fileList*/
+          const fileData = file.response.data;
+          fileList.splice(-1, 1, {
+            uid: fileData.fid,
+            name: fileData.fileName,
+            url: fileData.filePath,
+            status: 'done'
+          });
+        } else if (file.status === 'error') {
+          message.error(`${file.name}文件上传失败`);
+        }
+        me.setState({fileList});
       },
-      onRemove(toRemoveFile) {
-        console.log(toRemoveFile)
-        /*_.remove(me.fileList,(existFile)=>{
-          return existFile.fid === toRemoveFile.uid;
-        });*/
-      },
-      fileList: this.getFileList(fileList)
+      fileList: fileList
     };
     return (
       <Row>
@@ -243,10 +256,10 @@ class EditTask extends React.Component {
   };
 
   render() {
-    const {isLoading, taskDetail, fileList} = this.state;
+    const {isLoading} = this.state;
     return (
       <div>
-        {isLoading ? <Spin/> : this.renderForm(taskDetail, fileList)}
+        {isLoading ? <Spin/> : this.renderForm()}
       </div>
     );
   }

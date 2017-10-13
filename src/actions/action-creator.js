@@ -20,8 +20,6 @@ export const actionTypes = {
   delete_task: 'delete_task',     //删除任务
   open_new_task: 'open_new_task', //打开新建任务Modal
   close_new_task: 'close_new_task', //关闭新建任务Modal
-  add_task: 'add_task',             //新建任务
-  add_task_success: 'add_task_success', //成功新建任务
   open_edit_task: 'open_edit_task',     //打开编辑任务Panel
   close_edit_task: 'close_edit_task',   //关闭编辑任务Panel
 };

@@ -1,17 +1,24 @@
-{"success": true,
-    "data": {
-        "repositories":[{
-            "path": "svn.bizwork.sogou-inc.com",
-            "managers": ["zhaiyibo@sogou.com"]
-        },{
-            "path": "svn.task.bizwork.sogou-inc.com",
-            "managers": [
-                "chenxi@sogou.com",
-                "zhaiyibo@sogou.com"
-            ]
-        }],
-        "managerIntersection": ["chenxi@sogou.com"]
-    },
-    "errorMsg": null,
-    "errorCode": 0
+{
+  "errno": 0,
+  "data": {
+    "repositories": [
+      {
+        "path": "svn.bizwork.sogou-inc.com",
+        "managers": [
+          "zhaiyibo@sogou.com"
+        ]
+      },
+      {
+        "path": "svn.task.bizwork.sogou-inc.com",
+        "managers": [
+          "chenxi@sogou.com",
+          "zhaiyibo@sogou.com"
+        ]
+      }
+    ],
+    "managerIntersection": [
+      "chenxi@sogou.com"
+    ]
+  },
+  "errormsg": ""
 }

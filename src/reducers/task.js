@@ -80,25 +80,6 @@ export function task(state = initialState, action) {
           isShow: false
         }
       };
-    /*新建任务*/
-    case actionTypes.add_task:
-      return {
-        ...state,
-        newTask: {
-          ...state.newTask,
-          isSubmitting: true
-        }
-      };
-    /*成功新建任务*/
-    case actionTypes.add_task_success:
-      return {
-        ...state,
-        newTask: {
-          ...state.newTask,
-          isShow: false,
-          isSubmitting: false
-        }
-      };
     /*打开编辑任务Panel*/
     case actionTypes.open_edit_task:
       return {

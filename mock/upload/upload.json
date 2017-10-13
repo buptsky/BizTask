@@ -1,10 +1,9 @@
 {
-  "success": 1,
+  "errno": 0,
   "data": {
     "filePath": "http://api.task.bizwork.sogou:80/task/downloadFile.do?filePath=bizwork_default_class_52e4fb06-3624-4f5a-9f54-dd1c96462b91_f85d5e45f57a91d0eb4e3db5dddd0542&fileName=delete.png",
     "fileName": "delete.png",
     "fid": "bizwork_default_class_52e4fb06-3624-4f5a-9f54-dd1c96462b91_f85d5e45f57a91d0eb4e3db5dddd0542"
   },
-  "errno": 0,
   "errmsg": ""
 }

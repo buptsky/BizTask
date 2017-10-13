@@ -1,5 +1,5 @@
 {
-    "success": true,
+    "errno": 0,
     "data": [
         "test12:/",
         "test:/",
@@ -55,6 +55,5 @@
         "testopleader:/",
         "ledertest:/"
     ],
-    "errorCode": 0,
-    "errorMsg": null
+    "errormsg": ""
 }

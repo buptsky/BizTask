@@ -1,5 +1,5 @@
 {
-    "success": 1,
+    "errno": 0,
     "data": [{
         "name": "TODO",
         "taskList": [{
@@ -85,8 +85,5 @@
         "chargeUserName": "翟懿博",
         "message": null
       }]
-    }],
-    "errorCode": 500,
-    "errorMsg": "系统异常",
-    "totalNumber": 10
+    }]
 }

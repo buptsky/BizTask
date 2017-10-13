@@ -29,27 +29,44 @@ function mapDispatchToProps(dispatch) {
 class NewTask extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      isSubmitting: false
+    };
   }
 
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
+        this.setState({
+          isSubmitting: true
+        });
         if (values.rangeTime) {
-          /*values.startTime = moment(values.rangeTime[0]).format('YYYY-MM-DD');
-          values.endTime = moment(values.rangeTime[1]).format('YYYY-MM-DD');*/
-          values.rangeTime = values.rangeTime.map((time)=>{
+          values.startTime = moment(values.rangeTime[0]).format('YYYY-MM-DD');
+          values.endTime = moment(values.rangeTime[1]).format('YYYY-MM-DD');
+          /*values.rangeTime = values.rangeTime.map((time)=>{
             return moment(time).format('YYYY-MM-DD');
-          });
+          });*/
         }
-        this.props.addTask(values, this.props.queryArgs);
+        fetchData({
+          url: '/task/addTask.do',
+          data: values
+        }).then(() => {
+          this.setState({
+            isSubmitting: false
+          });
+          this.props.closeNewTask();
+          this.props.getTasks(this.props.queryArgs);
+        });
       }
     });
   };
 
   render() {
-    const {onCancel, persons, personsAndGroups, isSubmitting} = this.props;
+    const {onCancel, persons, personsAndGroups} = this.props;
     const {getFieldDecorator} = this.props.form;
+
+    const {isSubmitting} = this.state;
     const chargeSelectOptions = persons.map((person) => {
       return <SelectOption key={person.name}>{person.label}</SelectOption>;
     });
@@ -107,7 +124,7 @@ class NewTask extends React.Component {
           )}
         </FormItem>
         <FormItem
-          wrapperCol={{span: 8, offset: 8}}>
+          wrapperCol={{span: 12, offset: 8}}>
           <Button type="primary" htmlType="submit" loading={isSubmitting}>
             确定
           </Button>
