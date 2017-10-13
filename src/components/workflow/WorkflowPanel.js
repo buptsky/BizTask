@@ -58,6 +58,7 @@ class WorkflowPanel extends React.Component {
 
   render() {
     const {flowTypes, flowDetailData} = this.props;
+    const onlyWatch = (flowDetailData.canAuthorize === false && flowDetailData.canDelete === false); // 是否只有查看权限，利用false判断是为了规避undefined
     let availableTypes = [];
     // 如果是新建流程模式，则不添加新员工入职选项
     if (!flowDetailData.flowTypeId) {
@@ -76,12 +77,12 @@ class WorkflowPanel extends React.Component {
     switch (this.state.currentFlowType) {
       case '101':
         flowForm = (
-          <SvnApplyForm message={this.state.message} close={this.props.close}/>
+          <SvnApplyForm getMsg={this.getMessage} close={this.props.close}/>
         )
         break;
       case '102':
         flowForm = (
-          <SvnPermissionForm message={this.state.message} close={this.props.close}/>
+          <SvnPermissionForm getMsg={this.getMessage} close={this.props.close}/>
         )
         break;
       case '201':
@@ -132,9 +133,9 @@ class WorkflowPanel extends React.Component {
             <div className="time-line-wrapper">
               <WorkflowTimeline data={this.props.flowDetailData.nodeList || null}/>
               {/*由于难以达到要求的表单布局，此项目单独拆开，表单提交时记得加上*/}
-              {/*调试的时候总是展示*/}
+              {/*只有查看权限的的情况不展示*/}
               {
-                !this.state.disableAll || (
+                !onlyWatch && (
                   <TextArea rows={4}
                             value={this.state.message}
                             className="note"

@@ -1,7 +1,14 @@
-import {Button, Form, Select, Input, Tag, Checkbox, Radio, AutoComplete, Row, Col} from 'antd';
-import config from './WorkflowConfig';
-import {connect} from 'react-redux';
+/*
+ * svn 权限分配流程表单
+ * 组件用于本流程的新建，编辑/查看
+ * 2017/10/13 新建流程初测通过
+ */
 import ReactDOM from 'react-dom';
+import {connect} from 'react-redux';
+import config from './WorkflowConfig';
+import {trim} from '../../utils/common';
+import {Button, Form, Select, Input, Tag, Checkbox, Radio, AutoComplete, Row, Col} from 'antd';
+
 // 表单样式配置
 const {formItemLayout1, formItemLayout2} = config;
 // antd 组件配置
@@ -22,7 +29,6 @@ const RadioGroup = Radio.Group;
 class SvnPermissionForm extends React.Component {
   constructor(props) {
     super(props);
-    // 这里手动指定了flownamePrefix的默认值,以后可能会动态获取
     this.state = {
       originData: {}, // 回填表单数据中的formData
       disableAll: false, // 禁用所有编辑（操作流程中的不可编辑权限）
@@ -77,6 +83,8 @@ class SvnPermissionForm extends React.Component {
 
   // 表单提交
   handleSubmit = (e) => {
+    console.log(e.target);
+    const originData = this.props.flowDetailData;
     // 还没有进行表单检测处理
     e.preventDefault();
     let commonArgs = {}; // 表单通用数据
@@ -87,12 +95,23 @@ class SvnPermissionForm extends React.Component {
         console.log(err);
         return;
       }
-      // 设置流程类型ID（svn权限分配-102）
-      commonArgs['flowTypeId'] = '102';
-      // 获取流程名称（流程前缀 + 仓库名） (后续需要对名称进行处理，如去掉空格)
-      commonArgs['flowName'] = this.state.flownamePrefix + values['create-name'];
+      // 判断当前权限
+      if (originData.canAuthorize) { // 审批权限
+        Object.assign(commonArgs, {
+          flowId: originData.flowId, // 当前流程id
+          taskId: originData.taskId, // 当前流程的taskId
+          isPassed: true // 当前流程被拒绝还是通过
+        });
+      } else if (originData.canDelete) { // 修改权限
+
+      } else { // 创建流程
+        // 设置流程类型ID（svn权限分配-102）(number)
+        commonArgs['flowTypeId'] = 102;
+      }
+      // 获取流程名称（流程前缀 + 仓库名）
+      commonArgs['flowName'] = this.state.flownamePrefix + trim(values['create-name']);
       // 本次操作的留言,从父组件获取
-      commonArgs['message'] = this.props.message;
+      commonArgs['message'] = this.props.getMsg();
       // 本次操作添加的权限人员
       this.state.permissionTags.forEach((item) => {
         // 获取人员的权限信息存入persons，读写-> 1 ,只读-> 2
@@ -106,9 +125,17 @@ class SvnPermissionForm extends React.Component {
         needEmailManagers: values['inform-manager'], // 需要邮件通知的管理员
         managers: this.state.storeManagers.managerIntersection, // 仓库公共管理员
         persons: persons, // 权限人员
-        remark: values['remark'] // 备注
+        remark: trim(values['remark']) // 备注
       }
       console.log({...commonArgs, formData}); // 最后提交的参数集
+
+      fetchData({
+        url: '/workflow/submitWorkflow.do',
+        data: {...commonArgs, formData: JSON.stringify(formData)}
+      }).then((data) => {
+        console.log('提交成功' + data);
+        // 成功后记得刷新数据
+      });
     });
   }
   // 查找符合条件的权限人员(暂时不使用默认的自动补全)
@@ -132,7 +159,15 @@ class SvnPermissionForm extends React.Component {
   }
   // 隐藏添加权限人员输入框
   hidePermissionInput = () => {
-    this.setState({permissionInputVisible: false});
+    this.setState({
+      permissionPersons: [], // 清空补全数据
+    }, () => {
+      // 放入回调更新的原因是，不能在react组件已经卸载的情况下，更新该react组件的状态。
+      // 在当前情景下，不遵守该顺序不会出现错误，但会出现警告
+      this.setState({
+        permissionInputVisible: false
+      });
+    });
   }
   // 添加选中权限人员
   confirmPermission = (value) => {
@@ -311,7 +346,8 @@ class SvnPermissionForm extends React.Component {
                       {permissionOptions}
                     </AutoComplete>
                   ) : (
-                    <Button type="dashed" onClick={this.showPermissionInput} disabled={this.state.disableAll}>+新增成员</Button>
+                    <Button type="dashed" onClick={this.showPermissionInput}
+                            disabled={this.state.disableAll}>+新增成员</Button>
                   )
                 }
                 {/*权限描述*/}
@@ -327,7 +363,7 @@ class SvnPermissionForm extends React.Component {
             )
           }
           {/*新增权限人员显示*/}
-          <Row style={{margin:'10px 0 24px 0'}}>
+          <Row style={{margin: '10px 0 24px 0'}}>
             {/*禁用编辑模式下展示，用于配合显示隐藏*/}
             <Col span={6} style={{textAlign: 'right'}}>
               {
@@ -343,7 +379,7 @@ class SvnPermissionForm extends React.Component {
                 {this.state.permissionTags.map((tag, index) => {
                   const tagElem = (
                     <Tag key={tag}
-                         style={{height: 32, lineHeight: '28px'}}
+                         style={{height: 32, lineHeight: '28px', marginBottom: 10}}
                          color="#108ee9"
                          closable={!this.state.disableAll}
                          afterClose={() => this.deletePermission(tag)}
@@ -368,10 +404,48 @@ class SvnPermissionForm extends React.Component {
           </FormItem>
           {/*表单提交*/}
           <FormItem {...formItemLayout2}>
-            <Button type="primary" htmlType="submit">
-              启动
-            </Button>
-            <Button type="primary" style={{marginLeft: '20px'}} onClick={this.props.close}>
+            {/*仅创建流程*/}
+            {
+              !originData.formData && (
+                <Button type="primary" htmlType="submit" style={{marginRight: '20px'}}>
+                  启动
+                </Button>
+              )
+            }
+            {/*审批权限*/}
+            {
+              originData.canAuthorize && (
+                <Button type="primary" htmlType="submit" style={{marginRight: '20px'}}>
+                  通过
+                </Button>
+              )
+            }
+            {
+              originData.canAuthorize && (
+                <Button type="danger" htmlType="submit" style={{marginRight: '20px'}}>
+                  拒绝
+                </Button>
+              )
+            }
+            {/*修改权限*/}
+            {
+              originData.canDelete && (
+                <Button
+                  type="danger"
+                  htmlType="submit"
+                  style={{marginRight: '20px'}}>
+                  提交
+                </Button>
+              )
+            }
+            {
+              originData.canDelete && (
+                <Button type="danger" style={{marginRight: '20px'}}>
+                  删除
+                </Button>
+              )
+            }
+            <Button onClick={this.props.close}>
               取消
             </Button>
           </FormItem>

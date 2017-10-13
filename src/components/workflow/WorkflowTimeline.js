@@ -3,14 +3,21 @@
  * 根据不同的流程状态，显示对应的提示图标和颜色
  */
 import {Timeline, Icon} from 'antd';
+import {connect} from 'react-redux';
 
+@connect(
+  state => ({
+    userInfo: state.common.commonData.userInfo
+  }),
+  dispatch => ({})
+)
 class WorkflowTimeline extends React.Component {
 
   constructor(props) {
     super(props);
     this.state = {
       defaultLine: [
-        {name: "拟稿", employee: "当前用户", dateTime: null, status: null, remarks: null}
+        {name: "拟稿", employee: this.props.userInfo.userName, dateTime: null, status: null, remarks: null}
       ]
     }
   }

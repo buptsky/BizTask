@@ -1,7 +1,13 @@
-import {Button, Form, Select, Input, Tag, Checkbox, Radio, AutoComplete, Row, Col} from 'antd';
-import config from './WorkflowConfig';
-import {connect} from 'react-redux';
+/*
+ * svn 仓库申请流程表单
+ * 组件用于本流程的新建，编辑/查看
+ * 2017/10/13 新建流程初测通过
+ */
 import ReactDOM from 'react-dom';
+import {connect} from 'react-redux';
+import config from './WorkflowConfig';
+import {trim} from '../../utils/common';
+import {Button, Form, Select, Input, Tag, Checkbox, Radio, AutoComplete, Row, Col} from 'antd';
 // 表单样式配置
 const {formItemLayout1, formItemLayout2} = config;
 // antd 组件配置
@@ -10,7 +16,7 @@ const Option = Select.Option;
 const {TextArea} = Input;
 const CheckboxGroup = Checkbox.Group;
 const RadioGroup = Radio.Group;
-// 可选check(暂时放在这里，以后根据情况调整）
+// 仓库功能可选check
 const checkOptions = [
   {label: '涉及财务、资金、计费、管理权限等', value: 'limit'},
   {label: '需要404审计', value: '404'}
@@ -26,7 +32,6 @@ const checkOptions = [
 class SvnApplyForm extends React.Component {
   constructor(props) {
     super(props);
-    // 这里手动指定了flownamePrefix的默认值,以后可能会动态获取
     this.state = {
       disableAll: false, // 禁用所有编辑（操作流程中的不可编辑权限）
       flownamePrefix: `svn权限申请-`, // 流程名称前缀
@@ -83,11 +88,11 @@ class SvnApplyForm extends React.Component {
         return;
       }
       // 获取流程类型ID
-      commonArgs['flowTypeId'] = '101';
-      // 获取流程名称（流程前缀 + 仓库名） (后续需要对名称进行处理，如去掉空格)
-      commonArgs['flowName'] = this.state.flownamePrefix + values['create-name'];
+      commonArgs['flowTypeId'] = 101;
+      // 获取流程名称（流程前缀 + 仓库名）
+      commonArgs['flowName'] = this.state.flownamePrefix + trim(values['create-name']);
       // 本次操作的留言,从父组件获取
-      commonArgs['message'] = this.props.message;
+      commonArgs['message'] = trim(this.props.getMsg());
       // 本次操作添加的权限人员
       this.state.permissionTags.forEach((item) => {
         // 获取人员的权限信息存入persons，读写-> 1 ,只读-> 2
@@ -97,16 +102,22 @@ class SvnApplyForm extends React.Component {
         })
       });
       formData = {
-        repositoryName: values['storage-name'], // 仓库名
-        manager: values['storage-manager'], // 仓库管理员
-        description: values['storage-desc'], // 仓库功能描述
+        repositoryName: trim(values['storage-name']), // 仓库名
+        manager: values['storage-manager'].join(','), // 仓库管理员
+        description: trim(values['storage-desc']), // 仓库功能描述
         needADPublish: false, // 后来去掉的选项,一直为false
         needFinance: values['check-opt'].includes('limit'), // 涉及财务等权限
         need404: values['check-opt'].includes('404'), // 需要404审计
         persons: persons, // 权限人员
-        remark: values['remark'] // 备注
+        remark: trim(values['remark']) // 备注
       }
       console.log({...commonArgs, formData}); // 最后提交的参数集
+      fetchData({
+        url: '/workflow/submitWorkflow.do',
+        data: {...commonArgs, formData: JSON.stringify(formData)}
+      }).then((data) => {
+        console.log('提交成功' + data);
+      });
     });
   }
   // 同步输入 （可能影响性能，可优化）
@@ -121,7 +132,15 @@ class SvnApplyForm extends React.Component {
   }
   // 隐藏添加权限人员输入框
   hidePermissionInput = () => {
-    this.setState({permissionInputVisible: false});
+    this.setState({
+      permissionPersons:[], // 清空补全数据
+    }, () => {
+      // 放入回调更新的原因是，不能在react组件已经卸载的情况下，更新该react组件的状态。
+      // 在当前情景下，不遵守该顺序不会出现错误，但会出现警告
+      this.setState({
+        permissionInputVisible: false
+      })
+    });
   }
   // 查找符合条件的权限人员(暂时不使用默认的自动补全)
   searchPermissionPersons = (value) => {
@@ -283,7 +302,7 @@ class SvnApplyForm extends React.Component {
                 {this.state.permissionTags.map((tag, index) => {
                   const tagElem = (
                     <Tag key={tag}
-                         style={{height: 32, lineHeight: '28px'}}
+                         style={{height: 32, lineHeight: '28px', marginBottom: 10}}
                          color="#108ee9"
                          closable={!this.state.disableAll}
                          afterClose={() => this.deletePermission(tag)}
@@ -316,7 +335,7 @@ class SvnApplyForm extends React.Component {
                 </Button>
               )
             }
-            <Button type="primary" onClick={this.props.close}>
+            <Button onClick={this.props.close}>
               取消
             </Button>
           </FormItem>

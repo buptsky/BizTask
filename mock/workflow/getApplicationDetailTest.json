@@ -8,7 +8,7 @@
     "formData": "{\"repositories\":[{\"managers\":[\"lixiaoqing\"],\"path\":\"brandstart\"},{\"managers\":[\"lixiaoqing\"],\"path\":\"brandstart-admin:/\"}],\"needEmailManagers\":[\"lixiaoqing\"],\"managers\":[\"lixiaoqing\"],\"persons\":[{\"email\":\"svn_bizdocker\",\"permission\":\"2\"}],\"remark\":\"brandstart，brandstart-admin接入测试云平台\"}",
     "flowImageUrl": "http://bizflow.sogou-inc.com/process/runninginfoByBusinessKey/bizwork_svnDistribution__0000015F0507A022269649B9F88F5FAC",
     "businessKey": "bizwork_svnDistribution__0000015F0507A022269649B9F88F5FAC",
-    "canAuthorize": false,
+    "canAuthorize": true,
     "canEdit": false,
     "canDelete": false,
     "nodeList": [

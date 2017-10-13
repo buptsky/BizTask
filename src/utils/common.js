@@ -8,3 +8,7 @@ export function debounce(fn, interval = 300) {
     }, interval);
   }
 };
+// 清除字符串首尾空字符
+export function trim(text) {
+  return (text || '').replace(/^\s+|\s+$/g, '');
+}
