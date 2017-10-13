@@ -10,7 +10,7 @@ module.exports = merge(common, {
         new webpack.HotModuleReplacementPlugin()
     ],
     devServer: {
-        host: '10.129.148.89',
+        host: '0.0.0.0',
         port: 8080,
         inline: true,
         hot: true,

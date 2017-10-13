@@ -1,4 +1,4 @@
-import {Select, Input, Row, Col} from 'antd';
+import {Select, Input, Row, Col, Popover, Button} from 'antd';
 import WorkflowTimeline from './WorkflowTimeline';
 import SvnPermissionForm from './SvnPermissionForm';
 import SvnApplyForm from './SvnApplyForm';
@@ -60,11 +60,25 @@ class WorkflowPanel extends React.Component {
     const {flowTypes, flowDetailData} = this.props;
     const onlyWatch = (flowDetailData.canAuthorize === false && flowDetailData.canDelete === false); // 是否只有查看权限，利用false判断是为了规避undefined
     let availableTypes = [];
+    let selectWidth = '100%';
+    let flowWatch = '';
     // 如果是新建流程模式，则不添加新员工入职选项
     if (!flowDetailData.flowTypeId) {
       availableTypes = flowTypes.filter((type) => type.flowTypeId !== 201);
-    } else {
+    } else { // 留出流程查看的空间
       availableTypes = flowTypes;
+      selectWidth = '60%';
+      let content = (
+        <div>
+          <img src={flowDetailData.flowImageUrl} style={{width: 582, height: 236}}></img>
+        </div>
+      );
+      // 查看流程
+      flowWatch = (
+        <Popover placement="bottom" title="流程示意图" content={content} trigger="click">
+          <Button size="large" type="primary">查看流程图</Button>
+        </Popover>
+      )
     }
     // 新建流程下拉列表选项
     const workflowSelectItem = (
@@ -109,16 +123,19 @@ class WorkflowPanel extends React.Component {
                 {
                   this.props.flowTypes.length ?
                     (
-                      <Select
-                        style={{width: '100%'}}
-                        className="create-type"
-                        defaultValue="102"
-                        value={this.state.currentFlowType}
-                        onSelect={this.changeType}
-                        disabled={this.state.disableAll}
-                      >
-                        {workflowSelectItem}
-                      </Select>
+                      <div className="">
+                        <Select
+                          style={{width: selectWidth, marginRight: 10}}
+                          className="create-type"
+                          defaultValue="102"
+                          value={this.state.currentFlowType}
+                          onSelect={this.changeType}
+                          disabled={this.state.disableAll || flowDetailData.canDelete}
+                        >
+                          {workflowSelectItem}
+                        </Select>
+                        {flowWatch}
+                      </div>
                     ) : null
                 }
               </Col>

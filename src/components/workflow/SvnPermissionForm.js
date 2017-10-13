@@ -1,19 +1,20 @@
 /*
  * svn 权限分配流程表单
  * 组件用于本流程的新建，编辑/查看
- * 2017/10/13 新建流程初测通过
+ * 2017/10/13 gzj初测通过
  */
-import ReactDOM from 'react-dom';
+import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import config from './WorkflowConfig';
 import {trim} from '../../utils/common';
-import {Button, Form, Select, Input, Tag, Checkbox, Radio, AutoComplete, Row, Col} from 'antd';
+import {getFlowData} from '../../actions/workflow';
+import {Button, Form, Input, Tag, Checkbox, Radio, AutoComplete, Row, Col, Modal, message} from 'antd';
 
 // 表单样式配置
 const {formItemLayout1, formItemLayout2} = config;
 // antd 组件配置
 const FormItem = Form.Item;
-const Option = Select.Option;
+const Option =  AutoComplete.Option;;
 const {TextArea} = Input;
 const CheckboxGroup = Checkbox.Group;
 const RadioGroup = Radio.Group;
@@ -24,7 +25,9 @@ const RadioGroup = Radio.Group;
     flowDetailData: state.workflow.flowDetailData,
     repositories: state.workflow.repositories
   }),
-  dispatch => ({})
+  dispatch => ({
+    getFlowData: bindActionCreators(getFlowData, dispatch)
+  })
 )
 class SvnPermissionForm extends React.Component {
   constructor(props) {
@@ -40,7 +43,8 @@ class SvnPermissionForm extends React.Component {
       permissionPersons: [], // 权限人员自动补全的动态数据源
       storeManagers: {}, // 仓库及管理信息（机制不清）
       storePaths: [], // 需要查询的仓库地址集合
-      filterPaths: [] // 筛选后的仓库地址
+      filterPaths: [], // 筛选后的仓库地址
+      deleteVisible: false // 确认删除流程
     }
   }
 
@@ -73,37 +77,26 @@ class SvnPermissionForm extends React.Component {
     }
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (this.state.permissionInputVisible) {
-      // 这里直接访问了底层dom元素是为了使select组件的输入框获取焦点
-      // 暂时只找到这种解决方案，因为不使用datasource时，发现children中的input自定义失效了
-      ReactDOM.findDOMNode(this.permissionInput).click();
-    }
-  }
-
-  // 表单提交
-  handleSubmit = (e) => {
-    console.log(e.target);
+  // 表单提交(为了进行不同方式的提交，暂不使用antd自带的提交方式)
+  // 参数只会在审批/修改流程中使用，true -> 通过/提交， false -> 拒绝/删除
+  handleSubmit = (flag) => {
+    console.log(flag);
     const originData = this.props.flowDetailData;
-    // 还没有进行表单检测处理
-    e.preventDefault();
     let commonArgs = {}; // 表单通用数据
     let formData = {};
     let persons = []; // 权限人员集合
     this.props.form.validateFields((err, values) => {
-      if (err) { // 表单提交错误
+      if (err) { // 表单提交错误（验证失败）
         console.log(err);
         return;
       }
       // 判断当前权限
-      if (originData.canAuthorize) { // 审批权限
+      if (originData.canAuthorize || originData.canDelete) { // 审批权限和修改权限
         Object.assign(commonArgs, {
           flowId: originData.flowId, // 当前流程id
           taskId: originData.taskId, // 当前流程的taskId
-          isPassed: true // 当前流程被拒绝还是通过
+          isPassed: flag // 当前流程被拒绝/删除还是通过/提交
         });
-      } else if (originData.canDelete) { // 修改权限
-
       } else { // 创建流程
         // 设置流程类型ID（svn权限分配-102）(number)
         commonArgs['flowTypeId'] = 102;
@@ -127,16 +120,39 @@ class SvnPermissionForm extends React.Component {
         persons: persons, // 权限人员
         remark: trim(values['remark']) // 备注
       }
-      console.log({...commonArgs, formData}); // 最后提交的参数集
-
+      // 表单校验
+      let ret = this.checkFormData({...commonArgs, formData});
+      if (!ret) return;
+      // 校验成功，发送请求
       fetchData({
-        url: '/workflow/submitWorkflow.do',
+        url: `/workflow/${flag === undefined ? 'submitWorkflow.do' : 'approve.do'}`,
         data: {...commonArgs, formData: JSON.stringify(formData)}
       }).then((data) => {
-        console.log('提交成功' + data);
-        // 成功后记得刷新数据
+        console.log('提交成功');
+        // 成功后刷新流程列表数据
+        this.props.getFlowData();
       });
     });
+  }
+  // 校验必需的表单数据，由于表单设计问题，采用自行验证的方式
+  checkFormData = (data) => {
+    console.log(data);
+    // 流程名非空
+    if (!data.flowName.split('-').slice(1).join('-')) {
+      message.error('请输入流程名！');
+      return false;
+    }
+    // 仓库列表非空
+    if (!data.formData.managers) {
+      message.error('请选择至少一个仓库！');
+      return false;
+    }
+    // 权限人员非空
+    if (!data.formData.persons.length) {
+      message.error('请选择至少一人添加权限！');
+      return false;
+    }
+    return true;
   }
   // 查找符合条件的权限人员(暂时不使用默认的自动补全)
   searchPermissionPersons = (value) => {
@@ -155,7 +171,10 @@ class SvnPermissionForm extends React.Component {
   }
   // 显示添加权限人员输入框
   showPermissionInput = () => {
-    this.setState({permissionInputVisible: true});
+    this.setState({permissionInputVisible: true}, () => {
+      // 保证autocomplete组件已经渲染
+      this.permissionInput.focus();
+    });
   }
   // 隐藏添加权限人员输入框
   hidePermissionInput = () => {
@@ -186,14 +205,13 @@ class SvnPermissionForm extends React.Component {
       permissionInputVisible: false,
       permissionPersons: []
     });
-    this.props.form.setFieldsValue({'default-add': tags.join(',')});  // 表单同步
   }
   // 删除权限人员
   deletePermission = (removedTag) => {
     console.log(removedTag);
     const tags = this.state.permissionTags.filter(tag => tag !== removedTag);
     console.log(tags);
-    this.setState({permissionTags: tags})
+    this.setState({permissionTags: tags});
   }
   // 切换分配权限的类型
   changePermission = (e) => {
@@ -214,6 +232,7 @@ class SvnPermissionForm extends React.Component {
   }
   // 选取仓库路径
   confirmStorage = (path) => {
+    console.log(path);
     let paths = this.state.storePaths; // 获取当前地址集合
     if (paths.includes(path)) return; // 如果传递重复路径，则忽略
     paths.push(path); // 添加新地址
@@ -237,6 +256,14 @@ class SvnPermissionForm extends React.Component {
       url: '/svnService/getManagersByPaths.do',
       data: {path: this.state.storePaths}
     }).then((data) => {
+      // 如果有仓库数据，但是没有交叉管理员，则该仓库不可选
+      if (!data.managerIntersection.length && data.repositories.length) {
+        message.error('该仓库不可被选取');
+        this.props.form.setFieldsValue({
+          'storage-name-allot': ''
+        });
+        return;
+      }
       this.setState({
         storeManagers: data,
         storePaths: data.repositories.map((item) => item.path) // 获取到的仓库路径集合
@@ -247,6 +274,19 @@ class SvnPermissionForm extends React.Component {
         'storage-name-allot': ''
       });
     });
+  }
+  // 打开确认删除对话框
+  showConfirmModal = () => {
+    this.setState({deleteVisible: true});
+  }
+  // 确认删除流程
+  confirmDelete = () => {
+    this.setState({deleteVisible: false});
+    this.handleSubmit(false);
+  }
+  // 取消删除流程
+  cancelDelete = () => {
+    this.setState({deleteVisible: false});
   }
 
   render() {
@@ -259,14 +299,7 @@ class SvnPermissionForm extends React.Component {
     if (originData.flowName) {
       flowName = originData.flowName.split('-').slice(1).join('-');
     }
-    // 仓库路径下拉选项
-    const pathOptions = this.state.filterPaths.map((path) => {
-      return <Option key={path}>{path}</Option>;
-    });
-    // 权限人员下拉选项
-    const permissionOptions = this.state.permissionPersons.map((person) => {
-      return <Option key={person}>{person}</Option>;
-    });
+
     return (
       <div>
         {/*注意Form中字段没有按照实际情况配置，仅做测试使用*/}
@@ -275,27 +308,29 @@ class SvnPermissionForm extends React.Component {
         >
           {/*流程名称*/}
           <FormItem label="流程名称" {...formItemLayout1}>
-            {getFieldDecorator('create-name', {initialValue: flowName || ''})(
+            {getFieldDecorator('create-name', {initialValue: flowName || ''})
+            (
               <Input
                 addonBefore={this.state.flownamePrefix}
                 disabled={this.state.disableAll}
               />
             )}
           </FormItem>
+
           {/*仓库名称*/}
-          <FormItem label="仓库名称" {...formItemLayout1}>
+          <FormItem label={<span>仓库名称</span>} {...formItemLayout1} >
             <span>http://bizsvn.sogou-inc.com/svn/</span>
             {/*禁用编辑情况下隐藏*/}
             {
               !this.state.disableAll && (
-                getFieldDecorator('storage-name-allot', {initialValue: ''})(
+                getFieldDecorator('storage-name-allot', {initialValue: ''})
+                (
                   <AutoComplete
                     onSearch={this.filterStorage}
                     onSelect={this.confirmStorage}
                     disabled={this.state.disableAll}
-                  >
-                    {pathOptions}
-                  </AutoComplete>
+                    dataSource={this.state.filterPaths}
+                  />
                 )
               )
             }
@@ -331,20 +366,20 @@ class SvnPermissionForm extends React.Component {
           {
             !this.state.disableAll && (
               <FormItem label="默认给谁添加权限" style={{marginBottom: '5px'}} {...formItemLayout1}>
-                {getFieldDecorator('default-add', {initialValue: ''})(
+                {getFieldDecorator('default-add', {initialValue: ''})
+                (
                   <Input type="hidden"/>
                 )}
                 {
                   this.state.permissionInputVisible ? (
                     <AutoComplete
+                      dataSource={this.state.permissionPersons}
+                      children={<Input ref={(input) => this.permissionInput = input}/>}
                       onSelect={this.confirmPermission}
                       onSearch={this.searchPermissionPersons}
                       onBlur={this.hidePermissionInput}
-                      ref={(input) => this.permissionInput = input}
                       style={{width: '45%'}}
-                    >
-                      {permissionOptions}
-                    </AutoComplete>
+                    />
                   ) : (
                     <Button type="dashed" onClick={this.showPermissionInput}
                             disabled={this.state.disableAll}>+新增成员</Button>
@@ -407,7 +442,9 @@ class SvnPermissionForm extends React.Component {
             {/*仅创建流程*/}
             {
               !originData.formData && (
-                <Button type="primary" htmlType="submit" style={{marginRight: '20px'}}>
+                <Button type="primary" onClick={() => {
+                  this.handleSubmit();
+                }} style={{marginRight: '20px'}}>
                   启动
                 </Button>
               )
@@ -415,14 +452,18 @@ class SvnPermissionForm extends React.Component {
             {/*审批权限*/}
             {
               originData.canAuthorize && (
-                <Button type="primary" htmlType="submit" style={{marginRight: '20px'}}>
+                <Button type="primary" onClick={() => {
+                  this.handleSubmit(true);
+                }} style={{marginRight: '20px'}}>
                   通过
                 </Button>
               )
             }
             {
               originData.canAuthorize && (
-                <Button type="danger" htmlType="submit" style={{marginRight: '20px'}}>
+                <Button type="danger" onClick={() => {
+                  this.handleSubmit(false);
+                }} style={{marginRight: '20px'}}>
                   拒绝
                 </Button>
               )
@@ -430,17 +471,19 @@ class SvnPermissionForm extends React.Component {
             {/*修改权限*/}
             {
               originData.canDelete && (
-                <Button
-                  type="danger"
-                  htmlType="submit"
-                  style={{marginRight: '20px'}}>
+                <Button type="primary" onClick={() => {
+                  this.handleSubmit(true);
+                }} style={{marginRight: '20px'}}>
                   提交
                 </Button>
               )
             }
             {
               originData.canDelete && (
-                <Button type="danger" style={{marginRight: '20px'}}>
+                <Button type="danger"
+                        onClick={this.showConfirmModal}
+                        style={{marginRight: '20px'}}
+                >
                   删除
                 </Button>
               )
@@ -448,6 +491,16 @@ class SvnPermissionForm extends React.Component {
             <Button onClick={this.props.close}>
               取消
             </Button>
+            {/*删除流程确认*/}
+            <Modal
+              title="删除流程"
+              visible={this.state.deleteVisible}
+              onOk={this.confirmDelete}
+              onCancel={this.cancelDelete}
+              zIndex="2000"
+            >
+              <p style={{color: '#f04134', fontSize: 16}}>确认是否删除该流程（删除后不可找回）</p>
+            </Modal>
           </FormItem>
         </Form>
       </div>

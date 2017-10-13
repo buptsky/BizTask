@@ -10,14 +10,14 @@ const initialState = {
   repositories: [], // svn仓库数据
   queryArgs: {
     typeId: 1,
-    flowTypeId: 0,
-    flowName: '',
-    status: 0,
+    flowTypeId: "0",
+    flowName: "",
+    status: "0",
     startTime: startTime,
     endTime: endTime,
-    pageSize: 10,
+    pageSize: "10",
     pageNo: 1,
-    employee: '',
+    employee: "",
     isDone: true
   },
   flowLoading: false,

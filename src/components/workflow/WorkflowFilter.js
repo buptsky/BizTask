@@ -28,10 +28,8 @@ class ApplyFilter extends React.Component {
     // 新员工入职选项存在一些问题情况，之后复核
     if (args['workflow-type'] === 'search-all') {
       flowTypeId = '0';
-    } else if (args['workflow-type'] === 'svn-apply') {
-      flowTypeId = '101';
-    } else if (args['workflow-type'] === 'svn-allot'){
-      flowTypeId = '102';
+    } else {
+      flowTypeId = args['workflow-type'];
     }
     // 获取发起时间段
     args.startTime = [moment(args['start-rangeTime'][0]).format('YYYY-MM-DD'), moment(args['start-rangeTime'][1]).format('YYYY-MM-DD')].join(',');
@@ -39,7 +37,7 @@ class ApplyFilter extends React.Component {
     const submitArgs = {
       flowTypeId: flowTypeId,
       flowName: args['workflow-name'],
-      status: args['workflow-status'],
+      status: args['workflow-status'].toString(),
       startTime: args['startTime'],
       endTime: args['endTime'],
       pageSize: config.tablePagination.defaultPageSize.toString(),

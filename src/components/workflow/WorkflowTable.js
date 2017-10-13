@@ -17,7 +17,7 @@ class WorkflowTable extends React.Component {
   // 每页显示数目改变
   pageSizeChange = (current, pageSize) => {
     this.props.pageChange({
-      pageSize: pageSize,
+      pageSize: pageSize.toString(),
       pageNo: current
     });
   }
@@ -27,7 +27,7 @@ class WorkflowTable extends React.Component {
       current: page,
     });
     this.props.pageChange({
-      pageSize: pageSize,
+      pageSize: pageSize.toString(),
       pageNo: page
     });
   }

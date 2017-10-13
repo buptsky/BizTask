@@ -1,7 +1,8 @@
 {
-    "success": true,
-    "data": {
-        "manager": "fangxiuli",
-        "is404": true
-    }
+  "success": true,
+  "data": {
+    "manager": "fangxiuli",
+    "is404": true
+  },
+  "errno": 0
 }

@@ -6,8 +6,7 @@ import Panel from '../common/panel/panel';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {actionCreator} from '../../actions/action-creator';
-import {getFlowData} from '../../actions/workflow';
-import {getFlowDetailData, clearFlowDetailData, getRepositories} from '../../actions/workflow';
+import {getFlowData, getFlowDetailData, clearFlowDetailData, getRepositories} from '../../actions/workflow';
 import {Layout, Menu, Icon, Button} from 'antd';
 
 const {Sider, Content} = Layout;
@@ -48,6 +47,7 @@ class DailyWorksheet extends React.Component {
       url: '/workflow/getFlowTypes.do',
       data: {}
     }).then((data) => {
+      console.log(data);
       data.forEach((flowType) => {
         flowType['subFlowTypeList'].forEach((subFlowType) => {
           flowTypes.push(subFlowType);
@@ -114,7 +114,7 @@ class DailyWorksheet extends React.Component {
   // 查看/修改表格中的流程
   operateFlow = (id) => {
     this.props.getFlowDetailData(id); // 异步获取流程详情数据
-    this.openPanel(); // 打开面板
+    this.openPanel(); // 打开面板,使用了异步加载，打开面板后会有loading状态
   }
 
   render() {

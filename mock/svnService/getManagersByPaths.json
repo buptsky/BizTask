@@ -3,21 +3,14 @@
   "data": {
     "repositories": [
       {
-        "path": "svn.bizwork.sogou-inc.com",
+        "path": "galaxy:/",
         "managers": [
-          "zhaiyibo@sogou.com"
-        ]
-      },
-      {
-        "path": "svn.task.bizwork.sogou-inc.com",
-        "managers": [
-          "chenxi@sogou.com",
-          "zhaiyibo@sogou.com"
+          "xiaxianbo"
         ]
       }
     ],
     "managerIntersection": [
-      "chenxi@sogou.com"
+      "xiaxianbo"
     ]
   },
   "errormsg": ""
