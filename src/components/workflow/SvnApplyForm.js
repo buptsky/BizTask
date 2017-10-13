@@ -71,7 +71,7 @@ class SvnApplyForm extends React.Component {
     if (this.state.permissionInputVisible) {
       // 这里直接访问了底层dom元素是为了使select组件的输入框获取焦点
       // 暂时只找到这种解决方案，因为不使用datasource时，发现children中的input自定义失效了
-      ReactDOM.findDOMNode(this.permissionInput).click();
+      //ReactDOM.findDOMNode(this.permissionInput).click();
     }
   }
 

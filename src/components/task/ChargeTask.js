@@ -64,7 +64,7 @@ class Task extends React.Component {
             title="任务详情"
             footer={false}
           >
-            <EditTask onCancel={closeEditTask}/>
+            <EditTask key={editTask.taskId} onCancel={closeEditTask} taskId={editTask.taskId}/>
           </Panel>
         </Content>
       </Layout>

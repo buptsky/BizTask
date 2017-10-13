@@ -1,10 +1,7 @@
 {
-    "success": 1,
+    "errno": 0,
     "data": {
     	"fileName": "附件1",
     	"filePath": "www.sogou.com"
-    },
-    "errorCode": 500,
-    "errorMsg": "系统异常",
-    "totalNumber": 10
+    }
 }

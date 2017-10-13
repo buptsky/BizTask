@@ -9,15 +9,15 @@ const initialState = {
     isSubmitting: false
   },
   editTask: {
-    taskDetail: {},
+    taskId: '',
     isShow: false,
-    isLoading: false,
     isSubmitting: false
   }
 };
 
 export function task(state = initialState, action) {
   switch (action.type) {
+    /*获取任务列表*/
     case actionTypes.get_tasks:
       return {
         ...state,
@@ -27,12 +27,14 @@ export function task(state = initialState, action) {
         },
         isLoading: true
       };
+    /*成功获取任务列表*/
     case actionTypes.get_tasks_success:
       return {
         ...state,
         taskLists: action.payload,
         isLoading: false
       };
+    /*任务拖拽*/
     case actionTypes.move_task:
       const newLists = [...state.taskLists];
       const {lastX, lastY, nextX, nextY} = action.payload;
@@ -51,6 +53,7 @@ export function task(state = initialState, action) {
         ...state,
         taskLists: newLists
       };
+    /*删除任务*/
     case actionTypes.delete_task:
       const listForDelete = [...state.taskLists];
       const {x, y} = action.payload;
@@ -61,6 +64,7 @@ export function task(state = initialState, action) {
         ...state,
         taskLists: listForDelete
       };
+    /*打开新建任务Modal*/
     case actionTypes.open_new_task:
       return {
         ...state,
@@ -68,6 +72,7 @@ export function task(state = initialState, action) {
           isShow: true
         }
       };
+    /*关闭新建任务Modal*/
     case actionTypes.close_new_task:
       return {
         ...state,
@@ -75,64 +80,23 @@ export function task(state = initialState, action) {
           isShow: false
         }
       };
-    case actionTypes.add_task:
-      return {
-        ...state,
-        newTask: {
-          ...state.newTask,
-          isSubmitting: true
-        }
-      };
-    case actionTypes.add_task_success:
-      return {
-        ...state,
-        newTask: {
-          ...state.newTask,
-          isShow: false,
-          isSubmitting: false
-        }
-      };
+    /*打开编辑任务Panel*/
     case actionTypes.open_edit_task:
       return {
         ...state,
         editTask: {
           ...state.editTask,
-          isShow: true,
-          isLoading: true
+          taskId: action.payload,
+          isShow: true
         }
       };
-    case actionTypes.get_task_detail_success:
-      return {
-        ...state,
-        editTask: {
-          ...state.editTask,
-          isLoading: false,
-          taskDetail: action.payload
-        }
-      };
+    /*关闭编辑任务Panel*/
     case actionTypes.close_edit_task:
       return {
         ...state,
         editTask: {
           ...state.editTask,
           isShow: false
-        }
-      };
-    case actionTypes.update_task:
-      return {
-        ...state,
-        editTask: {
-          ...state.editTask,
-          isSubmitting: true
-        }
-      };
-    case actionTypes.update_task_success:
-      return {
-        ...state,
-        editTask: {
-          ...state.editTask,
-          isShow: false,
-          isSubmitting: false
         }
       };
     default:

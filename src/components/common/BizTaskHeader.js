@@ -56,7 +56,6 @@ class BizTaskHeader extends React.Component {
 
   render() {
     const {activeKey, userInfo} = this.props;
-    console.log(activeKey);
     return (
       <Header>
         <Link to="/" className="logo"/>

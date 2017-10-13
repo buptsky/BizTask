@@ -1,4 +1,7 @@
-import {Form, Input, Button, DatePicker, Select, Row, Col, Timeline, Spin} from 'antd';
+import {
+  Form, Input, Button, DatePicker, Select,
+  Row, Col, Timeline, Spin, Upload, Icon, message
+} from 'antd';
 import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import * as TaskActions from '../../actions/task';
@@ -29,8 +32,39 @@ function mapDispatchToProps(dispatch) {
 class EditTask extends React.Component {
   constructor(props) {
     super(props);
+    this.message = '';  //留言消息
+    this.state = {
+      taskDetail: {},
+      fileList: [],
+      isLoading: true,
+      isSubmitting: false
+    };
   }
 
+  componentDidMount() {
+    fetchData({
+      url: '/task/getTaskDetail.do',
+      data: {
+        taskId: this.props.taskId
+      }
+    }).then(data => {
+      const stateFileList = data.fileList.map((file) => {
+        return {
+          uid: file.fid,
+          name: file.fileName,
+          url: file.filePath,
+          status: 'done'
+        };
+      });
+      this.setState({
+        taskDetail: data,
+        fileList: stateFileList,
+        isLoading: false
+      });
+    });
+  }
+
+  /*渲染TimeLine部分*/
   renderTimeLine = (taskDetail) => {
     return (
       <Timeline>
@@ -44,19 +78,41 @@ class EditTask extends React.Component {
     );
   };
 
+  changeMessage = (e) => {
+    this.message = e.target.value;
+  };
+
   handleSubmit = (e) => {
     e.preventDefault();
     this.props.form.validateFields((err, values) => {
       if (!err) {
+        this.setState({
+          isSubmitting: true
+        });
         if (values.rangeTime) {
-          /*values.startTime = moment(values.rangeTime[0]).format('YYYY-MM-DD');
-          values.endTime = moment(values.rangeTime[1]).format('YYYY-MM-DD');*/
-          values.rangeTime = values.rangeTime.map((time) => {
+          values.startTime = moment(values.rangeTime[0]).format('YYYY-MM-DD');
+          values.endTime = moment(values.rangeTime[1]).format('YYYY-MM-DD');
+          values.rangeTime = undefined;
+          /*values.rangeTime = values.rangeTime.map((time) => {
             return moment(time).format('YYYY-MM-DD');
-          });
+          });*/
         }
-        values.taskId = this.props.taskDetail.taskId;
-        this.props.updateTask(values, this.props.queryArgs);
+        values.taskId = this.props.taskId;
+        values.messageContent = this.message;
+        /*附件列表*/
+        values.attachment = this.state.fileList.map((file) => {
+          return `${file.uid}*${file.name}`   //接口格式需要
+        });
+        fetchData({
+          url: '/task/updateTask.do',
+          data: values
+        }).then(() => {
+          this.setState({
+            isSubmitting: false
+          });
+          this.props.closeEditTask();
+          this.props.getTasks(this.props.queryArgs);
+        });
       }
     });
   };
@@ -64,12 +120,12 @@ class EditTask extends React.Component {
   renderForm = () => {
     const {
       onCancel,
-      taskDetail,
       persons,
-      personsAndGroups,
-      isSubmitting
+      personsAndGroups
     } = this.props;
     const {getFieldDecorator} = this.props.form;
+
+    const {taskDetail, fileList, isSubmitting} = this.state;
     const chargeSelectOptions = persons.map((person) => {
       return <SelectOption key={person.name}>{person.label}</SelectOption>;
     });
@@ -77,6 +133,33 @@ class EditTask extends React.Component {
       return <SelectOption key={person.name}>{person.label}</SelectOption>;
     });
     const defaultRangeTime = taskDetail.rangeTime;
+    const me = this;
+    const uploadProps = {
+      name: 'file',
+      //action: 'api/task/upload_attachment',
+      action: '/upload/upload.do',
+      onChange(info) {
+        let fileList = info.fileList;
+        const file = info.file;
+        if (file.status === 'uploading') {
+          me.setState({fileList});
+        }
+        if (file.status === 'done') {
+          /*根据服务器的响应生成新的fileList*/
+          const fileData = file.response.data;
+          fileList.splice(-1, 1, {
+            uid: fileData.fid,
+            name: fileData.fileName,
+            url: fileData.filePath,
+            status: 'done'
+          });
+        } else if (file.status === 'error') {
+          message.error(`${file.name}文件上传失败`);
+        }
+        me.setState({fileList});
+      },
+      fileList: fileList
+    };
     return (
       <Row>
         {/*左侧表单*/}
@@ -139,6 +222,16 @@ class EditTask extends React.Component {
               )}
             </FormItem>
             <FormItem
+              label=""
+              {...formItemLayout}
+            >
+              <Upload {...uploadProps}>
+                <Button>
+                  <Icon type="upload"/> 上传附件
+                </Button>
+              </Upload>
+            </FormItem>
+            <FormItem
               wrapperCol={{span: 8, offset: 8}}>
               <Button type="primary" htmlType="submit" loading={isSubmitting}>
                 确定
@@ -152,13 +245,18 @@ class EditTask extends React.Component {
         {/*右侧时间线和留言*/}
         <Col span={10} offset={2} className="panel-right">
           {this.renderTimeLine(taskDetail)}
+          <TextArea rows={4}
+                    className="note"
+                    placeholder="你可以在这里留言"
+                    onChange={this.changeMessage}
+          />
         </Col>
       </Row>
     );
   };
 
   render() {
-    const {isLoading} = this.props;
+    const {isLoading} = this.state;
     return (
       <div>
         {isLoading ? <Spin/> : this.renderForm()}
