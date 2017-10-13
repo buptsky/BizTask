@@ -127,6 +127,8 @@ class SvnApplyForm extends React.Component {
         console.log('提交成功');
         // 成功后刷新流程列表数据
         this.props.getFlowData();
+        // 因为申请了新的仓库，这里还要更新仓库列表，记得加上
+        // some code ...
       });
     });
   }

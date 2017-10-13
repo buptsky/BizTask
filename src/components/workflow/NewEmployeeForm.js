@@ -26,13 +26,13 @@ class NewEmployeeForm extends React.Component {
     if (data.formData) {
       switch (data.formData.step) {
         case 1:
-          employeeForm = (<NewEmployeeStep1 getMsg={this.props.getMsg}/>);
+          employeeForm = (<NewEmployeeStep1 getMsg={this.props.getMsg} close={this.props.close}/>);
           break;
         case 2:
-          employeeForm = (<NewEmployeeStep2/>);
+          employeeForm = (<NewEmployeeStep2 getMsg={this.props.getMsg} close={this.props.close}/>);
           break;
         case 3:
-          employeeForm = (<NewEmployeeStep3 getMsg={this.props.getMsg}/>);
+          employeeForm = (<NewEmployeeStep3 getMsg={this.props.getMsg} close={this.props.close}/>);
           break;
         default:
       }

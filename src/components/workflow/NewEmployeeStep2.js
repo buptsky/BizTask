@@ -1,4 +1,4 @@
-import {Button, Input, Row, Col, Icon, Popover, Select, Checkbox, AutoComplete, Tag} from 'antd';
+import {Button, Input, Row, Col, Icon, Popover, Select, Checkbox, AutoComplete, Tag, Modal} from 'antd';
 import {connect} from 'react-redux';
 import {debounce} from '../../utils/common';
 // antd 组件配置
@@ -50,7 +50,7 @@ class NewEmployeeStep2 extends React.Component {
     }
   }
   // 提交表单
-  onSubmit = () => {
+  handleSubmit = () => {
 
   }
   // 更改svn组
@@ -136,7 +136,7 @@ class NewEmployeeStep2 extends React.Component {
 
   render() {
     console.log('render');
-    const data = this.props.flowDetailData;
+    const originData = this.props.flowDetailData;
     const lists = this.state.groupAndSvnList;
     const svns = this.state.currentSvns;
     // 筛选后的仓库路径下拉选项
@@ -189,27 +189,27 @@ class NewEmployeeStep2 extends React.Component {
             </div>
           </Col>
           <Col span={16} offset={1}>
-            <Input value={data.flowName} style={{height: 32}} disabled/>
+            <Input value={originData.flowName} style={{height: 32}} disabled/>
           </Col>
         </Row>
         <Row style={{...RowStyle, ...ColorStyle}}>
-          {data.formData.name}({data.formData.email})的入职准备工作如下:
+          {originData.formData.name}({originData.formData.email})的入职准备工作如下:
         </Row>
         <Row style={RowStyle}>
           <Icon type="flag" style={{padding: '0 10px'}} />
-          请邀请QQ号 <span style={ColorStyle}>{data.formData.qq}</span> 加入biztechQQ群及组内联系群
+          请邀请QQ号 <span style={ColorStyle}>{originData.formData.qq}</span> 加入biztechQQ群及组内联系群
         </Row>
         <Row style={RowStyle}>
           <Icon type="flag" style={{padding: '0 10px'}} />
-          请检查是否需要给邮箱号：<span style={ColorStyle}>{data.formData.email}</span> 开通产品文档权限
+          请检查是否需要给邮箱号：<span style={ColorStyle}>{originData.formData.email}</span> 开通产品文档权限
         </Row>
         <Row style={RowStyle}>
           <Icon type="flag" style={{padding: '0 10px'}} />
-          请将微信账号 <span style={ColorStyle}>{data.formData.weixin}</span> 邀请加入biztech微信群
+          请将微信账号 <span style={ColorStyle}>{originData.formData.weixin}</span> 邀请加入biztech微信群
         </Row>
         <Row style={RowStyle}>
           <Icon type="flag" style={{padding: '0 10px'}} />
-          请将邮箱 <span style={ColorStyle}>{data.formData.email}</span> 加入组内邮件组
+          请将邮箱 <span style={ColorStyle}>{originData.formData.email}</span> 加入组内邮件组
         </Row>
         <Row style={RowStyle}>
           <Icon type="flag" style={{padding: '0 10px'}} />
@@ -268,8 +268,57 @@ class NewEmployeeStep2 extends React.Component {
         </Row>
         <Row style={RowStyle}>
           <Col style={{marginLeft: 34}}>
-            <Button type="primary" size="large" onClick={this.onSubmit}>提交</Button>
-            <Button style={{marginLeft: '20px'}} size="large">取消</Button>
+            {/*审批权限*/}
+            {
+              originData.canAuthorize && (
+                <Button type="primary" size="large" onClick={() => {
+                  this.handleSubmit(true);
+                }} style={{marginRight: '20px'}}>
+                  通过
+                </Button>
+              )
+            }
+            {
+              originData.canAuthorize && (
+                <Button type="danger" size="large" onClick={() => {
+                  this.handleSubmit(false);
+                }} style={{marginRight: '20px'}}>
+                  拒绝
+                </Button>
+              )
+            }
+            {/*修改权限*/}
+            {
+              originData.canDelete && (
+                <Button type="primary" size="large" onClick={() => {
+                  this.handleSubmit(true);
+                }} style={{marginRight: '20px'}}>
+                  提交
+                </Button>
+              )
+            }
+            {
+              originData.canDelete && (
+                <Button type="danger"
+                        size="large"
+                        onClick={this.showConfirmModal}
+                        style={{marginRight: '20px'}}
+                >
+                  删除
+                </Button>
+              )
+            }
+            <Button size="large" onClick={this.props.close}>取消</Button>
+            {/*删除流程确认*/}
+            <Modal
+              title="删除流程"
+              visible={this.state.deleteVisible}
+              onOk={this.confirmDelete}
+              onCancel={this.cancelDelete}
+              zIndex="2000"
+            >
+              <p style={{color: '#f04134',fontSize: 16}}>确认是否删除该流程（删除后不可找回）</p>
+            </Modal>
           </Col>
         </Row>
       </div>
