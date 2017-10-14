@@ -7,7 +7,7 @@ import {bindActionCreators} from 'redux';
 import {connect} from 'react-redux';
 import config from './WorkflowConfig';
 import {trim} from '../../utils/common';
-import {getFlowData} from '../../actions/workflow';
+import {getFlowData, getRepositories} from '../../actions/workflow';
 import {Button, Form, Select, Input, Tag, Checkbox, Radio, AutoComplete, Row, Col, Modal, message} from 'antd';
 // 表单样式配置
 const {formItemLayout1, formItemLayout2} = config;
@@ -29,7 +29,8 @@ const checkOptions = [
     flowDetailData: state.workflow.flowDetailData
   }),
   dispatch => ({
-    getFlowData: bindActionCreators(getFlowData, dispatch)
+    getFlowData: bindActionCreators(getFlowData, dispatch),
+    getRepositories: bindActionCreators(getRepositories, dispatch)
   })
 )
 class SvnApplyForm extends React.Component {
@@ -128,7 +129,7 @@ class SvnApplyForm extends React.Component {
         // 成功后刷新流程列表数据
         this.props.getFlowData();
         // 因为申请了新的仓库，这里还要更新仓库列表，记得加上
-        // some code ...
+        this.props.getRepositories();
       });
     });
   }

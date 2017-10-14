@@ -18,7 +18,7 @@ export function getFlowDetailData (flowId) {
   return (dispatch, getState) => {
     dispatch(actionCreator(actionTypes.get_flow_detail));
     fetchData({
-      url: '/workflow/getApplicationDetailTest2.do',
+      url: '/workflow/getApplicationDetail.do',
       data: {flowId}
     }).then((data) => {
       // 格式化处理数据

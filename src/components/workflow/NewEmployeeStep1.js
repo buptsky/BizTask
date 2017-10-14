@@ -1,3 +1,9 @@
+/*
+ * 新员工入职step1表单
+ * 组件用于本流程本流程第一步骤（员工填写个人信息）编辑/查看
+ * 2017/10/14 gzj初测通过
+ * 该系列表单(step1-3)存在一些问题 ①是否允许删除 ②是否每个表单的操作模式是固定的，比如当前表单只能用来提交/（删除）/取消，或者查看，而不能进行审批 ③员工入职表单验证，是否需要验证
+ */
 import {Button, Input, Row, Col, Icon, Modal} from 'antd';
 import {connect} from 'react-redux';
 import {getFlowData} from '../../actions/workflow';
@@ -18,6 +24,7 @@ class NewEmployeeStep1 extends React.Component {
     super(props);
     this.state = {
       disableAll: false,
+      deleteVisible: false,
       qq: '',
       weixin: ''
     }
@@ -70,9 +77,22 @@ class NewEmployeeStep1 extends React.Component {
       weixin: e.target.value
     });
   }
+  /*需要确认下员工入职流程是否支持删除*/
+  // 打开确认删除对话框
+  showConfirmModal = () => {
+    this.setState({deleteVisible: true});
+  }
+  // 确认删除流程
+  confirmDelete = () => {
+    this.setState({deleteVisible: false});
+    this.handleSubmit(false);
+  }
+  // 取消删除流程
+  cancelDelete = () => {
+    this.setState({deleteVisible: false});
+  }
 
   render() {
-    console.log('render');
     const originData = this.props.flowDetailData;
     return (
       <div>

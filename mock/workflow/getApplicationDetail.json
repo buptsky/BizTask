@@ -6,9 +6,9 @@
     "flowName": "SVN仓库申请-bizwork-task-fe",
     "formData": "{\"repositoryName\":\"bizwork-task-fe\",\"manager\":\"zhaiyibo\",\"description\":\"功能描述\",\"needADPublish\":true,\"needFinance\":true,\"need404\":true,\"persons\":[{\"email\":\"weilin\",\"permission\":\"1\"},{\"email\":\"shangyan200758\",\"permission\":\"1\"}],\"remark\":\"备注(remark)\"}",
     "flowImageUrl": "http://bizflow.sogou-inc.com/process/runninginfoByBusinessKey/bizwork_svnDistribution__0000015F0507A022269649B9F88F5FAC",
-    "canAuthorize": false,
-    "canEdit": true,
-    "canDelete": true,
+    "canAuthorize": true,
+    "canEdit": false,
+    "canDelete": false,
     "flowId": null,
     "nodeList": [
       {

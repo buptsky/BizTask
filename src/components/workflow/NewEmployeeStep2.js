@@ -1,6 +1,14 @@
+/*
+ * 新员工入职step2表单
+ * 组件用于本流程第二步骤（leader对员工进行仓库权限分配）表单编辑/查看
+ * 2017/10/14 gzj初测通过
+ * 该系列表单(step1-3)存在一些问题 ①是否允许删除 ②是否每个表单的操作模式是固定的，比如当前表单只能用来提交/（删除）/取消，或者查看，而不能进行审批 ③员工入职表单验证，是否需要验证
+ */
 import {Button, Input, Row, Col, Icon, Popover, Select, Checkbox, AutoComplete, Tag, Modal} from 'antd';
 import {connect} from 'react-redux';
 import {debounce} from '../../utils/common';
+import {bindActionCreators} from 'redux';
+import {getFlowData} from '../../actions/workflow';
 // antd 组件配置
 const Option = Select.Option;
 const CheckboxGroup = Checkbox.Group;
@@ -14,7 +22,9 @@ const textStyle = {overflow: 'hidden', textOverflow:'ellipsis', whiteSpace: 'now
     flowDetailData: state.workflow.flowDetailData,
     repositories: state.workflow.repositories
   }),
-  dispatch => ({})
+  dispatch => ({
+    getFlowData: bindActionCreators(getFlowData, dispatch)
+  })
 )
 class NewEmployeeStep2 extends React.Component {
   constructor(props) {
@@ -26,7 +36,7 @@ class NewEmployeeStep2 extends React.Component {
       filterSvns: [], // svn路径自动补全的动态数据源
       svnTags: [], // 选中的svn标签集合
       popoverVisible: false,
-      indeterminate: true, // checkbox全选样式控制
+      indeterminate: false, // checkbox全选样式控制（true - 当前有选中 false - 当前无选中）
       currentCheckedList: [], // 当前选中的check
       checkAll: false // 是否全选
     }
@@ -50,8 +60,31 @@ class NewEmployeeStep2 extends React.Component {
     }
   }
   // 提交表单
-  handleSubmit = () => {
-
+  handleSubmit = (flag) => {
+    const originData = this.props.flowDetailData;
+    console.log(originData);
+    const formData = {
+      step: originData.formData.step,
+      svn: this.state.svnTags
+    }
+    const args = {
+      flowId: originData.flowId,
+      flowName: originData.flowName,
+      taskId: originData.taskId,
+      isPassed: flag,
+      message: this.props.getMsg(),
+      formData: JSON.stringify(formData)
+    }
+    console.log(args);
+    // 数据提交
+    fetchData({
+      url: '/workflow/approve.do',
+      data: args
+    }).then((data) => {
+      console.log('提交成功');
+      // 成功后刷新流程列表数据
+      this.props.getFlowData();
+    });
   }
   // 更改svn组
   changeGroup = (value) => {
@@ -61,7 +94,7 @@ class NewEmployeeStep2 extends React.Component {
     this.setState({
       currentSvns: ret[0].svns,
       currentCheckedList: [],
-      indeterminate: true,
+      indeterminate: false,
       checkAll: false
     });
   }
@@ -96,7 +129,7 @@ class NewEmployeeStep2 extends React.Component {
     this.setState((prevState) => {
       return {
         currentCheckedList: [], // 清空选中状态
-        indeterminate: true,
+        indeterminate: false,
         checkAll: false, // 清空全选状态
         popoverVisible: !prevState.popoverVisible
       };
@@ -140,15 +173,15 @@ class NewEmployeeStep2 extends React.Component {
     const lists = this.state.groupAndSvnList;
     const svns = this.state.currentSvns;
     // 筛选后的仓库路径下拉选项
-    // 仓库路径下拉选项
+    // 仓库路径下拉选项（搜索方式）
     const svnOpts = this.state.filterSvns.map((path) => {
       return <Option key={path}>{path}</Option>;
     });
-    // svn分组下拉选项
+    // svn分组下拉选项（分组选择方式）
     const svnGroupOpts = lists.map((item) => {
       return (<Option key={item.group} value={item.group}>{item.group}</Option>)
     });
-    // 多选框组内容
+    // 多选框组内容（分组选择方式）
     let checkContent = svns.map((item) => {
       return (
         <Col span={6} key={item} style={textStyle} title={item}>

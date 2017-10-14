@@ -9,8 +9,8 @@
     "flowImageUrl": "http://bizflow.sogou-inc.com/process/runninginfoByBusinessKey/bizwork_entryProcess__0000015E9ED4EC440B9D763D76B2E068",
     "businessKey": "bizwork_entryProcess__0000015E9ED4EC440B9D763D76B2E068",
     "canAuthorize": false,
-    "canEdit": false,
-    "canDelete": false,
+    "canEdit": true,
+    "canDelete": true,
     "nodeList": [
       {
         "name": "发起申请",
