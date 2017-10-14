@@ -18,14 +18,15 @@
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "react": "^15.4.0",
+    "react-dnd": "^2.5.3",
+    "react-dnd-html5-backend": "^2.5.3",
     "react-dom": "^15.4.0",
     "react-redux": "^5.0.4",
     "react-router": "^4.2.0",
     "react-router-dom": "^4.2.2",
+    "react-transition-group": "^1.2.1",
     "redux": "^3.6.0",
-    "redux-thunk": "^2.2.0",
-    "react-dnd": "^2.5.3",
-    "react-dnd-html5-backend": "^2.5.3"
+    "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
     "babel-core": "^6.18.2",

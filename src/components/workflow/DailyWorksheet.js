@@ -35,7 +35,8 @@ class DailyWorksheet extends React.Component {
       currentMenu: 'pending-apply', // 申请类型tab栏
       showCreatePanel: false, // 控制流程面板显隐
       filterType: 'pending-apply', // 筛选组件类型
-      flowTypes: []
+      flowTypes: [],
+      isCreate: true // 是否为创建流程
     }
   }
 
@@ -70,6 +71,7 @@ class DailyWorksheet extends React.Component {
     // 清除flowdata
     this.setState({
       showCreatePanel: false,
+      isCreate: true
     });
     this.props.clearFlowDetailData(); // 清空redux中相关数据
   }
@@ -113,6 +115,7 @@ class DailyWorksheet extends React.Component {
   }
   // 查看/修改表格中的流程
   operateFlow = (id) => {
+    this.setState({isCreate: false});
     this.props.getFlowDetailData(id); // 异步获取流程详情数据
     this.openPanel(); // 打开面板,使用了异步加载，打开面板后会有loading状态
   }
@@ -149,7 +152,7 @@ class DailyWorksheet extends React.Component {
             onCancel={this.closePanel}
             title={this.props.flowDetailData.flowTypeId ? '查看流程' : '创建流程'}
             footer={false}
-            loading={this.props.flowDetailLoading}
+            loading={this.state.isCreate ? false : this.props.flowDetailLoading}
           >
             <WorkflowPanel
               flowTypes={this.state.flowTypes}

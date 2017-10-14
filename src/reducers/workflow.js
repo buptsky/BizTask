@@ -21,7 +21,7 @@ const initialState = {
     isDone: true
   },
   flowLoading: false,
-  flowDetailLoading: false,
+  flowDetailLoading: true,
   repositoryLoading: false // 仓库数据加载中，暂时不使用此数据
 };
 
