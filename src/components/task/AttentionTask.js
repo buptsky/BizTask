@@ -1,36 +1,14 @@
-import {Layout} from 'antd';
-const {Sider, Content} = Layout;
-import {connect} from 'react-redux';
-import {actionCreator, actionTypes} from '../../actions/action-creator';
-import TaskMenu from './TaskMenu';
-@connect(
-    state => ({}),
-    dispatch => ({
-        activeHeaderMenu: ()=> {
-            dispatch(actionCreator('change_header_menu', 'task'));
-        }
-    })
-)
-class Task extends React.Component {
+import ChargeTask from './ChargeTask';
+import {TaskListTypes} from './Constants';
+class AttentionTask extends React.Component {
     constructor(props) {
         super(props);
     }
 
-    componentDidMount() {
-        this.props.activeHeaderMenu();
-    }
-
     render() {
         return (
-            <Layout>
-                <Sider width={200} style={{ background: '#fff' }}>
-                    <TaskMenu activeKey="attentionTask"/>
-                </Sider>
-                <Content>
-                    <h1>attentionTask</h1>
-                </Content>
-            </Layout>
+            <ChargeTask type={TaskListTypes.ATTENTION}/>
         );
     }
 }
-export default Task;
+export default AttentionTask;

@@ -2,27 +2,24 @@
   "success": true,
   "data": {
     "totalNumber": 51,
-    "totalPages": 11,
     "list": [
       {
-        "flowId": 1,
-        "flowName": "001",
-        "businessKey": "101",
-        "employee": "xxxx",
-        "startTime": "xxxx-xx-xx",
-        "endTime": "xxxx-xx-xx",
-        "status": "xxxx",
-        "group": "xxxx"
+        "flowId": "bizwork_svnDistribution__0000015EC83CD761CB9DC4431D195C35",
+        "flowName": "SVN权限分配-test",
+        "employee": "陈曦",
+        "endTime": "",
+        "group": "bizwork",
+        "startTime": "2017-09-28 19:26:24",
+        "status": "未完结"
       },
       {
-        "flowId": 2,
-        "flowName": "002",
-        "businessKey": "101",
-        "employee": "xxxx",
-        "startTime": "xxxx-xx-xx",
-        "endTime": "xxxx-xx-xx",
-        "status": "xxxx",
-        "group": "xxxx"
+        "flowId": "bizwork_svnDistribution__0000015EC0CF61AA1A5E3745334B7C1A",
+        "flowName": "SVN权限分配-朱庆广开通权限--bizwork-fe:/",
+        "employee": "翟懿博",
+        "endTime": "2017-09-27 11:40:12",
+        "group": "bizdev_kcfe",
+        "startTime": "2017-09-27 08:49:30",
+        "status": "已完结"
       },
       {
         "flowId": 3,
@@ -53,7 +50,8 @@
         "endTime": "xxxx-xx-xx",
         "status": "xxxx",
         "group": "xxxx"
-      },{
+      },
+      {
         "flowId": 6,
         "flowName": "006",
         "businessKey": "101",
@@ -102,7 +100,8 @@
         "endTime": "xxxx-xx-xx",
         "status": "xxxx",
         "group": "xxxx"
-      },{
+      },
+      {
         "flowId": 11,
         "flowName": "011",
         "businessKey": "101",
@@ -151,7 +150,8 @@
         "endTime": "xxxx-xx-xx",
         "status": "xxxx",
         "group": "xxxx"
-      },{
+      },
+      {
         "flowId": 16,
         "flowName": "016",
         "businessKey": "101",
@@ -200,7 +200,8 @@
         "endTime": "xxxx-xx-xx",
         "status": "xxxx",
         "group": "xxxx"
-      },{
+      },
+      {
         "flowId": 21,
         "flowName": "021",
         "businessKey": "101",
@@ -233,5 +234,6 @@
     ]
   },
   "errorMsg": null,
-  "errorCode": 0
+  "errorCode": 0,
+  "errno": 0
 }

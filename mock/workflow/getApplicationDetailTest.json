@@ -1,0 +1,41 @@
+{
+  "success": true,
+  "data": {
+    "flowId": null,
+    "taskId": null,
+    "flowTypeId": 102,
+    "flowName": "SVN权限分配-给svn_bizdocker开通brandstart，brandstart-admin的只读权限",
+    "formData": "{\"repositories\":[{\"managers\":[\"lixiaoqing\"],\"path\":\"brandstart\"},{\"managers\":[\"lixiaoqing\"],\"path\":\"brandstart-admin:/\"}],\"needEmailManagers\":[\"lixiaoqing\"],\"managers\":[\"lixiaoqing\"],\"persons\":[{\"email\":\"svn_bizdocker\",\"permission\":\"2\"}],\"remark\":\"brandstart，brandstart-admin接入测试云平台\"}",
+    "flowImageUrl": "http://bizflow.sogou-inc.com/process/runninginfoByBusinessKey/bizwork_svnDistribution__0000015F0507A022269649B9F88F5FAC",
+    "businessKey": "bizwork_svnDistribution__0000015F0507A022269649B9F88F5FAC",
+    "canAuthorize": true,
+    "canEdit": false,
+    "canDelete": false,
+    "nodeList": [
+      {
+        "name": "发起申请",
+        "employee": "李全才",
+        "dateTime": "2017-10-10 14:45:06",
+        "status": "已完成",
+        "remarks": ""
+      },
+      {
+        "name": "leader审批",
+        "employee": "杨剑飞",
+        "dateTime": "2017-10-10 14:49:14",
+        "status": "同意",
+        "remarks": null
+      },
+      {
+        "name": "仓库管理员审批",
+        "employee": "李晓清",
+        "dateTime": "2017-10-10 14:51:34",
+        "status": "同意",
+        "remarks": "【系统提醒】恭喜您，权限分配完成！权限分配结果如下：[{\"username\":\"svn_bizdocker\",\"成功添加路径\":[\"brandstart:\\/\",\"brandstart-admin:\\/\"]},{\"username\":\"lixiaoqing\",\"成功添加路径\":[\"brandstart:\\/\",\"brandstart-admin:\\/\"]}]"
+      }
+    ]
+  },
+  "errorMsg": null,
+  "errorCode": 0,
+  "errno": 0
+}

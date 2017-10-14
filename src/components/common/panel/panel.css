@@ -1,0 +1,51 @@
+/*panel面板样式配置，不包括antd样式配置*/
+.bizwork-panel .panel-wrapper {
+  position: absolute;
+  width: 75%;
+  height: 100%;
+  overflow-y: auto;
+  background-color: #fff;
+  box-shadow: -3px 0px 8px #aaa;
+  display: none;
+}
+.bizwork-panel .panel-wrapper.open {
+  display: block;
+  animation: slider 0.3s ease-in;
+  animation-fill-mode: forwards;
+}
+
+.bizwork-panel .panel-wrapper.close {
+  display: block;
+  animation: slider-out 0.3s ease-out;
+  animation-fill-mode: forwards;
+}
+
+.bizwork-panel .panel-header {
+  height: 80px;
+  background-color: #108ee9;
+  color: #fff;
+  padding: 20px 0 20px 60px;
+}
+.bizwork-panel .panel-header .title {
+  font-size: 20px;
+  line-height: 40px;
+}
+
+.bizwork-panel .panel-content {
+  padding: 25px 60px;
+}
+
+.bizwork-panel .panel-footer {
+  height: 90px;
+  padding: 10px 30px 0 60px;
+}
+
+@keyframes slider {
+  0% {right: -75%}
+  100% {right: 0}
+}
+@keyframes slider-out {
+  0% {left: 25%; right: 0}
+  100% {left: 100%; right: -75%}
+}
+

@@ -1,0 +1,34 @@
+{
+  "success": true,
+  "data": {
+    "flowId": null,
+    "taskId": "402094",
+    "flowTypeId": 201,
+    "flowName": "新人入职-崔宝东",
+    "formData": "{\"employeeId\":214661,\"leader\":\"尚岩\",\"name\":\"崔宝东\",\"step\":1}",
+    "flowImageUrl": "http://bizflow.sogou-inc.com/process/runninginfoByBusinessKey/bizwork_entryProcess__0000015E9ECAD1C8C8EDB40FA12795AC",
+    "businessKey": "bizwork_entryProcess__0000015E9ECAD1C8C8EDB40FA12795AC",
+    "canAuthorize": true,
+    "canEdit": false,
+    "canDelete": false,
+    "nodeList": [
+      {
+        "name": "发起申请",
+        "employee": "崔宝东",
+        "dateTime": "2017-09-20 18:17:25",
+        "status": "已完成",
+        "remarks": null
+      },
+      {
+        "name": "新员工操作",
+        "employee": "崔宝东",
+        "dateTime": "",
+        "status": null,
+        "remarks": null
+      }
+    ]
+  },
+  "errorMsg": null,
+  "errorCode": 0,
+  "errno": 0
+}

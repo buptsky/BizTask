@@ -1,31 +1,27 @@
 import {
-    HashRouter, Route, Redirect, Link
+  HashRouter, Route, Redirect, Link
 } from 'react-router-dom';
 import {Layout} from 'antd';
-import HeadMenu from './components/common/HeadMenu';
+import BizTaskHeader from './components/common/BizTaskHeader';
 import ChargeTask from './components/task/ChargeTask';
 import AttentionTask from './components/task/AttentionTask';
-
+import DailyWorksheet from './components/workflow/DailyWorksheet';
 import Score from './components/score/Score';
-import Workflow from './components/workflow/Workflow';
-const {Header} = Layout;
 
 const AppRouter = (
-    <HashRouter>
-        <Layout className="main-layout">
-            <Header>
-                <Link to="/">
-                    <div className="logo"/>
-                </Link>
-                <HeadMenu/>
-            </Header>
-            <Route exact path="/" render={()=>(<Redirect to="/workflow"/>)}/>
-            <Route exact path="/task" render={()=>(<Redirect to="/task/charge"/>)}/>
-            <Route path="/task/charge" component={ChargeTask}/>
-            <Route path="/task/attention" component={AttentionTask}/>
-            <Route path="/workflow" component={Workflow}/>
-            <Route path="/score" component={Score}/>
-        </Layout>
-    </HashRouter>
+  <HashRouter>
+    <Layout className="main-layout">
+      <BizTaskHeader/>
+      <Route exact path="/" render={() => (<Redirect to="/workflow"/>)}/>
+      {/*task*/}
+      <Route path="/task/charge" component={ChargeTask}/>
+      <Route path="/task/attention" component={AttentionTask}/>
+      {/*workflow*/}
+      <Route exact path="/workflow" render={() => (<Redirect to="/workflow/daily"/>)}/>
+      <Route path="/workflow/daily" component={DailyWorksheet}/>
+      {/*score*/}
+      <Route path="/score" component={Score}/>
+    </Layout>
+  </HashRouter>
 );
 export default AppRouter;

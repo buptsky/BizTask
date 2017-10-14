@@ -1,0 +1,111 @@
+.workflow {
+  .time-line-wrapper {
+    vertical-align: top;
+    .line-content {
+      width: 100%;
+      .line-head {
+        .line-split {
+          width: 100%;
+          position: absolute;
+          top: 8px;
+          left: 12px;
+          border-top: 1px solid #ccc;
+        }
+        .line-title {
+          position: relative;
+          padding: 0 5px;
+          left: 40%;
+          top: -3px;
+          display: inline-block;
+          background-color: #fff;
+        }
+        &.success {
+          color: @green-6;
+          .line-split {
+            border-top: 1px solid @green-6;
+          }
+        }
+        &.fail {
+          color: @red-6;
+          .line-split {
+            border-top: 1px solid @red-6;
+          }
+        }
+        &.pending {
+          color: @blue-6;
+          .line-split {
+            border-top: 1px solid @blue-6;
+          }
+        }
+      }
+      .line-check {
+        padding: 5px 0;
+        span {
+          font-weight: 500;
+          margin-right: 5px;
+          color: @blue-6;
+        }
+      }
+      .line-remark {
+        width: 100%;
+        line-height: 25px;
+        background-color: #e9e9e9;
+        border-radius: 5px;
+        padding: 5px 8px;
+      }
+    }
+  }
+  .note {
+    resize: none;
+  }
+  .store-wrapper {
+    margin-top: 10px;
+    .store-item {
+      position: relative;
+      line-height: 24px;
+      .store-path {
+        margin-bottom: 5px;
+      }
+      .close {
+        position: absolute;
+        top: 0;
+        right: 0;
+        cursor: pointer;
+        color: @blue-6;
+      }
+      .manager {
+        color: @grey-7;
+      }
+    }
+  }
+  .store-wrapper~.store-wrapper {
+    margin: 10px 0;
+  }
+  // 调整表单中非表单项下拉列表样式，与表单项协同
+  .create-type {
+    .ant-select-selection--single {
+      height: 32px;
+      .ant-select-selection__rendered {
+        line-height: 32px;
+      }
+    }
+  }
+  // 调整checkbox-group 中的checkbox 的 margin , 修复多行展示不对齐问题
+  .ant-checkbox-group .ant-checkbox-group-item.ant-checkbox-wrapper {
+    margin-left: 0;
+  }
+  // 调整组件禁用后的文字颜色
+  .ant-select-selection__choice {
+    color: rgba(0, 0, 0, 0.85) !important;
+  }
+  // 小P二维码
+  .work-xiaop {
+    background: url(../img/xiaop.png);
+    background-size: 140px 140px;
+    height: 140px;
+    width: 140px;
+    margin-left: 34px;
+    display: block;
+    border: 5px #f1eeee solid;
+  }
+}
