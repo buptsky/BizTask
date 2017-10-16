@@ -1,10 +1,9 @@
 /*
  * 新员工入职step3表单
- * 组件用于本流程第三步骤（员工查看最后所有信息）表单编辑/查看
+ * 组件用于本流程第三步骤（员工查看最后所有信息）本步骤只用于查看
  * 2017/10/14 gzj初测通过
- * 该系列表单(step1-3)存在一些问题 ①是否允许删除 ②是否每个表单的操作模式是固定的，比如当前表单只能用来提交/（删除）/取消，或者查看，而不能进行审批 ③员工入职表单验证，是否需要验证
  */
-import {Button, Input, Row, Col, Icon, Tag, Modal} from 'antd';
+import {Button, Input, Row, Col, Icon, Tag} from 'antd';
 import {connect} from 'react-redux';
 
 const RowStyle = {marginBottom: 10, lineHeight: '28px'};
@@ -30,10 +29,6 @@ class NewEmployeeStep3 extends React.Component {
         disableAll: true
       });
     }
-  }
-  // 提交表单
-  handleSubmit = () => {
-
   }
 
   render() {
@@ -109,57 +104,7 @@ class NewEmployeeStep3 extends React.Component {
         </Row>
         <Row style={RowStyle}>
           <Col style={{marginLeft: 34}}>
-            {/*审批权限*/}
-            {
-              originData.canAuthorize && (
-                <Button type="primary" size="large" onClick={() => {
-                  this.handleSubmit(true);
-                }} style={{marginRight: '20px'}}>
-                  通过
-                </Button>
-              )
-            }
-            {
-              originData.canAuthorize && (
-                <Button type="danger" size="large" onClick={() => {
-                  this.handleSubmit(false);
-                }} style={{marginRight: '20px'}}>
-                  拒绝
-                </Button>
-              )
-            }
-            {/*修改权限*/}
-            {
-              originData.canDelete && (
-                <Button type="primary" size="large" onClick={() => {
-                  this.handleSubmit(true);
-                }} style={{marginRight: '20px'}}>
-                  提交
-                </Button>
-              )
-            }
-            {
-              originData.canDelete && (
-                <Button type="danger"
-                        size="large"
-                        onClick={this.showConfirmModal}
-                        style={{marginRight: '20px'}}
-                >
-                  删除
-                </Button>
-              )
-            }
             <Button size="large" onClick={this.props.close}>取消</Button>
-            {/*删除流程确认*/}
-            <Modal
-              title="删除流程"
-              visible={this.state.deleteVisible}
-              onOk={this.confirmDelete}
-              onCancel={this.cancelDelete}
-              zIndex="2000"
-            >
-              <p style={{color: '#f04134',fontSize: 16}}>确认是否删除该流程（删除后不可找回）</p>
-            </Modal>
           </Col>
         </Row>
       </div>

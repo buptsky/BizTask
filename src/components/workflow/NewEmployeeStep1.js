@@ -1,10 +1,9 @@
 /*
  * 新员工入职step1表单
- * 组件用于本流程本流程第一步骤（员工填写个人信息）编辑/查看
+ * 组件用于本流程本流程第一步骤（员工填写个人信息）编辑/查看 , 不用于审批
  * 2017/10/14 gzj初测通过
- * 该系列表单(step1-3)存在一些问题 ①是否允许删除 ②是否每个表单的操作模式是固定的，比如当前表单只能用来提交/（删除）/取消，或者查看，而不能进行审批 ③员工入职表单验证，是否需要验证
  */
-import {Button, Input, Row, Col, Icon, Modal} from 'antd';
+import {Button, Input, Row, Col, Icon, Modal, notification} from 'antd';
 import {connect} from 'react-redux';
 import {getFlowData} from '../../actions/workflow';
 import {bindActionCreators} from 'redux';
@@ -59,9 +58,9 @@ class NewEmployeeStep1 extends React.Component {
       url: '/workflow/approve.do',
       data: args
     }).then((data) => {
-      console.log('提交成功');
-      // 成功后刷新流程列表数据
-      this.props.getFlowData();
+      notification.success({message: '操作成功!',duration: 2}); // 成功提示
+      this.props.close(); // 关闭面板
+      this.props.getFlowData(); // 成功后刷新流程列表数据
     });
   }
   // qq输入
@@ -131,25 +130,6 @@ class NewEmployeeStep1 extends React.Component {
         </Row>
         <Row style={RowStyle}>
           <Col style={{marginLeft: 34}}>
-            {/*审批权限*/}
-            {
-              originData.canAuthorize && (
-                <Button type="primary" size="large" onClick={() => {
-                  this.handleSubmit(true);
-                }} style={{marginRight: '20px'}}>
-                  通过
-                </Button>
-              )
-            }
-            {
-              originData.canAuthorize && (
-                <Button type="danger" size="large" onClick={() => {
-                  this.handleSubmit(false);
-                }} style={{marginRight: '20px'}}>
-                  拒绝
-                </Button>
-              )
-            }
             {/*修改权限*/}
             {
               originData.canDelete && (

@@ -1,10 +1,9 @@
 /*
  * 新员工入职step2表单
- * 组件用于本流程第二步骤（leader对员工进行仓库权限分配）表单编辑/查看
+ * 组件用于本流程第二步骤（leader对员工进行仓库权限分配）表单编辑/查看 本步骤只用于审批
  * 2017/10/14 gzj初测通过
- * 该系列表单(step1-3)存在一些问题 ①是否允许删除 ②是否每个表单的操作模式是固定的，比如当前表单只能用来提交/（删除）/取消，或者查看，而不能进行审批 ③员工入职表单验证，是否需要验证
  */
-import {Button, Input, Row, Col, Icon, Popover, Select, Checkbox, AutoComplete, Tag, Modal} from 'antd';
+import {Button, Input, Row, Col, Icon, Popover, Select, Checkbox, AutoComplete, Tag, notification} from 'antd';
 import {connect} from 'react-redux';
 import {debounce} from '../../utils/common';
 import {bindActionCreators} from 'redux';
@@ -81,9 +80,9 @@ class NewEmployeeStep2 extends React.Component {
       url: '/workflow/approve.do',
       data: args
     }).then((data) => {
-      console.log('提交成功');
-      // 成功后刷新流程列表数据
-      this.props.getFlowData();
+      notification.success({message: '操作成功!',duration: 2}); // 成功提示
+      this.props.close(); // 关闭面板
+      this.props.getFlowData(); // 成功后刷新流程列表数据
     });
   }
   // 更改svn组
@@ -320,38 +319,7 @@ class NewEmployeeStep2 extends React.Component {
                 </Button>
               )
             }
-            {/*修改权限*/}
-            {
-              originData.canDelete && (
-                <Button type="primary" size="large" onClick={() => {
-                  this.handleSubmit(true);
-                }} style={{marginRight: '20px'}}>
-                  提交
-                </Button>
-              )
-            }
-            {
-              originData.canDelete && (
-                <Button type="danger"
-                        size="large"
-                        onClick={this.showConfirmModal}
-                        style={{marginRight: '20px'}}
-                >
-                  删除
-                </Button>
-              )
-            }
             <Button size="large" onClick={this.props.close}>取消</Button>
-            {/*删除流程确认*/}
-            <Modal
-              title="删除流程"
-              visible={this.state.deleteVisible}
-              onOk={this.confirmDelete}
-              onCancel={this.cancelDelete}
-              zIndex="2000"
-            >
-              <p style={{color: '#f04134',fontSize: 16}}>确认是否删除该流程（删除后不可找回）</p>
-            </Modal>
           </Col>
         </Row>
       </div>
