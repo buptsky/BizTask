@@ -8,7 +8,7 @@ import {connect} from 'react-redux';
 import config from './WorkflowConfig';
 import {trim} from '../../utils/common';
 import {getFlowData} from '../../actions/workflow';
-import {Button, Form, Input, Tag, Checkbox, Radio, AutoComplete, Row, Col, Modal, message} from 'antd';
+import {Button, Form, Input, Tag, Checkbox, Radio, AutoComplete, Row, Col, Modal, message, notification} from 'antd';
 
 // 表单样式配置
 const {formItemLayout1, formItemLayout2} = config;
@@ -128,9 +128,9 @@ class SvnPermissionForm extends React.Component {
         url: `/workflow/${flag === undefined ? 'submitWorkflow.do' : 'approve.do'}`,
         data: {...commonArgs, formData: JSON.stringify(formData)}
       }).then((data) => {
-        console.log('提交成功');
-        // 成功后刷新流程列表数据
-        this.props.getFlowData();
+        notification.success({message: '操作成功!',duration: 2}); // 成功提示
+        this.props.close(); // 关闭面板
+        this.props.getFlowData(); // 成功后刷新流程列表数据
       });
     });
   }

@@ -18,9 +18,9 @@ class WorkflowMenu extends React.Component {
         <Menu.Item key="daily-worksheet">
           <Link to="/workflow/daily">日常工作单</Link>
         </Menu.Item>
-        <Menu.Item key="extension">
-          可扩展tab页
-        </Menu.Item>
+        {/*<Menu.Item key="extension">*/}
+          {/*可扩展tab页*/}
+        {/*</Menu.Item>*/}
       </Menu>
     );
   }

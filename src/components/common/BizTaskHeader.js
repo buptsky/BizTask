@@ -26,7 +26,7 @@ class BizTaskHeader extends React.Component {
 
   renderUserName = (userInfo) => {
     return (
-      <div className="fr" style={{color: 'white', height: '52px'}}>
+      <div className="fr" style={{color: 'white', height: 80, lineHeight: '80px'}}>
         <Popover content={this.renderUserInfo(userInfo)} placement="bottomRight">
           <span style={{cursor: 'default'}}>{userInfo.userName}</span>
         </Popover>
@@ -57,13 +57,13 @@ class BizTaskHeader extends React.Component {
   render() {
     const {activeKey, userInfo} = this.props;
     return (
-      <Header>
+      <Header style={{height: 80}}>
         <Link to="/" className="logo"/>
         <Menu
           theme="dark"
           mode="horizontal"
           selectedKeys={[activeKey]}
-          style={{fontSize: '14px', lineHeight: '64px', width: '500px', float: 'left'}}
+          style={{fontSize: '14px', lineHeight: '80px', width: '500px', float: 'left'}}
         >
           <Menu.Item key="workflow">
             <Link to="/workflow">待办流程</Link>

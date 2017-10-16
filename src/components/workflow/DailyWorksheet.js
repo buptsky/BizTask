@@ -126,7 +126,7 @@ class DailyWorksheet extends React.Component {
         <Sider width={200} style={{background: '#fff', borderRight: '2px solid #ccc'}}>
           <WorkflowMenu activeKey="daily-worksheet"/>
         </Sider>
-        <Content style={{padding: '20px', position: 'relative', backgroundColor: '#fff'}}>
+        <Content style={{padding: '10px 20px', position: 'relative', backgroundColor: '#fff'}}>
           <Menu
             onClick={this.switchMenu}
             selectedKeys={[this.state.currentMenu]}
@@ -144,7 +144,7 @@ class DailyWorksheet extends React.Component {
           </Menu>
           <Button type="primary"
                   icon="plus"
-                  style={{position: 'absolute', top: '30px', left: '475px'}}
+                  style={{position: 'absolute', top: '20px', left: '475px', height: 28}}
                   onClick={this.openPanel}>新增申请
           </Button>
           <Panel
