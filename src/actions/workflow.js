@@ -9,6 +9,9 @@ export function getFlowData (args) {
       url: '/workflow/getApplications.do',
       data: queryArgs
     }).then((data) => {
+      // 为了防止使用了过时数据，需要判断数据来源
+      // 需要在返回一个typeId
+      // if (data.typeId != getState().workflow.queryArgs.typeId) return;
       dispatch(actionCreator(actionTypes.get_workflow_data_success, data));
     });
   }
@@ -45,4 +48,3 @@ export function getRepositories () {
     });
   }
 };
-

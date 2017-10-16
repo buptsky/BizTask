@@ -113,7 +113,7 @@ class WorkflowPanel extends React.Component {
           <Col span={12} className="panel-left">
             {/*工作流程选项框*/}
             <Row style={{marginBottom: 24}}>
-              <Col span={6} style={{textAlign: 'right'}}>
+              <Col span={this.state.currentFlowType === '201'? 3 : 6} style={{textAlign: 'right'}}>
                 <div className="ant-form-item-label">
                   <label htmlFor="create-type" title="工作流程">工作流程</label>
                 </div>

@@ -215,7 +215,7 @@ class NewEmployeeStep2 extends React.Component {
     return (
       <div>
         <Row style={{marginBottom: 24}}>
-          <Col span={6} style={{textAlign: 'right'}}>
+          <Col span={3} style={{textAlign: 'right'}}>
             <div className="ant-form-item-label">
               <label title="工作流程">流程名称</label>
             </div>
