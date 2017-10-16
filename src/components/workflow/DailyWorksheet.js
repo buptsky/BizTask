@@ -48,7 +48,6 @@ class DailyWorksheet extends React.Component {
       url: '/workflow/getFlowTypes.do',
       data: {}
     }).then((data) => {
-      console.log(data);
       data.forEach((flowType) => {
         flowType['subFlowTypeList'].forEach((subFlowType) => {
           flowTypes.push(subFlowType);

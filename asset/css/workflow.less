@@ -81,6 +81,69 @@
   .store-wrapper~.store-wrapper {
     margin: 10px 0;
   }
+  // 员工入职流程样式
+  .employee-step1, .employee-step2, .employee-step3{
+    .employee-item {
+      margin-bottom: 15px;
+      line-height: 28px;
+      .employee-info {
+        color: @blue-6;
+        padding: 0px 3px;
+      }
+      .todo-icon {
+        padding-right: 10px;
+      }
+      .employee-btn-wrapper {
+        margin-left: 24px;
+        .employee-btn {
+          margin-right: 20px;
+        }
+      }
+    }
+  }
+  .employee-step1 {
+    .employee-item {
+      .info-input {
+        width: 165px;
+        margin: 0 10px;
+      }
+    }
+  }
+  .employee-step2 {
+    .employee-item {
+      .svn-select {
+        width: 165px;
+        margin-right: 10px;
+      }
+      .employee-auto-complete {
+        height: 32px;
+        width: 205px;
+        margin-left: 104px;
+      }
+      .svn-tags {
+        margin-left: 24px;
+        .svn-tag-item {
+          height: 28px;
+          line-height: 26px;
+          margin-top: 10px;
+        }
+      }
+      .svn-add-type {
+        margin: 0 10px 0 24px;
+      }
+    }
+  }
+  .employee-step3 {
+    .employee-item {
+      line-height: 28px;
+      margin-bottom: 10px;
+      .svn-tags {
+        margin-left: 24px;
+        max-height: 150px;
+        overflow: auto;
+      }
+    }
+  }
   // 调整表单中非表单项下拉列表样式，与表单项协同
   .create-type {
     .ant-select-selection--single {
@@ -108,8 +171,20 @@
     background-size: 140px 140px;
     height: 140px;
     width: 140px;
-    margin-left: 34px;
+    margin-left: 24px;
     display: block;
     border: 5px #f1eeee solid;
+  }
+}
+// 多选框组文字溢出隐藏
+.checkbox-wrapper {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+// 重写antd多选框组样式，增加对齐方式
+.ant-checkbox-wrapper {
+  span {
+    vertical-align: middle;
   }
 }

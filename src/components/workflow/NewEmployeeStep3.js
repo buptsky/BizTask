@@ -6,9 +6,6 @@
 import {Button, Input, Row, Col, Icon, Tag} from 'antd';
 import {connect} from 'react-redux';
 
-const RowStyle = {marginBottom: 10, lineHeight: '28px'};
-const ColorStyle = {color: '#108ee9'}
-
 @connect(
   state => ({
     flowDetailData: state.workflow.flowDetailData
@@ -34,8 +31,9 @@ class NewEmployeeStep3 extends React.Component {
   render() {
     const originData = this.props.flowDetailData;
     return (
-      <div>
-        <Row style={{marginBottom: 24}}>
+      <div className="employee-step3">
+        {/*流程名称样式与antd-form组件样式协同*/}
+        <Row className="employee-item" style={{marginBottom: 24}}>
           <Col span={3} style={{textAlign: 'right'}}>
             <div className="ant-form-item-label">
               <label title="工作流程">流程名称</label>
@@ -45,20 +43,20 @@ class NewEmployeeStep3 extends React.Component {
             <Input value={originData.flowName} style={{height: 32}} disabled/>
           </Col>
         </Row>
-        <Row style={{lineHeight: '28px'}}>
-          <span style={ColorStyle}>{originData.formData.name}</span>
-          （微信号：<span style={ColorStyle}>{originData.formData.weixin}</span>）
-          （QQ号：<span style={ColorStyle}>{originData.formData.qq}</span>）
+        <Row className="employee-item" style={{marginBottom: 0}}>
+          <span className="employee-info" style={{paddingLeft: 0}}>{originData.formData.name}</span>
+          （微信号：<span className="employee-info">{originData.formData.weixin}</span>）
+          （QQ号：<span className="employee-info">{originData.formData.qq}</span>）
         </Row>
-        <Row style={RowStyle}>
+        <Row className="employee-item">
           申请开通SVN路径权限(前缀url：http://bizsvn.sogou-inc.com/svn/)：
         </Row>
-        <Row style={{margin: '-5px 0 10px 0'}}>
-          <div className="svn-tags" style={{marginLeft: 34, maxHeight: 150, overflow: 'auto'}}>
+        <Row className="employee-item" style={{margin: '-5px 0 10px 0'}}>
+          <div className="svn-tags">
             {originData.formData.svn.map((tag, index) => {
               const tagElem = (
                 <Tag key={tag}
-                     style={{height: 28, lineHeight: '26px', marginTop: 10}}
+                     className="svn-tag-item"
                      color="#108ee9"
                 >
                   {tag}
@@ -68,43 +66,43 @@ class NewEmployeeStep3 extends React.Component {
             })}
           </div>
         </Row>
-        <Row style={RowStyle}>
-          <Icon type="flag" style={{padding: '0 10px'}} />
+        <Row className="employee-item">
+          <Icon type="flag" className="todo-icon" />
           部门情况简介：
-          <a href={originData.formData.depInfo}>{originData.formData.depInfo}</a>
+          <a href={originData.formData.depInfo} target="_blank">{originData.formData.depInfo}</a>
         </Row>
-        <Row style={RowStyle}>
-          <Icon type="flag" style={{padding: '0 10px'}} />
+        <Row className="employee-item">
+          <Icon type="flag" className="todo-icon" />
           小组的对应简介：
-          <a href={originData.formData.groupInfo}>{originData.formData.groupInfo}</a>
+          <a href={originData.formData.groupInfo} target="_blank">{originData.formData.groupInfo}</a>
         </Row>
-        <Row style={RowStyle}>
-          <Icon type="flag" style={{padding: '0 10px'}} />
+        <Row className="employee-item">
+          <Icon type="flag" className="todo-icon" />
           小组特殊资料：
-          <a href={originData.formData.groupSpec}>{originData.formData.groupInfo}</a>
+          <a href={originData.formData.groupSpec} target="_blank">{originData.formData.groupInfo}</a>
         </Row>
-        <Row style={RowStyle}>
-          <Icon type="flag" style={{padding: '0 10px'}} />
+        <Row className="employee-item">
+          <Icon type="flag" className="todo-icon" />
           部门工作流程规范：
-          <a href={originData.formData.groupDoc}>{originData.formData.groupInfo}</a>
+          <a href={originData.formData.groupDoc} target="_blank">{originData.formData.groupInfo}</a>
         </Row>
-        <Row style={RowStyle}>
-          <Icon type="flag" style={{padding: '0 10px'}} />
+        <Row className="employee-item">
+          <Icon type="flag" className="todo-icon" />
           软件环境：
-          <a href={originData.formData.software}>{originData.formData.software}</a>
+          <a href={originData.formData.software} target="_blank">{originData.formData.software}</a>
         </Row>
-        <Row style={RowStyle}>
-          <Icon type="flag" style={{padding: '0 10px'}} />
+        <Row className="employee-item">
+          <Icon type="flag" className="todo-icon" />
           下载公司办公app：
-          <a href="https://xiaop.sogou-inc.com/">https://xiaop.sogou-inc.com/</a>
-          <span style={{marginLeft: 10}}>并关注小P公众号bizwork</span>
+          <a href="https://xiaop.sogou-inc.com/" className="employee-info" target="_blank">https://xiaop.sogou-inc.com/</a>
+          <span>并关注小P公众号bizwork</span>
         </Row>
-        <Row style={RowStyle}>
+        <Row className="employee-item">
           <div className="work-xiaop"></div>
         </Row>
-        <Row style={RowStyle}>
-          <Col style={{marginLeft: 34}}>
-            <Button size="large" onClick={this.props.close}>取消</Button>
+        <Row className="employee-item">
+          <Col className="employee-btn-wrapper">
+            <Button className="employee-btn" size="large" onClick={this.props.close}>取消</Button>
           </Col>
         </Row>
       </div>

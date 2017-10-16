@@ -94,8 +94,9 @@ class NewEmployeeStep1 extends React.Component {
   render() {
     const originData = this.props.flowDetailData;
     return (
-      <div>
-        <Row style={{marginBottom: 24}}>
+      <div className="employee-step1">
+        {/*流程名称样式与antd-form组件样式协同*/}
+        <Row className="employee-item">
           <Col span={3} style={{textAlign: 'right'}}>
             <div className="ant-form-item-label">
               <label title="工作流程">流程名称</label>
@@ -105,37 +106,37 @@ class NewEmployeeStep1 extends React.Component {
             <Input value={originData.flowName} style={{height: 32}} disabled/>
           </Col>
         </Row>
-        <Row style={{...RowStyle, color: '#108ee9'}}>
-          欢迎入职biztech，入职准备工作如下:
+        <Row className="employee-item">
+          <span className="employee-info" style={{paddingLeft: 0}}>欢迎入职biztech，入职准备工作如下:</span>
         </Row>
-        <Row style={RowStyle}>
-          <Icon type="flag" style={{padding: '0 10px'}} />
+        <Row className="employee-item">
+          <Icon type="flag" className="todo-icon" />
           准备一个qq号
-          <Input onChange={this.changeQQ} style={{width: 165, margin: '0 10px'}} disabled={this.state.disableAll}/>
+          <Input onChange={this.changeQQ} className="info-input" disabled={this.state.disableAll}/>
           ，用于leader下一步查看
         </Row>
-        <Row style={RowStyle}>
-          <Icon type="flag" style={{padding: '0 10px'}} />
+        <Row className="employee-item">
+          <Icon type="flag" className="todo-icon" />
           联系直属leader邀请加入biztechQQ群，biztech邮件组
         </Row>
-        <Row style={RowStyle}>
-          <Icon type="flag" style={{padding: '0 10px'}} />
+        <Row className="employee-item">
+          <Icon type="flag" className="todo-icon" />
           准备一个微信账号
           <Input
-            style={{width: 165, margin: '0 10px'}}
+            className="info-input"
             disabled={this.state.disableAll}
             onChange={this.changeWeixin}
           />
           ，用于加入部门微信群
         </Row>
-        <Row style={RowStyle}>
-          <Col style={{marginLeft: 34}}>
+        <Row className="employee-item">
+          <Col className="employee-btn-wrapper">
             {/*修改权限*/}
             {
               originData.canDelete && (
                 <Button type="primary" size="large" onClick={() => {
                   this.handleSubmit(true);
-                }} style={{marginRight: '20px'}}>
+                }} className="employee-btn">
                   提交
                 </Button>
               )
@@ -145,13 +146,13 @@ class NewEmployeeStep1 extends React.Component {
                 <Button type="danger"
                         size="large"
                         onClick={this.showConfirmModal}
-                        style={{marginRight: '20px'}}
+                        className="employee-btn"
                 >
                   删除
                 </Button>
               )
             }
-            <Button size="large" onClick={this.props.close}>取消</Button>
+            <Button size="large" onClick={this.props.close} className="employee-btn">取消</Button>
             {/*删除流程确认*/}
             <Modal
               title="删除流程"

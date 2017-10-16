@@ -3,6 +3,7 @@
  * 组件用于本流程第二步骤（leader对员工进行仓库权限分配）表单编辑/查看 本步骤只用于审批
  * 2017/10/14 gzj初测通过
  */
+import ReactDOM from 'react-dom';
 import {Button, Input, Row, Col, Icon, Popover, Select, Checkbox, AutoComplete, Tag, notification} from 'antd';
 import {connect} from 'react-redux';
 import {debounce} from '../../utils/common';
@@ -11,10 +12,6 @@ import {getFlowData} from '../../actions/workflow';
 // antd 组件配置
 const Option = Select.Option;
 const CheckboxGroup = Checkbox.Group;
-
-const RowStyle = {marginBottom: 15, lineHeight: '28px'};
-const ColorStyle = {color: '#108ee9'};
-const textStyle = {overflow: 'hidden', textOverflow:'ellipsis', whiteSpace: 'nowrap'}
 
 @connect(
   state => ({
@@ -105,7 +102,13 @@ class NewEmployeeStep2 extends React.Component {
     tags = [...tags, value];
     this.setState({
       svnTags: tags
+    }, () => {
+      // 这里调用ReactDOM.findDOMNode是为了使用底层dom清空输入框的值
+      // 异步调用的原因是外层autocomplete组件会在confirmSvn方法调用后同步远中的值，这将覆盖同步清空后的值
+      // 发现给autoComplete中的input绑定value属性会失效，暂时使用此方法清空输入
+      ReactDOM.findDOMNode(this.input).value = '';
     });
+
   }
   // 过滤匹配的svn路径
   filterSvn = (value) => {
@@ -167,15 +170,9 @@ class NewEmployeeStep2 extends React.Component {
   }
 
   render() {
-    console.log('render');
     const originData = this.props.flowDetailData;
     const lists = this.state.groupAndSvnList;
     const svns = this.state.currentSvns;
-    // 筛选后的仓库路径下拉选项
-    // 仓库路径下拉选项（搜索方式）
-    const svnOpts = this.state.filterSvns.map((path) => {
-      return <Option key={path}>{path}</Option>;
-    });
     // svn分组下拉选项（分组选择方式）
     const svnGroupOpts = lists.map((item) => {
       return (<Option key={item.group} value={item.group}>{item.group}</Option>)
@@ -183,7 +180,7 @@ class NewEmployeeStep2 extends React.Component {
     // 多选框组内容（分组选择方式）
     let checkContent = svns.map((item) => {
       return (
-        <Col span={6} key={item} style={textStyle} title={item}>
+        <Col span={6} key={item} title={item} className="checkbox-wrapper">
           <Checkbox value={item} style={{padding: '3px 0'}}>
             {item}
           </Checkbox>
@@ -213,9 +210,10 @@ class NewEmployeeStep2 extends React.Component {
     );
 
     return (
-      <div>
-        <Row style={{marginBottom: 24}}>
-          <Col span={3} style={{textAlign: 'right'}}>
+      <div className="employee-step2">
+        {/*流程名称样式与antd-form组件样式协同*/}
+        <Row className="employee-item">
+          <Col span={3}>
             <div className="ant-form-item-label">
               <label title="工作流程">流程名称</label>
             </div>
@@ -224,33 +222,44 @@ class NewEmployeeStep2 extends React.Component {
             <Input value={originData.flowName} style={{height: 32}} disabled/>
           </Col>
         </Row>
-        <Row style={{...RowStyle, ...ColorStyle}}>
-          {originData.formData.name}({originData.formData.email})的入职准备工作如下:
+        <Row className="employee-item">
+          <span className="employee-info" style={{paddingLeft: 0}}>
+            {originData.formData.name}({originData.formData.email})
+          </span>
+          的入职准备工作如下:
         </Row>
-        <Row style={RowStyle}>
-          <Icon type="flag" style={{padding: '0 10px'}} />
-          请邀请QQ号 <span style={ColorStyle}>{originData.formData.qq}</span> 加入biztechQQ群及组内联系群
+        <Row className="employee-item">
+          <Icon type="flag" className="todo-icon" />
+          请邀请QQ号
+          <span className="employee-info">{originData.formData.qq}</span>
+          加入biztechQQ群及组内联系群
         </Row>
-        <Row style={RowStyle}>
-          <Icon type="flag" style={{padding: '0 10px'}} />
-          请检查是否需要给邮箱号：<span style={ColorStyle}>{originData.formData.email}</span> 开通产品文档权限
+        <Row className="employee-item">
+          <Icon type="flag" className="todo-icon" />
+          请检查是否需要给邮箱号：
+          <span className="employee-info">{originData.formData.email}</span>
+          开通产品文档权限
         </Row>
-        <Row style={RowStyle}>
-          <Icon type="flag" style={{padding: '0 10px'}} />
-          请将微信账号 <span style={ColorStyle}>{originData.formData.weixin}</span> 邀请加入biztech微信群
+        <Row className="employee-item">
+          <Icon type="flag" className="todo-icon" />
+          请将微信账号
+          <span className="employee-info">{originData.formData.weixin}</span>
+          邀请加入biztech微信群
         </Row>
-        <Row style={RowStyle}>
-          <Icon type="flag" style={{padding: '0 10px'}} />
-          请将邮箱 <span style={ColorStyle}>{originData.formData.email}</span> 加入组内邮件组
+        <Row className="employee-item">
+          <Icon type="flag" className="todo-icon" />
+          请将邮箱
+          <span className="employee-info">{originData.formData.email}</span>
+          加入组内邮件组
         </Row>
-        <Row style={RowStyle}>
-          <Icon type="flag" style={{padding: '0 10px'}} />
+        <Row className="employee-item">
+          <Icon type="flag" className="todo-icon" />
           开通对应svn权限：
         </Row>
         {/*分组添加svn*/}
-        <Row style={RowStyle}>
-          <span style={{marginLeft: 34}}>分组添加：</span>
-          <Select style={{width: 165, margin: '0 10px'}}
+        <Row className="employee-item">
+          <span className="svn-add-type">分组添加：</span>
+          <Select className="svn-select"
                   value={(lists.length && lists[0].group) || ''}
                   onSelect={this.changeGroup}
           >
@@ -266,27 +275,30 @@ class NewEmployeeStep2 extends React.Component {
           </Popover>
         </Row>
         {/*搜索添加svn*/}
-        <Row style={RowStyle}>
-          <span style={{marginLeft: 34}}>搜索添加：</span>
-          <span style={{marginLeft: 10}}>http://bizsvn.sogou-inc.com/svn/</span>
+        <Row className="employee-item">
+          <span className="svn-add-type">搜索添加：</span>
+          <span>http://bizsvn.sogou-inc.com/svn/</span>
         </Row>
-        <Row style={{margin: '-5px 0 15px 0'}}>
+        <Row className="employee-item" style={{margin: '-5px 0 15px 0'}}>
           <AutoComplete
-            style={{height: 32, width: 205, marginLeft: 114}}
+            className="employee-auto-complete"
+            children={
+              <Input
+                ref={(input) => {this.input = input}}
+              />
+            }
             onSelect={this.confirmSvn}
             onSearch={debounce(this.filterSvn).bind(this)}
-            ref={(input) => {this.svnInput = input}}
-          >
-            {svnOpts}
-          </AutoComplete>
+            dataSource={this.state.filterSvns}
+          />
         </Row>
         {/*svn展示*/}
-        <Row style={{margin: '-20px 0 30px 0'}}>
-          <div className="svn-tags" style={{marginLeft: 34}}>
+        <Row className="employee-item" style={{margin: '-20px 0 30px 0'}}>
+          <div className="svn-tags">
             {this.state.svnTags.map((tag, index) => {
               const tagElem = (
                 <Tag key={tag}
-                     style={{height: 28, lineHeight: '26px', marginTop: 10}}
+                     className="svn-tag-item"
                      color="#108ee9"
                      closable={true}
                      afterClose={() => this.deleteSvn(tag)}
@@ -298,14 +310,14 @@ class NewEmployeeStep2 extends React.Component {
             })}
           </div>
         </Row>
-        <Row style={RowStyle}>
-          <Col style={{marginLeft: 34}}>
+        <Row className="employee-item">
+          <Col className="employee-btn-wrapper">
             {/*审批权限*/}
             {
               originData.canAuthorize && (
                 <Button type="primary" size="large" onClick={() => {
                   this.handleSubmit(true);
-                }} style={{marginRight: '20px'}}>
+                }} className="employee-btn">
                   通过
                 </Button>
               )
@@ -314,12 +326,12 @@ class NewEmployeeStep2 extends React.Component {
               originData.canAuthorize && (
                 <Button type="danger" size="large" onClick={() => {
                   this.handleSubmit(false);
-                }} style={{marginRight: '20px'}}>
+                }} className="employee-btn">
                   拒绝
                 </Button>
               )
             }
-            <Button size="large" onClick={this.props.close}>取消</Button>
+            <Button size="large" onClick={this.props.close} className="employee-btn">取消</Button>
           </Col>
         </Row>
       </div>

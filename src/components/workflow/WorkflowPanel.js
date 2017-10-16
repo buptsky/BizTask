@@ -113,7 +113,9 @@ class WorkflowPanel extends React.Component {
           <Col span={12} className="panel-left">
             {/*工作流程选项框*/}
             <Row style={{marginBottom: 24}}>
-              <Col span={this.state.currentFlowType === '201'? 3 : 6} style={{textAlign: 'right'}}>
+              <Col span={this.state.currentFlowType === '201'? 3 : 6}
+                   style={{textAlign: this.state.currentFlowType === '201' ? 'left ':'right'}}
+              >
                 <div className="ant-form-item-label">
                   <label htmlFor="create-type" title="工作流程">工作流程</label>
                 </div>
@@ -130,7 +132,11 @@ class WorkflowPanel extends React.Component {
                           defaultValue="102"
                           value={this.state.currentFlowType}
                           onSelect={this.changeType}
-                          disabled={this.state.disableAll || flowDetailData.canDelete}
+                          disabled={
+                            this.state.disableAll ||
+                            flowDetailData.canDelete ||
+                            flowDetailData.canAuthorize
+                          }
                         >
                           {workflowSelectItem}
                         </Select>

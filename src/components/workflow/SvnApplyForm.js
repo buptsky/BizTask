@@ -38,6 +38,7 @@ class SvnApplyForm extends React.Component {
     super(props);
     this.state = {
       disableAll: false, // 禁用所有编辑（操作流程中的不可编辑权限）
+      disableManager: false, // 勾选仓库404禁止自选仓库管理员
       flownamePrefix: `svn权限申请-`, // 流程名称前缀
       storenamePrefix: 'http://bizsvn.sogou-inc.com/svn/', // 仓库名称前缀
       permissionTags: [], // 添加权限人员
@@ -225,6 +226,17 @@ class SvnApplyForm extends React.Component {
   changePermission = (e) => {
     this.setState({permissionType: e.target.value})
   }
+  // 仓库描述多选框变动
+  onCheckChange = (values) => {
+    if (values.includes('404')) {
+      this.setState({disableManager: true});
+      this.props.form.setFieldsValue({'storage-manager': ['404管理员']});
+    } else {
+      this.setState({disableManager: false});
+      this.props.form.setFieldsValue({'storage-manager': []});
+    }
+    console.log(values);
+  }
   // 打开确认删除对话框
   showConfirmModal = () => {
     this.setState({deleteVisible: true});
@@ -282,7 +294,7 @@ class SvnApplyForm extends React.Component {
           <FormItem label="仓库管理员" {...formItemLayout1}>
             {getFieldDecorator('storage-manager',
               {initialValue: (formData.manager && formData.manager.split(',')) || []})(
-              <Select mode="multiple" disabled={this.state.disableAll}>
+              <Select mode="multiple" disabled={this.state.disableAll || this.state.disableManager}>
                 {managerOptions}
               </Select>
             )}
@@ -298,7 +310,11 @@ class SvnApplyForm extends React.Component {
             {getFieldDecorator('check-opt', {
               initialValue: formCheck || [],
             })(
-              <CheckboxGroup options={checkOptions} disabled={this.state.disableAll}/>
+              <CheckboxGroup
+                options={checkOptions}
+                onChange={this.onCheckChange}
+                disabled={this.state.disableAll}
+              />
             )}
           </FormItem>
           {/*默认添加权限*/}
