@@ -37,7 +37,7 @@ class Report extends React.Component {
   render() {
     return (
       <div style={{padding: '60px 30px'}}>
-        周报列表操作演示
+        周报列表操作交互演示
         <ReportTable data={this.state.reportData}/>
       </div>
     );

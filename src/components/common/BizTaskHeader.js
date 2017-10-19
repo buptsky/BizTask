@@ -72,7 +72,7 @@ class BizTaskHeader extends React.Component {
             <Link to="/task/charge">日常任务</Link>
           </Menu.Item>
           <Menu.Item key="report">
-            <Link to="/report">部分周会</Link>
+            <Link to="/report">部门周会</Link>
           </Menu.Item>
         </Menu>
         {userInfo ? this.renderUserName(userInfo) : null}
