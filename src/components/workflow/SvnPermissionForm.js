@@ -80,7 +80,7 @@ class SvnPermissionForm extends React.Component {
   // 表单提交(为了进行不同方式的提交，暂不使用antd自带的提交方式)
   // 参数只会在审批/修改流程中使用，true -> 通过/提交， false -> 拒绝/删除
   handleSubmit = (flag) => {
-    console.log(flag);
+    // console.log(flag);
     const originData = this.props.flowDetailData;
     let commonArgs = {}; // 表单通用数据
     let formData = {};
@@ -128,7 +128,7 @@ class SvnPermissionForm extends React.Component {
         url: `/workflow/${flag === undefined ? 'submitWorkflow.do' : 'approve.do'}`,
         data: {...commonArgs, formData: JSON.stringify(formData)}
       }).then((data) => {
-        notification.success({message: '操作成功!',duration: 2}); // 成功提示
+        // notification.success({message: '操作成功!',duration: 2}); // 成功提示
         this.props.close(); // 关闭面板
         this.props.getFlowData(); // 成功后刷新流程列表数据
       });
@@ -136,7 +136,7 @@ class SvnPermissionForm extends React.Component {
   }
   // 校验必需的表单数据，由于表单设计问题，采用自行验证的方式
   checkFormData = (data) => {
-    console.log(data);
+    // console.log(data);
     // 流程名非空
     if (!data.flowName.split('-').slice(1).join('-')) {
       message.error('请输入流程名！');
@@ -232,7 +232,7 @@ class SvnPermissionForm extends React.Component {
   }
   // 选取仓库路径
   confirmStorage = (path) => {
-    console.log(path);
+    // console.log(path);
     let paths = this.state.storePaths; // 获取当前地址集合
     if (paths.includes(path)) return; // 如果传递重复路径，则忽略
     paths.push(path); // 添加新地址

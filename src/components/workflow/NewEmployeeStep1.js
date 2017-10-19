@@ -58,7 +58,7 @@ class NewEmployeeStep1 extends React.Component {
       url: '/workflow/approve.do',
       data: args
     }).then((data) => {
-      notification.success({message: '操作成功!',duration: 2}); // 成功提示
+      // notification.success({message: '操作成功!',duration: 2}); // 成功提示
       this.props.close(); // 关闭面板
       this.props.getFlowData(); // 成功后刷新流程列表数据
     });

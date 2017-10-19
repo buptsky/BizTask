@@ -122,10 +122,10 @@ class DailyWorksheet extends React.Component {
   render() {
     return (
       <Layout className="workflow">
-        <Sider width={200} style={{background: '#fff', borderRight: '2px solid #ccc'}}>
+        <Sider>
           <WorkflowMenu activeKey="daily-worksheet"/>
         </Sider>
-        <Content style={{padding: '10px 20px', position: 'relative', backgroundColor: '#fff'}}>
+        <Content style={{padding: '10px 20px', position: 'relative'}}>
           <Menu
             onClick={this.switchMenu}
             selectedKeys={[this.state.currentMenu]}

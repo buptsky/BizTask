@@ -1,12 +1,10 @@
-import {
-  HashRouter, Route, Redirect, Link
-} from 'react-router-dom';
+import {HashRouter, Route, Redirect, Link} from 'react-router-dom';
 import {Layout} from 'antd';
 import BizTaskHeader from './components/common/BizTaskHeader';
 import ChargeTask from './components/task/ChargeTask';
 import AttentionTask from './components/task/AttentionTask';
 import DailyWorksheet from './components/workflow/DailyWorksheet';
-import Score from './components/score/Score';
+import Report from './components/report/Report';
 
 const AppRouter = (
   <HashRouter>
@@ -20,7 +18,7 @@ const AppRouter = (
       <Route exact path="/workflow" render={() => (<Redirect to="/workflow/daily"/>)}/>
       <Route path="/workflow/daily" component={DailyWorksheet}/>
       {/*score*/}
-      <Route path="/score" component={Score}/>
+      <Route path="/report" component={Report}/>
     </Layout>
   </HashRouter>
 );

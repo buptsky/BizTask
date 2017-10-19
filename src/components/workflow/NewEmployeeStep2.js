@@ -47,7 +47,7 @@ class NewEmployeeStep2 extends React.Component {
         groupAndSvnList: data,
         currentSvns: data[0].svns
       });
-      console.log(data);
+      // console.log(data);
     });
     if (!this.props.flowDetailData.canEdit) {
       this.setState({
@@ -58,7 +58,7 @@ class NewEmployeeStep2 extends React.Component {
   // 提交表单
   handleSubmit = (flag) => {
     const originData = this.props.flowDetailData;
-    console.log(originData);
+    // console.log(originData);
     const formData = {
       step: originData.formData.step,
       svn: this.state.svnTags
@@ -71,13 +71,13 @@ class NewEmployeeStep2 extends React.Component {
       message: this.props.getMsg(),
       formData: JSON.stringify(formData)
     }
-    console.log(args);
+    // console.log(args);
     // 数据提交
     fetchData({
       url: '/workflow/approve.do',
       data: args
     }).then((data) => {
-      notification.success({message: '操作成功!',duration: 2}); // 成功提示
+      // notification.success({message: '操作成功!',duration: 2}); // 成功提示
       this.props.close(); // 关闭面板
       this.props.getFlowData(); // 成功后刷新流程列表数据
     });
@@ -104,7 +104,7 @@ class NewEmployeeStep2 extends React.Component {
       svnTags: tags
     }, () => {
       // 这里调用ReactDOM.findDOMNode是为了使用底层dom清空输入框的值
-      // 异步调用的原因是外层autocomplete组件会在confirmSvn方法调用后同步远中的值，这将覆盖同步清空后的值
+      // 异步调用的原因是外层autocomplete组件会在confirmSvn方法调用后同步选中的值，这将覆盖同步清空后的值
       // 发现给autoComplete中的input绑定value属性会失效，暂时使用此方法清空输入
       ReactDOM.findDOMNode(this.input).value = '';
     });

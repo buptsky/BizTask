@@ -120,13 +120,13 @@ class SvnApplyForm extends React.Component {
       // 表单校验
       let ret = this.checkFormData({...commonArgs, formData});
       if (!ret) return;
-      console.log({...commonArgs, formData}); // 最后提交的参数集
+      // console.log({...commonArgs, formData}); // 最后提交的参数集
       // 数据提交
       fetchData({
         url: `/workflow/${flag === undefined ? 'submitWorkflow.do': 'approve.do'}`,
         data: {...commonArgs, formData: JSON.stringify(formData)}
       }).then((data) => {
-        notification.success({message: '操作成功!',duration: 2}); // 成功提示
+        // notification.success({message: '操作成功!',duration: 2}); // 成功提示
         this.props.close(); // 关闭面板
         this.props.getFlowData(); // 成功后刷新流程列表数据
         this.props.getRepositories(); // 因为申请了新的仓库，这里还要更新仓库列表

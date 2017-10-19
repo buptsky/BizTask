@@ -28,7 +28,7 @@ class BizTaskHeader extends React.Component {
     return (
       <div className="fr" style={{color: 'white', height: 80, lineHeight: '80px'}}>
         <Popover content={this.renderUserInfo(userInfo)} placement="bottomRight">
-          <span style={{cursor: 'default'}}>{userInfo.userName}</span>
+          <span style={{cursor: 'default'}}>{userInfo.chineseName}</span>
         </Popover>
         <span style={{margin: '0 5px'}}>|</span>
         <a href="/pc/index/logout" style={{color: 'white'}}>退出</a>
@@ -71,8 +71,8 @@ class BizTaskHeader extends React.Component {
           <Menu.Item key="task">
             <Link to="/task/charge">日常任务</Link>
           </Menu.Item>
-          <Menu.Item key="score">
-            <Link to="/score">部门积分</Link>
+          <Menu.Item key="report">
+            <Link to="/report">部分周会</Link>
           </Menu.Item>
         </Menu>
         {userInfo ? this.renderUserName(userInfo) : null}

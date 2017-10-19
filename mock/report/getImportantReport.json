@@ -1,0 +1,81 @@
+{
+  "errno": 0,
+  "errmsg": "",
+  "data": [
+    {
+      "type": "品牌",
+      "projects": [
+        {
+          "id": 1,
+          "name": "无线银河-生活服务行业",
+          "output": "增加生活服务行业,添加装修、摄影、家居三种样式",
+          "duration": "7",
+          "principal": ["翟懿博", "朱庆广"],
+          "endTime": "2017-10-20",
+          "process": "需求评审新人熟悉项目,开发30%",
+          "plan": "开发100%;联调100%;"
+        }
+      ]
+    },
+    {
+      "type": "CRM",
+      "projects": [
+        {
+          "id": 2,
+          "name": "H5迭代4",
+          "output": "开发H5页面综合方案",
+          "duration": "10",
+          "principal": ["郭松", "吴博"],
+          "endTime": "2017-09-29",
+          "process": "上线",
+          "plan": ""
+        },
+        {
+          "id": 3,
+          "name": "下线H5和iPad工具中的数据页",
+          "output": "下线H5和iPad工具中的数据页",
+          "duration": "2",
+          "principal": ["郭松"],
+          "endTime": "2017-10-13",
+          "process": "上线",
+          "plan": ""
+        },
+        {
+          "id": 4,
+          "name": "KA数据完整性-VR线上化",
+          "output": "KA VR线上化",
+          "duration": "5",
+          "principal": ["翟懿博", "朱庆广"],
+          "endTime": "2017/10/17",
+          "process": "测试",
+          "plan": "测试；上线"
+        }
+      ]
+    },
+    {
+      "type": "内部项目",
+      "projects": [
+        {
+          "id": 5,
+          "name": "biztask周报线上化",
+          "output": "在biztask中完成线上周报",
+          "duration": "待定",
+          "principal": ["翟懿博", "郭政健"],
+          "endTime": "待定",
+          "process": "讨论改进需求",
+          "plan": "待定"
+        },
+        {
+          "id": 6,
+          "name": "SOA服务框架",
+          "output": "架构升级，采用新的框架及新界面进行改版，在改版原有功能的情况下，增加新的功能，同时保留原版的功能入口。",
+          "duration": "12",
+          "principal": ["钱露"],
+          "endTime": "2017-10-31",
+          "process": "1.接口管理联调，bug处理；2.剩余模块需求对接；部分需求修改。",
+          "plan": "1.接口管理上线；服务治理开发。"
+        }
+      ]
+    }
+  ]
+}

@@ -8,9 +8,8 @@ instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlenco
 const fetchData = (options) => {
   return instance({
     method: options.method || 'post',
-    url: options.url,
-    data: options.data || {},
-    params: options.params || {}
+    url: `/dispatch${options.url}`,
+    data: options.data
   }).then(response => {
     const responseData = response.data;
     if (responseData.errno === 0) {

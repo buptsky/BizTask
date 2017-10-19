@@ -17,7 +17,7 @@ class NewEmployeeForm extends React.Component {
   }
 
   componentWillMount() {
-    console.log(this.props.flowDetailData);
+    // console.log(this.props.flowDetailData);
   }
 
   render() {
