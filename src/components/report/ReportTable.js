@@ -194,6 +194,38 @@ class ReportTable extends React.Component {
       props: {rowSpan}
     };
   }
+  // 生成数据索引映射
+  createSourceMap = (data) => {
+    let ret = [];
+    let dataIndex = 0;
+    data.forEach((item) => {
+      console.log(item);
+      if (!item.type) {
+        ret.push({type: '未定义', index: dataIndex, length: 1});
+        dataIndex++;
+      } else {
+        if (!ret.length) {
+          ret.push({type: item.type, index: 0, length: 1});
+        } else {
+          for (let i = 0; i < ret.length; i++) {
+            if (ret[i].type === item.type) {
+              console.log(i);
+              console.log(item.type);
+              ret[i].length++;
+              dataIndex++;
+              break;
+            }
+            if (i === ret.length - 1) {
+              ret.push({type: item.type, index: dataIndex, length:1});
+              dataIndex++;
+              break;
+            }
+          }
+        }
+      }
+    });
+    return ret;
+  }
 
   // 表格行成功保存
   handleChange(key, index, value) {
@@ -229,53 +261,63 @@ class ReportTable extends React.Component {
             targetDataIndex = typeItem.index;
           }
         });
-        console.log(targetDataIndex);
-        // 比较目标项索引和操作项索引
-        if (index < targetDataIndex) { // 需要将目标后移
-          // 遍历map,更改索引表
-          map.forEach((typeItem, typeItemIndex) => {
-            if (typeItem.index === targetDataIndex) {// 目标项
-              typeItem.index -= sourceDataLength;
-              typeItem.length += sourceDataLength;
-              if (needDetele) {typeItem.length--};
-            } else if ((typeItem.index > index) && (typeItem.index < targetDataIndex)) {
-              // 索引调整
-              typeItem.index -= sourceDataLength;
-            } else if (typeItem.index > targetDataIndex) {
-              if (needDetele) {typeItem.index--};
-            }
-          });
-          // 处理data，移动数据
-          let removeData = data.splice(index, sourceDataLength);
-          removeData.forEach((item) => item.type = value); // 更改数据项所属分组
-          if (needDetele) {
-            removeData.pop();
-            data.splice(targetDataIndex - removeData.length - 1, 0, ...removeData);
-          } else {
-            data.splice(targetDataIndex - removeData.length, 0, ...removeData);
-          }
-        } else { // 需要将目标前移
-          // 遍历map,更改索引表
-          map.forEach((typeItem, typeItemIndex) => {
-            if (typeItem.index === targetDataIndex) {// 目标项
-              typeItem.length += sourceDataLength;
-              if (needDetele) {typeItem.length--};
-            } else if ((typeItem.index > targetDataIndex) && (typeItem.index < index)) {
-              // 索引调整
-              typeItem.index += sourceDataLength;
-            }
-          });
-          // 处理data，移动数据
-          let removeData = data.splice(index, sourceDataLength);
-          removeData.forEach((item) => item.type = value); // 更改数据项所属分组
-          if (needDetele) {
-            removeData.pop();
-          }
-          data.splice(targetDataIndex, 0, ...removeData);
+        let removeData = data.splice(index, sourceDataLength); // 移除数据
+        removeData.forEach((item) => item.type = value); // 更改数据项所属分组
+        if (needDetele) { // 是否需要清除空数据
+          removeData.pop();
+          data.splice(targetDataIndex - removeData.length - 1, 0, ...removeData);
+        } else {
+          data.splice(targetDataIndex - removeData.length, 0, ...removeData);
         }
-        // 移除这个多余索引配置
-        map.splice(removeIndex, 1);
-        console.log(map);
+        console.log(data);
+        map = this.createSourceMap(data);
+        console.log(this.createSourceMap(data));
+        // 比较目标项索引和操作项索引
+        // if (index < targetDataIndex) { // 需要将目标后移
+        //   // 遍历map,更改索引表
+        //   map.forEach((typeItem, typeItemIndex) => {
+        //     if (typeItem.index === targetDataIndex) {// 目标项
+        //       typeItem.index -= sourceDataLength;
+        //       typeItem.length += sourceDataLength;
+        //       if (needDetele) {typeItem.length--};
+        //     } else if ((typeItem.index > index) && (typeItem.index < targetDataIndex)) {
+        //       // 索引调整
+        //       typeItem.index -= sourceDataLength;
+        //     } else if (typeItem.index > targetDataIndex) {
+        //       if (needDetele) {typeItem.index--};
+        //     }
+        //   });
+        //   // 处理data，移动数据
+        //   let removeData = data.splice(index, sourceDataLength);
+        //   removeData.forEach((item) => item.type = value); // 更改数据项所属分组
+        //   if (needDetele) {
+        //     removeData.pop();
+        //     data.splice(targetDataIndex - removeData.length - 1, 0, ...removeData);
+        //   } else {
+        //     data.splice(targetDataIndex - removeData.length, 0, ...removeData);
+        //   }
+        // } else { // 需要将目标前移
+        //   // 遍历map,更改索引表
+        //   map.forEach((typeItem, typeItemIndex) => {
+        //     if (typeItem.index === targetDataIndex) {// 目标项
+        //       typeItem.length += sourceDataLength;
+        //       if (needDetele) {typeItem.length--};
+        //     } else if ((typeItem.index > targetDataIndex) && (typeItem.index < index)) {
+        //       // 索引调整
+        //       typeItem.index += sourceDataLength;
+        //     }
+        //   });
+        //   // 处理data，移动数据
+        //   let removeData = data.splice(index, sourceDataLength);
+        //   removeData.forEach((item) => item.type = value); // 更改数据项所属分组
+        //   if (needDetele) {
+        //     removeData.pop();
+        //   }
+        //   data.splice(targetDataIndex, 0, ...removeData);
+        // }
+        // // 移除这个多余索引配置
+        // map.splice(removeIndex, 1);
+        // console.log(map);
       } else {
         let length = 0;
         console.log(index);
