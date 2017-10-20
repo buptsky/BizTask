@@ -1,6 +1,6 @@
 /*
  *  测试多功能表格实现 2017/10/17
- *  仅为测试功能板，数据结构后续需要重新梳理优化
+ *  仅为测试功能板,待优化
  */
 import {Table, Input, Popconfirm, Icon, Modal, message, Tooltip} from 'antd';
 import ReportTableCell from './ReportTableCell';
@@ -123,6 +123,7 @@ class ReportTable extends React.Component {
       dataSource: dataList.data
     });
   }
+
   // 格式化表格数据，创建映射表
   formatData = (data) => {
     if (!data.length) return [];
@@ -130,23 +131,24 @@ class ReportTable extends React.Component {
     let map = [];
     let index = 0;
     data.forEach((typeList) => {
+      // 如果还没有分好类,则构建一个未定义类，该类不会存在空数据
       // 构建每个分类在表格中的初始索引,length多加了1是因为要添加一行数据
       map.push({
-        type: typeList.type,
+        type: typeList.name ? typeList.name : '未定义',
         index: index,
-        length: typeList.projects.length + 1
+        length: typeList.name ? typeList.projects.length + 1 : typeList.projects.length
       });
-      index += typeList.projects.length + 1;
+      index += typeList.name ? typeList.projects.length + 1 : typeList.projects.length;
       // 将分类放入每条数据中,分类下最后一条数据应为空
       typeList.projects.forEach((item, index) => {
-        item.type = typeList.type;
+        item.type = typeList.name;
         item.key = item.id;
         ret.push(item);
-        if (index === typeList.projects.length - 1) { // 推入一个空任务
+        if (typeList.name && index === typeList.projects.length - 1) { // 推入一个空任务
           ret.push({
-            key: `${typeList.type}${Date.now()}`,
+            key: `${typeList.name}${Date.now()}`,
             name: "",
-            type: typeList.type,
+            type: typeList.name,
             output: "",
             duration: "",
             principal: [],
@@ -180,6 +182,7 @@ class ReportTable extends React.Component {
     const content = (
       <ReportTableCell
         editable={data.editable}
+        isTypeCell={key === 'type' ? true : false}
         value={text}
         onChange={value => this.handleChange(key, index, value)}
         status={data.status}
@@ -191,16 +194,113 @@ class ReportTable extends React.Component {
       props: {rowSpan}
     };
   }
+
   // 表格行成功保存
   handleChange(key, index, value) {
-    const data = this.state.dataSource.slice();
+    let data = this.state.dataSource.slice();
+    let map = this.state.dataTypeMap.slice();
     if (key === 'principal') {
       value = value.split(/[,，]/);
+    }
+    if (key === 'type') { // 表格分类改变
       console.log(value);
+      // 如果从未分类变为分类
+      if (!data[index].type) {
+
+      }
+      // 如果修改后的类和已有的重复
+      if (map.some((item) => item.type === value && item.index !== index)) {
+        console.log(index);
+        let removeIndex = 0;
+        let needDetele = false; // 是否要清除空数据
+        // 进行合并操作,首先在map中找到同名分类
+        let sourceDataLength = 0;
+        let targetDataIndex = 0;
+        // 第一次遍历，需要获取：1.被移除map项内部数据的长度 2.要被合并的map项的初始数据索引
+        map.forEach((typeItem, typeItemIndex) => {
+          if (typeItem.index === index) { // 要移动的项
+            sourceDataLength = typeItem.length;
+            removeIndex = typeItemIndex; // 标记最后要被清除的索引条目位置
+            if(typeItem.type !== '未定义') { // 如果是现有分类，去掉空行
+              needDetele = true;
+            }
+          }
+          if (typeItem.type === value) { // 目标项
+            targetDataIndex = typeItem.index;
+          }
+        });
+        console.log(targetDataIndex);
+        // 比较目标项索引和操作项索引
+        if (index < targetDataIndex) { // 需要将目标后移
+          // 遍历map,更改索引表
+          map.forEach((typeItem, typeItemIndex) => {
+            if (typeItem.index === targetDataIndex) {// 目标项
+              typeItem.index -= sourceDataLength;
+              typeItem.length += sourceDataLength;
+              if (needDetele) {typeItem.length--};
+            } else if ((typeItem.index > index) && (typeItem.index < targetDataIndex)) {
+              // 索引调整
+              typeItem.index -= sourceDataLength;
+            } else if (typeItem.index > targetDataIndex) {
+              if (needDetele) {typeItem.index--};
+            }
+          });
+          // 处理data，移动数据
+          let removeData = data.splice(index, sourceDataLength);
+          removeData.forEach((item) => item.type = value); // 更改数据项所属分组
+          if (needDetele) {
+            removeData.pop();
+            data.splice(targetDataIndex - removeData.length - 1, 0, ...removeData);
+          } else {
+            data.splice(targetDataIndex - removeData.length, 0, ...removeData);
+          }
+        } else { // 需要将目标前移
+          // 遍历map,更改索引表
+          map.forEach((typeItem, typeItemIndex) => {
+            if (typeItem.index === targetDataIndex) {// 目标项
+              typeItem.length += sourceDataLength;
+              if (needDetele) {typeItem.length--};
+            } else if ((typeItem.index > targetDataIndex) && (typeItem.index < index)) {
+              // 索引调整
+              typeItem.index += sourceDataLength;
+            }
+          });
+          // 处理data，移动数据
+          let removeData = data.splice(index, sourceDataLength);
+          removeData.forEach((item) => item.type = value); // 更改数据项所属分组
+          if (needDetele) {
+            removeData.pop();
+          }
+          data.splice(targetDataIndex, 0, ...removeData);
+        }
+        // 移除这个多余索引配置
+        map.splice(removeIndex, 1);
+        console.log(map);
+      } else {
+        let length = 0;
+        console.log(index);
+        map.forEach((item) => { // 重写map映射
+          if (item.index === index) {
+            item.type = value;
+            length = item.length;
+            console.log(item.length);
+          }
+        });
+        // 因为类型单元格本质上属于分类下所有数据的第一条，所以其他条目的分类也要变化
+        for (let i = 0; i < length; i++) {
+          data[index + i][key] = value;
+        }
+      }
     }
     data[index][key] = value;
-    this.setState({dataSource: data});
+    console.log(map);
+    console.log(data);
+    this.setState({
+      dataTypeMap: map,
+      dataSource: data
+    });
   }
+
   // 编辑表格行
   editCell = (index) => {
     // 将本行的数据切换为编辑状态
@@ -247,9 +347,10 @@ class ReportTable extends React.Component {
     data[index].editable = false; // 数据禁止编辑
     data[index].status = type; // 写入数据操作类型
     // 保存单元格状态
-    this.setState({dataSource: data}, () => {
-      // 如果保存了分类最后一个空行则要多加一个空行
-      if (type === 'cancel') return; // 撤销不做修改
+    // 如果保存了分类最后一个空行则要多加一条空数据
+    // 如果该条数据没有定义分类，则不加入空数据
+    const flag = map.some((item) => item.type === '未定义' && item.index === index);
+    if (type === 'save' && !flag) { // 如果保存了数据需要判断是否要添加一条空数据
       let changed = false;
       map.forEach((item) => { // 更新map
         if (changed) {
@@ -272,13 +373,22 @@ class ReportTable extends React.Component {
           });
         }
       });
-      console.log(map);
-      console.log(data);
-      this.setState({
-        dataTypeMap: map,
-        dataSource: data
-      });
+    }
+    console.log(map);
+    console.log(data);
+    this.setState({
+      dataTypeMap: map,
+      dataSource: data
+    }, () => {
+      // 数据保存到服务器
+      this.saveReportData();
     });
+  }
+  // 保存表格数据到服务器
+  saveReportData = () => {
+    const data = this.state.dataSource;
+    console.log(data);
+    // 数据格式化
   }
   // 增加分类
   addType = () => {
@@ -295,7 +405,7 @@ class ReportTable extends React.Component {
     // 首先更新map
     let newMap = [...map, {
       type: newType,
-      index: map.length ? map[map.length - 1].index +  map[map.length - 1].length : 0,
+      index: map.length ? map[map.length - 1].index + map[map.length - 1].length : 0,
       length: 1
     }];
     let newData = [...data, {

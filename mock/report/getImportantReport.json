@@ -3,7 +3,52 @@
   "errmsg": "",
   "data": [
     {
-      "type": "品牌",
+      "name": "",
+      "projects": [
+        {
+          "id": 100,
+          "name": "pms任务1",
+          "output": "pms任务1预期产出",
+          "duration": "10",
+          "principal": ["翟懿博", "朱庆广"],
+          "endTime": "2017-10-20",
+          "process": "需求评审新人熟悉项目,开发30%",
+          "plan": "开发100%;联调100%;"
+        }
+      ]
+    },
+    {
+      "name": "",
+      "projects": [
+        {
+          "id": 101,
+          "name": "pms任务2",
+          "output": "pms任务2预期产出",
+          "duration": "7",
+          "principal": ["翟懿博", "朱庆广"],
+          "endTime": "2017-10-20",
+          "process": "需求评审新人熟悉项目,开发30%",
+          "plan": "开发100%;联调100%;"
+        }
+      ]
+    },
+    {
+      "name": "",
+      "projects": [
+        {
+          "id": 102,
+          "name": "pms任务3",
+          "output": "pms任务3预期产出",
+          "duration": "10",
+          "principal": ["翟懿博", "朱庆广"],
+          "endTime": "2017-10-20",
+          "process": "需求评审新人熟悉项目,开发30%",
+          "plan": "开发100%;联调100%;"
+        }
+      ]
+    },
+    {
+      "name": "品牌",
       "projects": [
         {
           "id": 1,
@@ -18,7 +63,7 @@
       ]
     },
     {
-      "type": "CRM",
+      "name": "CRM",
       "projects": [
         {
           "id": 2,
@@ -53,7 +98,7 @@
       ]
     },
     {
-      "type": "内部项目",
+      "name": "内部项目",
       "projects": [
         {
           "id": 5,

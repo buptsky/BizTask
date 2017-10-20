@@ -1,6 +1,7 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import {actionCreator} from '../../actions/action-creator';
+import ReportOverall from './ReportOverall';
 import ReportTable from './ReportTable';
 import * as CommonActions from '../../actions/common';
 
@@ -36,7 +37,8 @@ class Report extends React.Component {
 
   render() {
     return (
-      <div style={{padding: '60px 30px'}}>
+      <div style={{padding: '20px 30px'}}>
+        <ReportOverall/>
         周报列表操作交互演示
         <ReportTable data={this.state.reportData}/>
       </div>
