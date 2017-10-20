@@ -194,29 +194,29 @@ class ReportTable extends React.Component {
       props: {rowSpan}
     };
   }
+
   // 生成数据索引映射
   createSourceMap = (data) => {
     let ret = [];
     let dataIndex = 0;
     data.forEach((item) => {
-      console.log(item);
       if (!item.type) {
         ret.push({type: '未定义', index: dataIndex, length: 1});
         dataIndex++;
       } else {
         if (!ret.length) {
           ret.push({type: item.type, index: 0, length: 1});
+          dataIndex++;
         } else {
+          // console.log(item);
           for (let i = 0; i < ret.length; i++) {
             if (ret[i].type === item.type) {
-              console.log(i);
-              console.log(item.type);
               ret[i].length++;
               dataIndex++;
               break;
             }
             if (i === ret.length - 1) {
-              ret.push({type: item.type, index: dataIndex, length:1});
+              ret.push({type: item.type, index: dataIndex, length: 1});
               dataIndex++;
               break;
             }
@@ -235,14 +235,29 @@ class ReportTable extends React.Component {
       value = value.split(/[,，]/);
     }
     if (key === 'type') { // 表格分类改变
+      const sameFlag = map.some((item) => item.type === value && item.index !== index);
       console.log(value);
-      // 如果从未分类变为分类
-      if (!data[index].type) {
-
-      }
-      // 如果修改后的类和已有的重复
-      if (map.some((item) => item.type === value && item.index !== index)) {
-        console.log(index);
+      // 如果从未分类变为分类,且新分类不存在
+      if (!data[index].type && !sameFlag) {
+        data[index].type = value;
+        // 添加一条空数据
+        data.splice(index + 1, 0, {
+          key: `${value}${Date.now()}`,
+          name: "",
+          type: value,
+          output: "",
+          duration: "",
+          principal: [],
+          endTime: "",
+          process: "",
+          plan: ""
+        });
+        map = this.createSourceMap(data);
+        console.log(data);
+        console.log(map);
+      } else if (sameFlag) {
+        console.log('重复');
+        // 如果修改后的类和已有的重复
         let removeIndex = 0;
         let needDetele = false; // 是否要清除空数据
         // 进行合并操作,首先在map中找到同名分类
@@ -253,7 +268,8 @@ class ReportTable extends React.Component {
           if (typeItem.index === index) { // 要移动的项
             sourceDataLength = typeItem.length;
             removeIndex = typeItemIndex; // 标记最后要被清除的索引条目位置
-            if(typeItem.type !== '未定义') { // 如果是现有分类，去掉空行
+            console.log(typeItem);
+            if (typeItem.type !== '未定义') { // 如果是现有分类，去掉空行
               needDetele = true;
             }
           }
@@ -263,62 +279,15 @@ class ReportTable extends React.Component {
         });
         let removeData = data.splice(index, sourceDataLength); // 移除数据
         removeData.forEach((item) => item.type = value); // 更改数据项所属分组
-        if (needDetele) { // 是否需要清除空数据
-          removeData.pop();
-          data.splice(targetDataIndex - removeData.length - 1, 0, ...removeData);
+        needDetele && removeData.pop(); // 删除空数据
+        if (index < targetDataIndex) {
+          data.splice(targetDataIndex - sourceDataLength, 0, ...removeData);
         } else {
-          data.splice(targetDataIndex - removeData.length, 0, ...removeData);
+          data.splice(targetDataIndex, 0, ...removeData);
         }
-        console.log(data);
         map = this.createSourceMap(data);
-        console.log(this.createSourceMap(data));
-        // 比较目标项索引和操作项索引
-        // if (index < targetDataIndex) { // 需要将目标后移
-        //   // 遍历map,更改索引表
-        //   map.forEach((typeItem, typeItemIndex) => {
-        //     if (typeItem.index === targetDataIndex) {// 目标项
-        //       typeItem.index -= sourceDataLength;
-        //       typeItem.length += sourceDataLength;
-        //       if (needDetele) {typeItem.length--};
-        //     } else if ((typeItem.index > index) && (typeItem.index < targetDataIndex)) {
-        //       // 索引调整
-        //       typeItem.index -= sourceDataLength;
-        //     } else if (typeItem.index > targetDataIndex) {
-        //       if (needDetele) {typeItem.index--};
-        //     }
-        //   });
-        //   // 处理data，移动数据
-        //   let removeData = data.splice(index, sourceDataLength);
-        //   removeData.forEach((item) => item.type = value); // 更改数据项所属分组
-        //   if (needDetele) {
-        //     removeData.pop();
-        //     data.splice(targetDataIndex - removeData.length - 1, 0, ...removeData);
-        //   } else {
-        //     data.splice(targetDataIndex - removeData.length, 0, ...removeData);
-        //   }
-        // } else { // 需要将目标前移
-        //   // 遍历map,更改索引表
-        //   map.forEach((typeItem, typeItemIndex) => {
-        //     if (typeItem.index === targetDataIndex) {// 目标项
-        //       typeItem.length += sourceDataLength;
-        //       if (needDetele) {typeItem.length--};
-        //     } else if ((typeItem.index > targetDataIndex) && (typeItem.index < index)) {
-        //       // 索引调整
-        //       typeItem.index += sourceDataLength;
-        //     }
-        //   });
-        //   // 处理data，移动数据
-        //   let removeData = data.splice(index, sourceDataLength);
-        //   removeData.forEach((item) => item.type = value); // 更改数据项所属分组
-        //   if (needDetele) {
-        //     removeData.pop();
-        //   }
-        //   data.splice(targetDataIndex, 0, ...removeData);
-        // }
-        // // 移除这个多余索引配置
-        // map.splice(removeIndex, 1);
-        // console.log(map);
       } else {
+        // 普通修改
         let length = 0;
         console.log(index);
         map.forEach((item) => { // 重写map映射
@@ -333,8 +302,9 @@ class ReportTable extends React.Component {
           data[index + i][key] = value;
         }
       }
+    } else { // 更改其他数据
+      data[index][key] = value;
     }
-    data[index][key] = value;
     console.log(map);
     console.log(data);
     this.setState({
