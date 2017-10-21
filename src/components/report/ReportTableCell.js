@@ -1,7 +1,7 @@
 /*
  * 报告中可编辑的单元格
  */
-import {Input, Tooltip, Icon, message} from 'antd';
+import {Input, Tooltip, Icon, message, Popconfirm} from 'antd';
 
 class ReportTableCell extends React.Component {
   constructor(props) {
@@ -9,7 +9,8 @@ class ReportTableCell extends React.Component {
     this.state = {
       value: this.props.value,// 单元格的值
       isTypeCell: this.props.isTypeCell, // 是否为类型单元
-      typeEditable: false // 类型单元是否可编辑
+      typeEditable: false, // 类型单元是否可编辑
+      checkVisible: false
     }
   }
 
@@ -41,17 +42,35 @@ class ReportTableCell extends React.Component {
   shouldComponentUpdate(nextProps, nextState) {
     return nextProps.editable !== this.props.editable ||
       nextState.value !== this.state.value ||
-      nextState.typeEditable !== this.state.typeEditable;
+      nextState.typeEditable !== this.state.typeEditable ||
+      nextState.checkVisible !== this.state.checkVisible;
   }
 
-  save = () => {
+  check = () => {
     if (!this.state.value) { // 保存的数据不能非空
       message.warning('请填写分类名');
       return;
     }
-    this.setState({typeEditable: false});
+    if (this.state.value === '未定义bizreport') { // 保留类型
+      message.warning("请填不要使用'未定义bizreport'作为分类名");
+      return;
+    }
+    if (this.props.checkTypeCell(this.state.value)) { // 检测类名是否重复
+      this.setState({checkVisible: true});
+      return;
+    }
+    this.save();
+  }
+
+
+  save = () => {
+    this.setState({
+      typeEditable: false,
+      checkVisible: false
+    });
     this.props.onChange(this.state.value);
   }
+
 
   cancel = () => {
     this.setState({
@@ -62,11 +81,11 @@ class ReportTableCell extends React.Component {
 
   edit = () => {
     this.cacheValue = this.state.value; // 编辑模式下需要缓存原有的值，用于恢复
-    this.setState({typeEditable: true});
+    this.setState({typeEditable: true},() => this.input.focus());
   }
 
   render() {
-    const {value, isTypeCell, typeEditable} = this.state;
+    const {value, isTypeCell, typeEditable, checkVisible} = this.state;
     const {editable, tip} = this.props;
     return (
       <div>
@@ -79,19 +98,29 @@ class ReportTableCell extends React.Component {
                         <Input
                           value={value}
                           onChange={this.handleChange}
+                          ref={(input) => {this.input = input}}
                         />
                         <div style={{textAlign: 'center'}}>
-                          <Icon
-                            type="save"
-                            className="editable-cell-icon-check"
-                            onClick={this.save}
-                          />
-                          <Icon
-                            type="rollback"
-                            className="editable-cell-icon-check"
-                            onClick={this.cancel}
-                            style={{padding: 10}}
-                          />
+                          <Popconfirm
+                            visible={checkVisible}
+                            onConfirm={this.save}
+                            onCancel={this.cancel}
+                            title="分类名已存在，合并分类?（不可撤销）"
+                          >
+                            <Icon
+                              type="save"
+                              title="保存"
+                              style={{cursor: 'pointer'}}
+                              onClick={this.check}
+                            />
+                          </Popconfirm>
+                          <Popconfirm title="确定要取消更改么？"
+                                      onConfirm={this.cancel}>
+                            <Icon type="rollback"
+                                  style={{cursor: 'pointer', paddingLeft: 10}}
+                                  title="取消"
+                            />
+                          </Popconfirm>
                         </div>
                       </div>
                     ) :
@@ -100,7 +129,8 @@ class ReportTableCell extends React.Component {
                         {value.toString() || ' '}
                         <Icon
                           type="edit"
-                          className="editable-cell-icon"
+                          title="编辑"
+                          style={{cursor: 'pointer'}}
                           onClick={this.edit}
                         />
                       </div>

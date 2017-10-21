@@ -3,10 +3,12 @@
   "errmsg": "",
   "data": [
     {
+      "id": "",
       "name": "",
       "projects": [
         {
           "id": 100,
+          "uuid": 343535,
           "name": "pms任务1",
           "output": "pms任务1预期产出",
           "duration": "10",
@@ -18,10 +20,12 @@
       ]
     },
     {
+      "id": "",
       "name": "",
       "projects": [
         {
           "id": 101,
+          "uuid": 343536,
           "name": "pms任务2",
           "output": "pms任务2预期产出",
           "duration": "7",
@@ -33,10 +37,12 @@
       ]
     },
     {
+      "id": "",
       "name": "",
       "projects": [
         {
           "id": 102,
+          "uuid": 343537,
           "name": "pms任务3",
           "output": "pms任务3预期产出",
           "duration": "10",
@@ -48,10 +54,12 @@
       ]
     },
     {
+      "id": "990",
       "name": "品牌",
       "projects": [
         {
           "id": 1,
+          "uuid": 343538,
           "name": "无线银河-生活服务行业",
           "output": "增加生活服务行业,添加装修、摄影、家居三种样式",
           "duration": "7",
@@ -63,10 +71,12 @@
       ]
     },
     {
+      "id": "991",
       "name": "CRM",
       "projects": [
         {
           "id": 2,
+          "uuid": 343539,
           "name": "H5迭代4",
           "output": "开发H5页面综合方案",
           "duration": "10",
@@ -77,6 +87,7 @@
         },
         {
           "id": 3,
+          "uuid": 343540,
           "name": "下线H5和iPad工具中的数据页",
           "output": "下线H5和iPad工具中的数据页",
           "duration": "2",
@@ -87,6 +98,7 @@
         },
         {
           "id": 4,
+          "uuid": 343541,
           "name": "KA数据完整性-VR线上化",
           "output": "KA VR线上化",
           "duration": "5",
@@ -98,10 +110,12 @@
       ]
     },
     {
+      "id": "992",
       "name": "内部项目",
       "projects": [
         {
           "id": 5,
+          "uuid": 343542,
           "name": "biztask周报线上化",
           "output": "在biztask中完成线上周报",
           "duration": "待定",
@@ -112,6 +126,7 @@
         },
         {
           "id": 6,
+          "uuid": 343543,
           "name": "SOA服务框架",
           "output": "架构升级，采用新的框架及新界面进行改版，在改版原有功能的情况下，增加新的功能，同时保留原版的功能入口。",
           "duration": "12",

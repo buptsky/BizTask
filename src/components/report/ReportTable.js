@@ -67,7 +67,6 @@ class ReportTable extends React.Component {
         render: (text, record, index) => {
           if (!this.state.dataSource.length) return;
           const editable = record.editable;
-          // console.log(record['key']);
           return (
             <div className="editable-row-operations">
               {
@@ -123,28 +122,18 @@ class ReportTable extends React.Component {
       dataSource: dataList.data
     });
   }
-
   // 格式化表格数据，创建映射表
   formatData = (data) => {
     if (!data.length) return [];
     let ret = [];
-    let map = [];
-    let index = 0;
     data.forEach((typeList) => {
-      // 如果还没有分好类,则构建一个未定义类，该类不会存在空数据
-      // 构建每个分类在表格中的初始索引,length多加了1是因为要添加一行数据
-      map.push({
-        type: typeList.name ? typeList.name : '未定义',
-        index: index,
-        length: typeList.name ? typeList.projects.length + 1 : typeList.projects.length
-      });
-      index += typeList.name ? typeList.projects.length + 1 : typeList.projects.length;
       // 将分类放入每条数据中,分类下最后一条数据应为空
       typeList.projects.forEach((item, index) => {
         item.type = typeList.name;
         item.key = item.id;
         ret.push(item);
-        if (typeList.name && index === typeList.projects.length - 1) { // 推入一个空任务
+        // 如果当前分类存在分类名，则在该分类下最后一条数据后推入一条新数据
+        if (typeList.name && index === typeList.projects.length - 1) {
           ret.push({
             key: `${typeList.name}${Date.now()}`,
             name: "",
@@ -159,7 +148,8 @@ class ReportTable extends React.Component {
         }
       });
     });
-    return {data: ret, map: map};
+    // 生成周报渲染数据及数据映射表
+    return {data: ret, map: this.createSourceMap(ret)};
   }
   // 渲染表格各个列，没有数据时不会调用此方法，不用额外判断
   // data->行数据, index->当前数据行索引，key->当前数据的key，text->当前数据的值
@@ -181,9 +171,10 @@ class ReportTable extends React.Component {
     }
     const content = (
       <ReportTableCell
+        value={text}
         editable={data.editable}
         isTypeCell={key === 'type' ? true : false}
-        value={text}
+        checkTypeCell={value => this.checkReportType(key, index, value)}
         onChange={value => this.handleChange(key, index, value)}
         status={data.status}
         tip={key === 'principal' ? '姓名请用逗号分隔' : ''}
@@ -194,14 +185,14 @@ class ReportTable extends React.Component {
       props: {rowSpan}
     };
   }
-
   // 生成数据索引映射
   createSourceMap = (data) => {
     let ret = [];
     let dataIndex = 0;
     data.forEach((item) => {
       if (!item.type) {
-        ret.push({type: '未定义', index: dataIndex, length: 1});
+        // 如果还没有分好类,则构建一个未定义类，未定义类可重复且只包含一条数据，该类不会存在空数据
+        ret.push({type: '未定义bizreport', index: dataIndex, length: 1});
         dataIndex++;
       } else {
         if (!ret.length) {
@@ -226,17 +217,21 @@ class ReportTable extends React.Component {
     });
     return ret;
   }
-
+  // 检测新增类名是否重复
+  checkReportType(key, index, value) {
+    let map = this.state.dataTypeMap;
+    return map.some((item) => item.type === value && item.index !== index);
+  }
   // 表格行成功保存
   handleChange(key, index, value) {
-    let data = this.state.dataSource.slice();
-    let map = this.state.dataTypeMap.slice();
-    if (key === 'principal') {
+    let data = [...this.state.dataSource];
+    let map = [...this.state.dataTypeMap];
+    if (key === 'principal') { // 将填写的负责人数据转为数组格式
       value = value.split(/[,，]/);
     }
-    if (key === 'type') { // 表格分类改变
+    if (key === 'type') { // 修改了表格分类
+      // 判断分类是否和已有分类重复
       const sameFlag = map.some((item) => item.type === value && item.index !== index);
-      console.log(value);
       // 如果从未分类变为分类,且新分类不存在
       if (!data[index].type && !sameFlag) {
         data[index].type = value;
@@ -255,9 +250,8 @@ class ReportTable extends React.Component {
         map = this.createSourceMap(data);
         console.log(data);
         console.log(map);
-      } else if (sameFlag) {
+      } else if (sameFlag) { // 如果修改后的类和已有的重复
         console.log('重复');
-        // 如果修改后的类和已有的重复
         let removeIndex = 0;
         let needDetele = false; // 是否要清除空数据
         // 进行合并操作,首先在map中找到同名分类
@@ -269,7 +263,7 @@ class ReportTable extends React.Component {
             sourceDataLength = typeItem.length;
             removeIndex = typeItemIndex; // 标记最后要被清除的索引条目位置
             console.log(typeItem);
-            if (typeItem.type !== '未定义') { // 如果是现有分类，去掉空行
+            if (typeItem.type !== '未定义bizreport') { // 如果是现有分类，去掉空行
               needDetele = true;
             }
           }
@@ -279,6 +273,7 @@ class ReportTable extends React.Component {
         });
         let removeData = data.splice(index, sourceDataLength); // 移除数据
         removeData.forEach((item) => item.type = value); // 更改数据项所属分组
+        console.log(needDetele);
         needDetele && removeData.pop(); // 删除空数据
         if (index < targetDataIndex) {
           data.splice(targetDataIndex - sourceDataLength, 0, ...removeData);
@@ -286,8 +281,7 @@ class ReportTable extends React.Component {
           data.splice(targetDataIndex, 0, ...removeData);
         }
         map = this.createSourceMap(data);
-      } else {
-        // 普通修改
+      } else { // 普通修改
         let length = 0;
         console.log(index);
         map.forEach((item) => { // 重写map映射
@@ -312,7 +306,6 @@ class ReportTable extends React.Component {
       dataSource: data
     });
   }
-
   // 编辑表格行
   editCell = (index) => {
     // 将本行的数据切换为编辑状态
@@ -361,7 +354,7 @@ class ReportTable extends React.Component {
     // 保存单元格状态
     // 如果保存了分类最后一个空行则要多加一条空数据
     // 如果该条数据没有定义分类，则不加入空数据
-    const flag = map.some((item) => item.type === '未定义' && item.index === index);
+    const flag = map.some((item) => item.type === '未定义bizreport' && item.index === index);
     if (type === 'save' && !flag) { // 如果保存了数据需要判断是否要添加一条空数据
       let changed = false;
       map.forEach((item) => { // 更新map
@@ -396,7 +389,7 @@ class ReportTable extends React.Component {
       this.saveReportData();
     });
   }
-  // 保存表格数据到服务器
+  // 保存表格数据到服务器,待完成
   saveReportData = () => {
     const data = this.state.dataSource;
     console.log(data);
@@ -406,7 +399,7 @@ class ReportTable extends React.Component {
   addType = () => {
     this.setState({modalVisible: true});
   }
-  // 确认添加分类
+  // 确认添加分类，分类追加到最后
   confirmAddType = () => {
     const {dataSource: data, dataTypeMap: map, newType} = this.state;
     // 检查重复
@@ -421,7 +414,7 @@ class ReportTable extends React.Component {
       length: 1
     }];
     let newData = [...data, {
-      key: `${newType}0`,
+      key: `${newType}${Date.now()}`,
       name: "",
       type: newType,
       output: "",
@@ -435,11 +428,14 @@ class ReportTable extends React.Component {
       dataTypeMap: newMap,
       dataSource: newData,
       newType: ''
+    },() => {
+      console.log(this.state.dataSource);
+      console.log(this.state.dataTypeMap);
     });
-    this.handleCancel();
+    this.cancelAddType();
   }
   // 关闭添加分类modal
-  handleCancel = () => {
+  cancelAddType = () => {
     this.setState({modalVisible: false});
   }
   // 新分类输入变动
@@ -463,7 +459,7 @@ class ReportTable extends React.Component {
           title="添加分类"
           visible={this.state.modalVisible}
           onOk={this.confirmAddType}
-          onCancel={this.handleCancel}
+          onCancel={this.cancelAddType}
         >
           <Input onChange={this.onchangeNewType} value={this.state.newType}/>
         </Modal>
