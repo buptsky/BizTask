@@ -87,7 +87,7 @@ class ReportTable extends React.Component {
                     <Icon type="edit"
                           title="编辑"
                           onClick={() => this.editCell(index)}
-                          style={{marginRight: 15, cursor: 'pointer'}}
+                          style={{marginRight: 10, cursor: 'pointer'}}
                     />
                     {
                       !this.state.dataTypeMap.some((item) => {
@@ -95,9 +95,19 @@ class ReportTable extends React.Component {
                       }) ? (
                         <Popconfirm title="确定要删除该条目么？"
                                     onConfirm={() => this.deleteCell(index)}>
-                          <Icon type="delete" style={{cursor: 'pointer'}} title="删除"/>
+                          <Icon type="delete" style={{marginRight: 10,cursor: 'pointer'}} title="删除"/>
                         </Popconfirm>
                       ) : ''
+                    }
+                    {
+                      this.state.dataTypeMap.some((item) => { // 不是第一条或者最后一条，则可上移
+                        return (item.index === index) || (item.index + item.length  - 1 === index)
+                      })? ''
+                        : (<Icon title="上移"
+                                 type="up-square-o"
+                                 style={{cursor: 'pointer'}}
+                                 onClick={() => {this.moveUpItem(index)}}
+                        />)
                     }
                   </span>
               }
@@ -387,6 +397,16 @@ class ReportTable extends React.Component {
     }, () => {
       // 数据保存到服务器
       this.saveReportData();
+    });
+  }
+  // 上移表格数据（只能同分类上移）
+  moveUpItem = (index) => {
+    console.log(index);
+    const data = [...this.state.dataSource];
+    const removeData = data.splice(index, 1)
+    data.splice(index - 1, 0, ...removeData);
+    this.setState({
+      dataSource: data
     });
   }
   // 保存表格数据到服务器,待完成
