@@ -2,7 +2,7 @@
  *  测试多功能表格实现 2017/10/17
  *  仅为测试功能板,待优化
  */
-import {Table, Input, Popconfirm, Icon, Modal, message, Tooltip} from 'antd';
+import {Table, Input, Popconfirm, Icon, Modal, message, Card} from 'antd';
 import ReportTableCell from './ReportTableCell';
 
 class ReportTable extends React.Component {
@@ -75,11 +75,11 @@ class ReportTable extends React.Component {
                     <Icon type="save"
                           title="保存"
                           onClick={() => this.editDone(index, 'save')}
-                          style={{marginRight: 15, cursor: 'pointer'}}
+                          style={{marginRight: 15, cursor: 'pointer', color: '#007b43'}}
                     />
-                    <Popconfirm title="确定要取消更改么？"
+                    <Popconfirm title="确定要取消更改？"
                                 onConfirm={() => this.editDone(index, 'cancel')}>
-                      <Icon type="rollback" style={{cursor: 'pointer'}} title="取消"/>
+                      <Icon type="rollback" style={{cursor: 'pointer', color: '#bd2636'}} title="取消"/>
                     </Popconfirm>
                   </span>
                   :
@@ -87,15 +87,15 @@ class ReportTable extends React.Component {
                     <Icon type="edit"
                           title="编辑"
                           onClick={() => this.editCell(index)}
-                          style={{marginRight: 10, cursor: 'pointer'}}
+                          style={{marginRight: 10, cursor: 'pointer', color: '#007b43'}}
                     />
                     {
                       !this.state.dataTypeMap.some((item) => {
                         return (item.index + item.length - 1 === index) && (item.length !== 1);
                       }) ? (
-                        <Popconfirm title="确定要删除该条目么？"
+                        <Popconfirm title="确定要删除该条目？"
                                     onConfirm={() => this.deleteCell(index)}>
-                          <Icon type="delete" style={{marginRight: 10,cursor: 'pointer'}} title="删除"/>
+                          <Icon type="delete" style={{marginRight: 10, cursor: 'pointer', color: '#bd2636'}} title="删除"/>
                         </Popconfirm>
                       ) : ''
                     }
@@ -105,7 +105,7 @@ class ReportTable extends React.Component {
                       })? ''
                         : (<Icon title="上移"
                                  type="up-square-o"
-                                 style={{cursor: 'pointer'}}
+                                 style={{cursor: 'pointer', color: '#0c60aa'}}
                                  onClick={() => {this.moveUpItem(index)}}
                         />)
                     }
@@ -163,7 +163,7 @@ class ReportTable extends React.Component {
   }
   // 渲染表格各个列，没有数据时不会调用此方法，不用额外判断
   // data->行数据, index->当前数据行索引，key->当前数据的key，text->当前数据的值
-  renderColumns(data, index, key, text) {
+  renderColumns =(data, index, key, text) => {
     const map = this.state.dataTypeMap;
     if (Array.isArray(text)) { // 如果值为数组，转化为字符串（负责人列是数组格式）
       text = text.join(',');
@@ -185,6 +185,8 @@ class ReportTable extends React.Component {
         editable={data.editable}
         isTypeCell={key === 'type' ? true : false}
         checkTypeCell={value => this.checkReportType(key, index, value)}
+        moveUpType={() => this.moveUpType(index)}
+        isFirstType={index === 0}
         onChange={value => this.handleChange(key, index, value)}
         status={data.status}
         tip={key === 'principal' ? '姓名请用逗号分隔' : ''}
@@ -228,12 +230,12 @@ class ReportTable extends React.Component {
     return ret;
   }
   // 检测新增类名是否重复
-  checkReportType(key, index, value) {
+  checkReportType =(key, index, value) => {
     let map = this.state.dataTypeMap;
     return map.some((item) => item.type === value && item.index !== index);
   }
   // 表格行成功保存
-  handleChange(key, index, value) {
+  handleChange =(key, index, value) => {
     let data = [...this.state.dataSource];
     let map = [...this.state.dataTypeMap];
     if (key === 'principal') { // 将填写的负责人数据转为数组格式
@@ -361,17 +363,16 @@ class ReportTable extends React.Component {
     const map = this.state.dataTypeMap.slice();
     data[index].editable = false; // 数据禁止编辑
     data[index].status = type; // 写入数据操作类型
-    // 保存单元格状态
     // 如果保存了分类最后一个空行则要多加一条空数据
-    // 如果该条数据没有定义分类，则不加入空数据
-    const flag = map.some((item) => item.type === '未定义bizreport' && item.index === index);
-    if (type === 'save' && !flag) { // 如果保存了数据需要判断是否要添加一条空数据
+    if (type === 'save') {
       let changed = false;
       map.forEach((item) => { // 更新map
         if (changed) {
           item.index++;
         }
-        if ((item.index + item.length - 1) === index) { // 该项已经当前分类的最后一项
+        // 命中该条数据在map中的分组，如果该条数据没有定义分类，则不加入空数据
+        if ((item.index + item.length - 1) === index && item.type !== '未定义bizreport') {
+          // 该项已经当前分类的最后一项
           item.length++;
           changed = true;
           // 传入一行空数据
@@ -409,10 +410,33 @@ class ReportTable extends React.Component {
       dataSource: data
     });
   }
+  // 上移整个分类
+  moveUpType = (index) => {
+    console.log(index);
+    const map = [...this.state.dataTypeMap];
+    const data = [...this.state.dataSource];
+    let length = 0;
+    let mapIndex = 0;
+    map.forEach((typeItem, typeIndex) => {
+      if (typeItem.index === index) {
+        length = typeItem.length;
+        mapIndex = typeIndex - 1;
+      }
+    });
+    const removeData = data.splice(index, length);
+    console.log(removeData);
+    data.splice(map[mapIndex].index, 0, ...removeData);
+    this.setState({
+      dataTypeMap: this.createSourceMap(data),
+      dataSource: data
+    }, () => {
+      console.log( this.state.dataTypeMap);
+    });
+  }
   // 保存表格数据到服务器,待完成
   saveReportData = () => {
     const data = this.state.dataSource;
-    console.log(data);
+    // console.log(data);
     // 数据格式化
   }
   // 增加分类
@@ -465,14 +489,14 @@ class ReportTable extends React.Component {
 
   render() {
     const dataSource = this.state.dataSource;
-    // console.log(dataSource);
     const columns = this.columns;
     return (
-      <div>
+      <Card className="report-table" style={{marginTop: 20}} title={this.props.title}>
+        {/*<div className="table-name"></div>*/}
         <Table bordered
                dataSource={dataSource}
                columns={columns}
-               size="middle"
+               size="small"
                pagination={false}
         />
         <Modal
@@ -483,7 +507,7 @@ class ReportTable extends React.Component {
         >
           <Input onChange={this.onchangeNewType} value={this.state.newType}/>
         </Modal>
-      </div>
+      </Card>
     );
   }
 }

@@ -10,7 +10,8 @@ class ReportTableCell extends React.Component {
       value: this.props.value,// 单元格的值
       isTypeCell: this.props.isTypeCell, // 是否为类型单元
       typeEditable: false, // 类型单元是否可编辑
-      checkVisible: false
+      checkVisible: false,
+      date: Date.now()
     }
   }
 
@@ -32,6 +33,10 @@ class ReportTableCell extends React.Component {
     }
   }
 
+  componentWillUnmount() {
+    console.log('unmount');
+  }
+
   // 改变输入值
   handleChange = (e) => {
     const value = e.target.value;
@@ -41,6 +46,7 @@ class ReportTableCell extends React.Component {
   // 受传参限制，每次渲染都会传入一个内存位置变化的onChange函数，在判断中不考虑此变化
   shouldComponentUpdate(nextProps, nextState) {
     return nextProps.editable !== this.props.editable ||
+      nextProps.isFirstType !== this.props.isFirstType ||
       nextState.value !== this.state.value ||
       nextState.typeEditable !== this.state.typeEditable ||
       nextState.checkVisible !== this.state.checkVisible;
@@ -52,7 +58,7 @@ class ReportTableCell extends React.Component {
       return;
     }
     if (this.state.value === '未定义bizreport') { // 保留类型
-      message.warning("请填不要使用'未定义bizreport'作为分类名");
+      message.warning("请不要使用'未定义bizreport'作为分类名");
       return;
     }
     if (this.props.checkTypeCell(this.state.value)) { // 检测类名是否重复
@@ -75,7 +81,8 @@ class ReportTableCell extends React.Component {
   cancel = () => {
     this.setState({
       value: this.cacheValue,
-      typeEditable: false
+      typeEditable: false,
+      checkVisible: false
     });
   }
 
@@ -83,10 +90,15 @@ class ReportTableCell extends React.Component {
     this.cacheValue = this.state.value; // 编辑模式下需要缓存原有的值，用于恢复
     this.setState({typeEditable: true},() => this.input.focus());
   }
+  // 如果是分类单元，可以上移
+  moveUpType = () => {
+    // 注意该方法不能直接在render函数中以this.props.moveUpType形式调用，原因是为了提升性能，外界moveUpType函数的变动不会引起此组件render的重新渲染，所以直接绑定上去的moveUpType函数还是会绑定移动之前的位置信息，造成位置判断错误
+    this.props.moveUpType();
+  }
 
   render() {
     const {value, isTypeCell, typeEditable, checkVisible} = this.state;
-    const {editable, tip} = this.props;
+    const {editable, tip, isFirstType} = this.props;
     return (
       <div>
         {
@@ -110,14 +122,14 @@ class ReportTableCell extends React.Component {
                             <Icon
                               type="save"
                               title="保存"
-                              style={{cursor: 'pointer'}}
+                              style={{cursor: 'pointer', color: '#007b43'}}
                               onClick={this.check}
                             />
                           </Popconfirm>
                           <Popconfirm title="确定要取消更改么？"
                                       onConfirm={this.cancel}>
                             <Icon type="rollback"
-                                  style={{cursor: 'pointer', paddingLeft: 10}}
+                                  style={{cursor: 'pointer', paddingLeft: 10, color: '#bd2636'}}
                                   title="取消"
                             />
                           </Popconfirm>
@@ -130,9 +142,18 @@ class ReportTableCell extends React.Component {
                         <Icon
                           type="edit"
                           title="编辑"
-                          style={{cursor: 'pointer'}}
+                          style={{cursor: 'pointer', color: '#007b43'}}
                           onClick={this.edit}
                         />
+                        {
+                          !isFirstType && (
+                            <Icon title="上移"
+                                  type="up-square-o"
+                                  style={{cursor: 'pointer', paddingLeft: 10,color: '#0c60aa'}}
+                                  onClick={this.moveUpType}
+                            />
+                          )
+                        }
                       </div>
                     )
                 }
@@ -144,7 +165,7 @@ class ReportTableCell extends React.Component {
                   editable ?
                     <div>
                       <Tooltip title={tip} placement="topLeft">
-                        <Input value={value} onChange={this.handleChange}/>
+                        <Input value={value} onChange={this.handleChange} style={{color: '#007b43'}}/>
                       </Tooltip>
                     </div>
                     :

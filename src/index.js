@@ -8,6 +8,9 @@ import AppRouter from './AppRouter';
 import reducer from './reducers/index';
 import fetchData from './utils/fetch-data';
 window.fetchData = fetchData;
+// 设置 moment locale
+import 'moment/locale/zh-cn';
+moment.locale('zh-cn');
 /*系统localStorage*/
 storeJS.set('bizTask',{...storeJS.get('bizTask')});
 /*redux 状态调试*/
