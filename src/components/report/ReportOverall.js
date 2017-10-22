@@ -5,33 +5,23 @@
  * ④ref引用: 条目名 + input
  */
 
-import {connect} from 'react-redux';
 import {Row, Col, Input, Icon, Popconfirm, Button, Card, Modal} from 'antd';
-import {bindActionCreators} from 'redux';
-import {actionCreator} from '../../actions/action-creator';
-import ReportTable from './ReportTable';
-import * as CommonActions from '../../actions/common';
 
 const {TextArea} = Input;
 
-@connect(
-  state => ({}),
-  dispatch => ({})
-)
 class ReportOverall extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       overAllItems: [
         {name: 'work', value: '主要工作'},
-        {name: 'risk', value: '问题/风险'},
-        {name: 'new', value: '新增'}
+        {name: 'risk', value: '问题/风险'}
       ],
       newItem: '',
       newItemIndex: 0
     }
   }
-
+  // 编辑输入
   editInput = (type) => {
     // 将当前值缓存
     this[`${type}cacheValue`] = this.state[`${type}value`];
@@ -41,7 +31,7 @@ class ReportOverall extends React.Component {
       this[`${type}value`].focus();  // 文本框获取焦点
     });
   }
-
+  // 输入框变动
   changeInput = (value, type) => {
     this.setState({
       [`${type}value`]: value
@@ -62,7 +52,6 @@ class ReportOverall extends React.Component {
       [`disable${type}`]: true
     });
   }
-
   // 增加分类
   addItem = () => {
     this.setState({modalVisible: true});
@@ -86,6 +75,13 @@ class ReportOverall extends React.Component {
   // 新分类输入变动
   onchangeNewItem = (e) => {
     this.setState({newItem: e.target.value});
+  }
+  // 删除分类
+  deleteItem = (type) => {
+    const map = this.state.overAllItems;
+    this.setState({
+      overAllItems: map.filter((item) => item.name !== type)
+    })
   }
 
   componentWillMount() {
@@ -123,11 +119,25 @@ class ReportOverall extends React.Component {
                     {
                       this.state[`disable${item.name}`] ?
                         (
-                          <Icon type="edit"
-                                title="编辑"
-                                style={{cursor: 'pointer', color: '#007b43'}}
-                                onClick={() => {this.editInput(item.name)}}
-                          />
+                          <div style={{display: 'inline-block'}}>
+                            <Icon type="edit"
+                                  title="编辑"
+                                  style={{cursor: 'pointer', color: '#007b43', paddingRight: 5}}
+                                  onClick={() => {this.editInput(item.name)}}
+                            />
+                            {
+                              index > 1 && (
+                                <Popconfirm title="确定要删除该项"
+                                            onConfirm={() => {this.deleteItem(item.name)}}
+                                >
+                                  <Icon type="delete"
+                                        title="删除"
+                                        style={{cursor: 'pointer', color: '#bd2636'}}
+                                  />
+                                </Popconfirm>
+                              )
+                            }
+                          </div>
                         ) :
                         (
                           <div style={{display: 'inline-block'}}>

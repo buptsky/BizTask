@@ -1,4 +1,4 @@
-import {Menu, Icon, Button, DatePicker} from 'antd';
+import {Button, DatePicker} from 'antd';
 
 class ReportFilter extends React.Component {
   constructor(props) {
@@ -8,11 +8,11 @@ class ReportFilter extends React.Component {
     }
   }
 
-
+  // 禁用的时间选择项
   disabledDate = (current) => {
     return current.valueOf() > Date.now();
   }
-
+  //　选取时间
   onChange = (date, dateString) => {
     console.log(date);
     console.log(dateString);
