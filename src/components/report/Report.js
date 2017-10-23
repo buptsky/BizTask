@@ -4,9 +4,9 @@ import {actionCreator} from '../../actions/action-creator';
 import ReportFilter from './ReportFilter';
 import ReportOverall from './ReportOverall';
 import ReportTable from './ReportTable';
-import {Menu, Icon, Button} from 'antd';
+import ReportPreview from './ReportPreview';
+import {Menu, Icon, Button, Modal} from 'antd';
 import * as CommonActions from '../../actions/common';
-
 
 @connect(
   state => ({}),
@@ -21,7 +21,9 @@ class Report extends React.Component {
     super(props);
     this.state = {
       reportData: [],
-      currentMenu: 'team-report'
+      currentMenu: 'team-report',
+      modalVisible: false,
+      importantData: []
     }
   }
 
@@ -40,6 +42,22 @@ class Report extends React.Component {
 
   switchMenu = (e) => {
     this.setState({currentMenu: e.key});
+  }
+  // 周报预览
+  previewReport = () => {
+    this.setState({
+      importantData: this.reportTable.collectData(),
+      modalVisible: true
+    });
+    console.log(this.reportOverAll.collectData());
+  }
+  // 确认发送周报
+  confirmSend = () => {
+    this.reportPreview.getTableHtml();
+  }
+  // 取消发送周报
+  cancelSend = () => {
+    this.setState({modalVisible: false});
   }
 
   render() {
@@ -61,14 +79,32 @@ class Report extends React.Component {
             </Menu.Item>
           </Menu>
           <Button type="primary"
+                  onClick={this.previewReport}
                   icon="eye"
                   style={{position: 'absolute', top: 10, right: 33, height: 28}}
                   >周报预览
           </Button>
         </div>
-        <ReportOverall/>
-        <ReportTable data={this.state.reportData} title="重要项目进展"/>
+        <ReportOverall ref={(value) => {this.reportOverAll = value}}/>
+        <ReportTable data={this.state.reportData}
+                     title="重要项目进展"
+                     ref={(value) => {this.reportTable = value}}
+        />
         <ReportTable data={[]} title="其他项目进展"/>
+        <Modal
+          title="周报预览"
+          visible={this.state.modalVisible}
+          onOk={this.confirmSend}
+          okText={'发送'}
+          cancelText={'取消'}
+          onCancel={this.cancelSend}
+          width={'70%'}
+        >
+          <ReportPreview
+            ref={(value) => {this.reportPreview = value}}
+            importantData={this.state.importantData}
+          />
+        </Modal>
       </div>
     );
   }

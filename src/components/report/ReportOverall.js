@@ -83,6 +83,18 @@ class ReportOverall extends React.Component {
       overAllItems: map.filter((item) => item.name !== type)
     })
   }
+  // 收集数据
+  collectData = () => {
+    let ret = [];
+    this.state.overAllItems.forEach((item) => {
+      ret.push({
+        name: item.name,
+        value: item.value,
+        desc: this.state[`${item.name}value`]
+      });
+    });
+    return ret;
+  }
 
   componentWillMount() {
     const ret = {};
@@ -157,8 +169,8 @@ class ReportOverall extends React.Component {
                         )
                     }
                   </div>
-                  <TextArea rows={2}
-                            style={{resize: 'none', width: '80%', verticalAlign: 'middle'}}
+                  <TextArea rows={3}
+                            style={{resize: 'vertical', width: '80%', verticalAlign: 'middle'}}
                             ref={(input) => {this[`${item.name}value`] = input}}
                             value={this.state[`${item.name}value`]}
                             onChange={(e) => {this.changeInput(e.target.value, item.name)}}

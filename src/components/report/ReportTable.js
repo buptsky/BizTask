@@ -21,7 +21,7 @@ class ReportTable extends React.Component {
           </div>
         ),
         dataIndex: 'type',
-        width: '8%',
+        width: '10%',
         render: (text, record, index) => this.renderColumns(record, index, 'type', text),
       },
       {
@@ -44,14 +44,14 @@ class ReportTable extends React.Component {
       },
       {
         title: '负责人',
-        width: '10%',
+        width: '9%',
         dataIndex: 'principal',
         render: (text, record, index) => this.renderColumns(record, index, 'principal', text),
       },
       {
         title: '本周进展',
         dataIndex: 'process',
-        width: '20%',
+        width: '18%',
         render: (text, record, index) => this.renderColumns(record, index, 'process', text),
       },
       {
@@ -63,12 +63,12 @@ class ReportTable extends React.Component {
       {
         title: '操作项',
         dataIndex: 'operation',
-        width: '6%',
+        width: '7%',
         render: (text, record, index) => {
           if (!this.state.dataSource.length) return;
           const editable = record.editable;
           return (
-            <div className="editable-row-operations">
+            <div className="editable-row-operations" style={{textAlign: 'center'}}>
               {
                 editable ?
                   <span>
@@ -487,6 +487,13 @@ class ReportTable extends React.Component {
     this.setState({newType: e.target.value});
   }
 
+  // 收集最终数据
+  collectData = () => {
+    return {
+      data: this.state.dataSource,
+      map: this.state.dataTypeMap
+    };
+  }
   render() {
     const dataSource = this.state.dataSource;
     const columns = this.columns;

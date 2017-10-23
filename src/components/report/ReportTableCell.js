@@ -3,6 +3,8 @@
  */
 import {Input, Tooltip, Icon, message, Popconfirm} from 'antd';
 
+const { TextArea } = Input;
+
 class ReportTableCell extends React.Component {
   constructor(props) {
     super(props);
@@ -34,7 +36,7 @@ class ReportTableCell extends React.Component {
   }
 
   componentWillUnmount() {
-    console.log('unmount');
+    // console.log('unmount');
   }
 
   // 改变输入值
@@ -161,18 +163,34 @@ class ReportTableCell extends React.Component {
             ) :
             (
               <div>
-                {
-                  editable ?
-                    <div>
-                      <Tooltip title={tip} placement="topLeft">
-                        <Input value={value} onChange={this.handleChange} style={{color: '#007b43'}}/>
-                      </Tooltip>
-                    </div>
-                    :
-                    <div className="editable-row-text">
-                      {value.toString() || ' '}
-                    </div>
-                }
+                <div>
+                  <Tooltip title={editable ? tip : ''} placement="topLeft">
+                    <TextArea
+                      value={value}
+                      onChange={this.handleChange}
+                      style={{
+                        resize: editable ? 'auto': 'none',
+                        border: editable ? '1px solid #d9d9d9': 0,
+                        backgroundColor: editable ? '#fff': 'inherit',
+                        cursor: 'default'
+                      }}
+                      disabled={!editable}
+                      autosize={true}
+                    />
+                  </Tooltip>
+                </div>
+                {/*{*/}
+                  {/*editable ?*/}
+                    {/*<div>*/}
+                      {/*<Tooltip title={tip} placement="topLeft">*/}
+                        {/*<TextArea value={value} onChange={this.handleChange} style={{color: '#007b43'}}/>*/}
+                      {/*</Tooltip>*/}
+                    {/*</div>*/}
+                    {/*:*/}
+                    {/*<div className="editable-row-text">*/}
+                      {/*{value.toString() || ' '}*/}
+                    {/*</div>*/}
+                {/*}*/}
               </div>
             )
         }
